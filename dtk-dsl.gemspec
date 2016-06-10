@@ -1,6 +1,6 @@
 require_relative 'lib/dsl/version'
 Gem::Specification.new do |spec| 
-  spec.name        = 'dtk-cli'
+  spec.name        = 'dtk-dsl' 
   spec.version     = DTK::DSL::VERSION
   spec.author      = 'Reactor8'
   spec.email       = 'support@reactor8.com'
