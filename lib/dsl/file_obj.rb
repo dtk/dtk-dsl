@@ -19,9 +19,10 @@ module DTK::DSL
   class FileObj
     # opts can have keys
     #  :path
-    def initialize(opts = {})
-      @path = opts[:path]
-      @content   = get_content?(@path)
+    def initialize(directory_parser, opts = {})
+      @directory_parser = directory_parser
+      @path             = opts[:path]
+      @content          = directory_parser.get_content?(@path)
     end
     
     def content_or_raise_error
@@ -66,9 +67,6 @@ module DTK::DSL
         "Cannot find #{file_path_type} in the #{dir_ref} or ones nested under it"
       end
     end
-    
-    def get_content?(path)
-      File.open(path).read if path and File.exists?(path)
-    end
+
   end
 end

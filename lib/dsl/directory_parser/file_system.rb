@@ -17,15 +17,21 @@
 #
 
 module DTK::DSL
-  class DirectoryParser
+  module DirectoryParser
     # For getting directory information when files in a vanilla file system
-    class FileSystem < self
+    class FileSystem 
+      # return either a string file path or of match to path_info working from current directory and 'otwards'
+      # until base_path in path_info (if it exists)
       # opts can have keys
       #  :current_dir if set means start from this dir; otherwise start from computed current dir
       def most_nested_matching_file_path?(path_info, opts = {})
         base_dir = path_info.base_dir || OsUtil.home_dir
         current_dir = opts[:current_dir] || OsUtil.current_dir
         check_match_recurse_on_failure?(path_info, current_dir, base_dir)
+      end
+
+      def get_content?(path)
+        File.open(path).read if path and File.exists?(path)
       end
       
       private
@@ -45,6 +51,7 @@ module DTK::DSL
         end
       end
 
+      # returns an array of strings that are file paths
       def matching_file_paths(dir_path, path_info)
         Dir.glob("#{dir_path}/*").select { |file_path| File.file?(file_path) and path_info.matches?(file_path) }
       end

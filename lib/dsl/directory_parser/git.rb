@@ -17,9 +17,9 @@
 #
 
 module DTK::DSL
-  class DirectoryParser    
+  module DirectoryParser    
     # For getting directory information when files in git repo
-    class Git < self
+    class Git
     end
   end
 end

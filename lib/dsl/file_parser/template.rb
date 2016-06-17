@@ -46,7 +46,7 @@ module DTK::DSL
 
       # Main parse call; Each concrete class should over write this
       def parse!
-        raise Error::NoMethodForConcreteClass.new(self.class)
+        raise Error, "No 'parse!' method for concreate class '#{self.class}'"
       end
 
       # The method output_type can be set on concrete class; it wil be set if input and output types are different

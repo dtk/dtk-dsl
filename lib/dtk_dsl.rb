@@ -27,9 +27,10 @@ module DTK
 
     # Above class defs must go first
 
-    require_relative('dsl/util')
+    require_relative('dsl/os_util')
     require_relative('dsl/dsl_version')
     require_relative('dsl/filename')
+    require_relative('dsl/file_obj')
     require_relative('dsl/directory_parser')
     require_relative('dsl/file_parser')
   end
