@@ -16,7 +16,7 @@
 # limitations under the License.
 #
 module DTK::DSL
-  module OsUtil
+  class OsUtil
     def self.method_missing(method, *args, &body)
       base_module.respond_to?(method) ? base_module.send(method, *args, &body) : super
     end
