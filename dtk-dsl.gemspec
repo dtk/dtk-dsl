@@ -1,4 +1,5 @@
-require_relative 'lib/dsl/version'
+require File.expand_path('../lib/dsl/version', __FILE__)
+
 Gem::Specification.new do |spec| 
   spec.name        = 'dtk-dsl' 
   spec.version     = DTK::DSL::VERSION
