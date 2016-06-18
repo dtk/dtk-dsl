@@ -60,6 +60,8 @@ module DTK::DSL
 
     ### 
 
+    attr_reader :directory_parser
+
     def error_msg_no_content
       if @path
         "No #{file_path_type} found at '#{@path}'"
