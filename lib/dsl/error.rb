@@ -15,16 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 module DTK::DSL
-  # Abstract class; application taht uses this library must provide a concrete class that inherits from this
-  class DirectoryParser
-    require_relative('directory_parser/path_info')
-
-    # Methods that concerete class most provide
-    # Path is a string
-    def get_content?(path)
-      raise Error::NoMethodForConcreteClass.new(self.class)
-    end
+  class Error < GlobalForDSL::Error
+    require_relative('error/subclasses')
   end
 end

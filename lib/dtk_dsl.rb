@@ -18,16 +18,7 @@
 
 module DTK
   module DSL    
-    class Error < GlobalForDSL::Error
-      class Usage < GlobalForDSL::ErrorUsage
-      end
-    end
-    class OsUtil < GlobalForDSL::OsUtil
-    end
-
-    # Above class defs must go first
-
-    require_relative('dsl/os_util')
+    require_relative('dsl/error')
     require_relative('dsl/dsl_version')
     require_relative('dsl/filename')
     require_relative('dsl/file_obj')

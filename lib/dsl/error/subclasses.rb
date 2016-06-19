@@ -16,19 +16,21 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class OsUtil
-    def self.method_missing(method, *args, &body)
-      base_module.respond_to?(method) ? base_module.send(method, *args, &body) : super
+  class Error
+    class Usage < GlobalForDSL::ErrorUsage
     end
-
-    def self.respond_to?(method)
-      base_module.respond_to?(method) or super
-    end
-
-    private
-
-    def self.base_module
-      DTK::DSL.delegate_module.os_util_module
+    
+    class NoMethodForConcreteClass < self
+      def initialize(klass)
+        method_string = caller[1]
+        method_ref =
+          if method_string =~ /`(.+)'$/
+            method = $1
+            " '#{method}'"
+          end
+        super("No method#{method_ref} for concrete class #{klass}")
+      end
     end
   end
 end
+

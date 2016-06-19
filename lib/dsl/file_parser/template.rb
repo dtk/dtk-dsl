@@ -44,9 +44,9 @@ module DTK::DSL
 
       private
 
-      # Main parse call; Each concrete class should over write this
+      # Main parse call; Each concrete class should overwrite this
       def parse!
-        raise Error, "No 'parse!' method for concreate class '#{self.class}'"
+        raise Error::NoMethodForConcreteClass.new(self.class)
       end
 
       # The method output_type can be set on concrete class; it wil be set if input and output types are different
@@ -63,7 +63,7 @@ module DTK::DSL
       end
       
       # args can have form 
-      #  (:PasringErrorName,*parsing_error_params) or
+      #  (:ParsingErrorName,*parsing_error_params) or
       #  (parsing_error_params)
       def parsing_error(*args)
         if error_class = parsing_error_class?(args)
