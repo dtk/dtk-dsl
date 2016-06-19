@@ -17,7 +17,7 @@
 #
 
 module DTK::DSL
-  module DirectoryParser    
+  class DirectoryParser    
     class PathInfo
       attr_reader :regexp, :depth, :base_dir
       # opts can have keys
