@@ -73,7 +73,7 @@ module DTK::DSL
     end
 
     def file_ref
-      @file_type.print_name || 'DSL file'
+      (@file_type && @file_type.print_name) || 'DSL file'
     end
 
     def dir_ref
