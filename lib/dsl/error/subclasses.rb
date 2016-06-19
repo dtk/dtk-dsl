@@ -15,20 +15,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-module DTK::DSL
-  class Error
-    class Usage < GlobalForDSL::ErrorUsage
-    end
-    
-    class NoMethodForConcreteClass < self
-      def initialize(klass)
-        method_string = caller[1]
-        method_ref =
-          if method_string =~ /`(.+)'$/
-            method = $1
-            " '#{method}'"
-          end
-        super("No method#{method_ref} for concrete class #{klass}")
+module DTK
+  module DSL
+    class Error
+      class Usage < GlobalForDSL::ErrorUsage
+      end
+      
+      class NoMethodForConcreteClass < self
+        def initialize(klass)
+          method_string = caller[1]
+          method_ref =
+            if method_string =~ /`(.+)'$/
+              method = $1
+              " '#{method}'"
+            end
+          super("No method#{method_ref} for concrete class #{klass}")
+        end
       end
     end
   end

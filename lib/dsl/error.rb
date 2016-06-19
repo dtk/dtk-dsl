@@ -15,8 +15,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-module DTK::DSL
-  class Error < GlobalForDSL::Error
-    require_relative('error/subclasses')
+module DTK
+  module DSL
+    class Error < GlobalForDSL::Error
+      require_relative('error/subclasses')
+    end
   end
 end
