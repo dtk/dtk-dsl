@@ -33,6 +33,7 @@ module DTK::DSL
     end
 
     attr_accessor :yaml_parse_hash    
+    attr_reader :file_type
 
     def content_or_raise_error
       @content || raise(Error::Usage, error_msg_no_content)
