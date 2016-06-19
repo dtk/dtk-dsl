@@ -17,18 +17,16 @@
 #
 module DTK::DSL
   class FileObj
-    require_relative('file_obj/type')
-
     # opts can have keys
     #  :dir_path
     #  :current_dir
     #  :content 
     def initialize(file_type, file_path, opts = {})
-      @file_type        = file_type
-      @file_path        = file_path
-      @dir_path         = opts[:dir_path]
-      @current_dir      = opts[:current_dir]  
-      @content          = opts[:content]
+      @file_type   = file_type
+      @path        = file_path
+      @dir_path    = opts[:dir_path]
+      @current_dir = opts[:current_dir]  
+      @content     = opts[:content]
 
       # below computed on demand
       @yaml_parse_hash = nil
