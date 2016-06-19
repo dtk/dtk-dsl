@@ -17,14 +17,26 @@
 #
 module DTK::DSL
   class FileObj
+    require_relative('file_obj/type')
+
     # opts can have keys
-    #  :path
-    def initialize(directory_parser, opts = {})
+    #  :dir_path
+    #  :current_dir
+    #  :content 
+    def initialize(directory_parser, file_type, file_path, opts = {})
       @directory_parser = directory_parser
-      @path             = opts[:path]
-      @content          = directory_parser.get_content?(@path)
+      @file_type        = file_type
+      @file_path        = file_path
+      @dir_path         = opts[:dir_path]
+      @current_dir      = opts[:current_dir]  
+      @content          = opts[:content]
+
+      # below computed on demand
+      @yaml_parse_hash = nil
     end
-    
+
+    attr_accessor :yaml_parse_hash    
+
     def content_or_raise_error
       @content || raise(Error::Usage, error_msg_no_content)
     end
@@ -48,25 +60,31 @@ module DTK::DSL
       @path
     end
 
+    def hash_content?
+      FileParser.yaml_parse!(self) if exists?
+    end
+
     private
-
-    # These can be overwritten
-    def file_path_type
-      'file'
-    end
-    def dir_ref
-      'directory'
-    end
-
-    ### 
 
     def error_msg_no_content
       if @path
-        "No #{file_path_type} found at '#{@path}'"
+        "No #{@file_type.print_name} found at '#{@path}'"
       else
-        "Cannot find #{file_path_type} in the #{dir_ref} or ones nested under it"
+        "Cannot find #{file_type.print_name} in the #{dir_ref} or ones nested under it"
       end
     end
 
+    def dir_ref
+      if @dir_path 
+        "specified directory '#{@dir_path}'" 
+      elsif @current_dir
+        "current directory '#{@current_dir}'"
+      else
+        'directory'
+      end
+    end
   end
 end
+
+
+
