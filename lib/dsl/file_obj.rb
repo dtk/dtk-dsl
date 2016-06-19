@@ -23,8 +23,7 @@ module DTK::DSL
     #  :dir_path
     #  :current_dir
     #  :content 
-    def initialize(directory_parser, file_type, file_path, opts = {})
-      @directory_parser = directory_parser
+    def initialize(file_type, file_path, opts = {})
       @file_type        = file_type
       @file_path        = file_path
       @dir_path         = opts[:dir_path]
