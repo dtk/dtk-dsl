@@ -66,10 +66,14 @@ module DTK::DSL
 
     def error_msg_no_content
       if @path
-        "No #{@file_type.print_name} found at '#{@path}'"
+        "No #{file_ref} found at '#{@path}'"
       else
-        "Cannot find #{file_type.print_name} in the #{dir_ref} or ones nested under it"
+        "Cannot find a #{file_ref} in the #{dir_ref} or ones nested under it"
       end
+    end
+
+    def file_ref
+      @file_type.print_name || 'DSL file'
     end
 
     def dir_ref

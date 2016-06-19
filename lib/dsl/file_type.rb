@@ -29,7 +29,7 @@ module DTK::DSL
     
     class BaseModule < self
       def print_name
-        'Base DSL file'
+        'module DSL file'
       end
       private
       # Purposely does not have ^ or $ so calling function can insert these depending on context
@@ -40,7 +40,7 @@ module DTK::DSL
     
     class BaseService < self
       def print_name
-        'Service DSL file'
+        'service DSL file'
       end
       private
       # Purposely does not have ^ or $ so calling function can insert these depending on context
