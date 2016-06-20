@@ -19,6 +19,39 @@
 module DTK::DSL
   # This has specfic file type meta info
   class FileType
+    Types = 
+      [
+       {
+         :type => :common_module,
+         :regexp => "/dtk\.module\.(yml|yaml)/",
+         :print_name => 'module DSL file'
+       },
+       {
+         :type => :service_instance,
+         :regexp => "/dtk\.service\.(yml|yaml)/",
+         :print_name => 'service DSL file'
+       }
+      ]
+      # regexps purposely do not have ^ or $ so calling function can insert these depending on context
+
+    Types.each do |type_info|
+      # convert to camel case
+      class_name = type_info[:type].to_s.gsub(/(?<=_|^)(\w)/){$1.upcase}.gsub(/(?:_)(\w)/,'\1')
+      pp class_name
+      class_eval("
+         class #{class_name} < self
+           def self.type
+             :#{type_info[:type]}
+           end
+           def self.print_name
+             '#{type_info[:print_name]}'
+           end
+           def self.regexp
+             #{type_info[:regexp]}
+           end
+        end")
+    end
+
     def self.create_path_info
       DirectoryParser::PathInfo.new(regexp)
     end
@@ -26,28 +59,7 @@ module DTK::DSL
     def self.matches?(file_path)
       DirectoryParser::PathInfo.matches?(file_path, regexp)
     end
-    
-    class BaseModule < self
-      def print_name
-        'module DSL file'
-      end
-      private
-      # Purposely does not have ^ or $ so calling function can insert these depending on context
-      def self.regexp
-        /dtk\.module\.(yml|yaml)/
-      end
-    end
-    
-    class BaseService < self
-      def print_name
-        'service DSL file'
-      end
-      private
-      # Purposely does not have ^ or $ so calling function can insert these depending on context
-      def self.regexp
-        /dtk\.service\.(yml|yaml)/
-      end
-    end
   end
 end
+
 
