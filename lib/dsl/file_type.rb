@@ -37,7 +37,6 @@ module DTK::DSL
     Types.each do |type_info|
       # convert to camel case
       class_name = type_info[:type].to_s.gsub(/(?<=_|^)(\w)/){$1.upcase}.gsub(/(?:_)(\w)/,'\1')
-      pp class_name
       class_eval("
          class #{class_name} < self
            def self.type
