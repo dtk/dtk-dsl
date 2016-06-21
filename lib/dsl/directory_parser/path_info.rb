@@ -32,12 +32,19 @@ module DTK::DSL
         self.class.matches?(file_path, @regexp)
       end
       def self.matches?(file_path, regexp)
-        # extra check to see if regep is just for file part or has '/' seperators
+        # extra check to see if regexp is just for file part or has '/' seperators
         if '/' =~ regexp
-          file_path.split(OsUtil.delim).last =~ Regexp.new("^#{regexp.source}$")
+          file_path.split('/').last =~ Regexp.new("^#{regexp.source}$")
         else
           file_path =~ Regexp.new("#{regexp.source}$")
         end
+      end
+
+      def exact_match?(file_path)
+        self.class.exact_match?(file_path, @regexp)
+      end
+      def self.exact_match?(file_path, regexp)
+        file_path =~ Regexp.new("^#{regexp.source}$")
       end
 
       private

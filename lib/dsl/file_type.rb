@@ -45,6 +45,9 @@ module DTK::DSL
            def self.print_name
              '#{type_info[:print_name]}'
            end
+
+           private
+
            def self.regexp
              #{type_info[:regexp]}
            end
@@ -57,6 +60,10 @@ module DTK::DSL
     
     def self.matches?(file_path)
       DirectoryParser::PathInfo.matches?(file_path, regexp)
+    end
+
+    def self.exact_match?(file_path)
+      DirectoryParser::PathInfo.exact_match?(file_path, regexp)
     end
   end
 end
