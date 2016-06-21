@@ -58,12 +58,10 @@ module DTK::DSL
       DirectoryParser::PathInfo.new(regexp)
     end
     
-    def self.matches?(file_path)
-      DirectoryParser::PathInfo.matches?(file_path, regexp)
-    end
-
-    def self.exact_match?(file_path)
-      DirectoryParser::PathInfo.exact_match?(file_path, regexp)
+    # opts can have keys:
+    #  :exact - Booelan (default: false) - meaning regexp completely matches file_path
+    def self.matches?(file_path, opts = {})
+      DirectoryParser::PathInfo.matches?(file_path, regexp, opts)
     end
   end
 end

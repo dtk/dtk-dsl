@@ -28,23 +28,22 @@ module DTK::DSL
         @base_dir = opts[:base_dir]
       end
 
-      def matches?(file_path)
-        self.class.matches?(file_path, @regexp)
+      # opts can have keys:
+      #  :exact - Booelan (default: false) - meaning regexp completely matches file_path
+      def matches?(file_path, opts = {})
+        self.class.matches?(file_path, @regexp, opts)
       end
-      def self.matches?(file_path, regexp)
-        # extra check to see if regexp is just for file part or has '/' seperators
-        if '/' =~ regexp
-          file_path.split('/').last =~ Regexp.new("^#{regexp.source}$")
+      def self.matches?(file_path, regexp, opts = {})
+        if opts[:exact]
+          file_path =~ Regexp.new("^#{regexp.source}$")
         else
-          file_path =~ Regexp.new("#{regexp.source}$")
+          # extra check to see if regexp is just for file part or has '/' seperators
+          if '/' =~ regexp
+            file_path.split('/').last =~ Regexp.new("^#{regexp.source}$")
+          else
+            file_path =~ Regexp.new("#{regexp.source}$")
+          end
         end
-      end
-
-      def exact_match?(file_path)
-        self.class.exact_match?(file_path, @regexp)
-      end
-      def self.exact_match?(file_path, regexp)
-        file_path =~ Regexp.new("^#{regexp.source}$")
       end
 
       private
