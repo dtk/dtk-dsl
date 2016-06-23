@@ -27,6 +27,7 @@ class DTK::DSL::FileParser::Template
         Variations::Module = ['module', 'module_name'] 
 
         DependentModules = 'dependencies'
+        Assemblies = 'assemblies'
       end
 
       def parse!
@@ -35,7 +36,11 @@ class DTK::DSL::FileParser::Template
 
         dependent_modules = constant_matches(input_hash, :DependentModules)
         parsed_dep_modules = parse_child(:dependent_modules, dependent_modules, :parent_key => Constant::DependentModules)
-        @output.merge!(:dependent_modules => parsed_dep_modules)
+
+        assemblies = constant_matches(input_hash, :Assemblies)
+        parsed_assemblies = parse_child(:assemblies, assemblies, :parent_key => Constant::Assemblies)
+
+        @output.merge!(:dependent_modules => parsed_dep_modules, :assemblies => parsed_assemblies)
       end
     end
   end

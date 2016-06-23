@@ -15,19 +15,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-module DTK::DSL; class FileParser
-  class Template
-    class V1 < self
-      require_relative('v1/module_ref')
-      require_relative('v1/base_module')
-      require_relative('v1/dependent_modules')
-      require_relative('v1/assemblies')
+class DTK::DSL::FileParser::Template
+  class V1
+    class Assemblies < self
 
-      VERSION = 1
-      def template_version
-        VERSION
+      MODULE_NAMESPACE_DELIMS = ['/', ':']
+
+      def output_type
+        :array
+      end
+
+      def parse!
+        input_hash.each_pair do |name, content|
+          @output << { :name => name, :content => content }
+        end
       end
     end
   end
-end; end
+end
 
