@@ -17,17 +17,17 @@
 #
 class DTK::DSL::FileParser::Template
   class V1
-    class BaseModule < self
+    class CommonModuleSummary < self
       module Constant
         module Variations
         end
         extend ClassMixin::Constant
 
+        DependentModules = 'dependencies'
+
         Module = 'module'
         Variations::Module = ['module', 'module_name'] 
 
-        DependentModules = 'dependencies'
-        Assemblies = 'assemblies'
       end
 
       def parse!
@@ -35,12 +35,7 @@ class DTK::DSL::FileParser::Template
         @output.merge!(parse_child(:module_ref, module_ref, :parent_key => Constant::Module))
 
         dependent_modules = constant_matches(input_hash, :DependentModules)
-        parsed_dep_modules = parse_child(:dependent_modules, dependent_modules, :parent_key => Constant::DependentModules)
-
-        assemblies = constant_matches(input_hash, :Assemblies)
-        parsed_assemblies = parse_child(:assemblies, assemblies, :parent_key => Constant::Assemblies)
-
-        @output.merge!(:dependent_modules => parsed_dep_modules, :assemblies => parsed_assemblies)
+        @output.set(:DependentModules, parse_child(:dependent_modules, dependent_modules, :parent_key => Constant::DependentModules))
       end
     end
   end

@@ -31,7 +31,8 @@ class DTK::DSL::FileParser::Template
           raise parsing_error("The term '#{input_string}' is an ill-formed module reference")
         end
         namespace, module_name = split
-        @output.merge!(:namespace => namespace, :module_name => module_name)
+        @output.set(:Namespace, namespace)
+        @output.set(:ModuleName, module_name)
       end
       
       def split_by_delim(str)

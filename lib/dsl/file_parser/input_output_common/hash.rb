@@ -15,22 +15,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-module DTK::DSL
-  class FileParser
-    class Output < InputOutputCommon
-      require_relative('output/hash')
-      require_relative('output/array')
-
-      # opts can have keys
-      #  :output_type
-      #  :input
-      def self.create(opts = {})
-        unless opts[:output_type] or opts[:input]
-          raise Error, "opts must have one of the keys :output_type or :input"
-        end
-        obj_type = opts[:output_type] || obj_type(opts[:input])
-        create_aux(obj_type)
+module DTK::DSL; class FileParser
+  class InputOutputCommon
+    class Hash < ::Hash
+      def initialize(hash = nil)
+        super()
+        replace(reify(hash)) if hash
       end
     end
   end
-end
+end; end
+

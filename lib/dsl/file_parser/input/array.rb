@@ -15,22 +15,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-module DTK::DSL; class FileParser
+class DTK::DSL::FileParser
   class Input
-    class Array < ::Array
-      def initialize(array = [])
-        array.each { |el| self << reify(el) }
-      end
-
-      def map(&body)
-        inject(self.class.new) { |a, el| a + el }
-      end
-      
+    class Array < InputOutputCommon::Array 
       def reify(obj)
         if obj.kind_of?(self.class)
           obj
         elsif obj.kind_of?(::Array)
-          obj.map { |el| reify(el) }
+          inject(self.class.new) { |a, el| a << reify(el) }
         elsif obj.kind_of?(::Hash)
           Input::Hash.new(obj)
         else
@@ -39,5 +31,6 @@ module DTK::DSL; class FileParser
       end
     end
   end
-end; end
+end
+
 

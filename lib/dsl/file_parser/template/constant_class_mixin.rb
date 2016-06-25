@@ -55,7 +55,11 @@ module DTK::DSL
 
         def canonical_value(constant)
           # self. is important beacuse want to evalute wrt to class that calls this
-          self.const_get(constant.to_s)
+          begin
+            self.const_get(constant.to_s)
+          rescue
+            raise Error, "Illegal Input parsing constant '#{constant}'"
+          end
         end
 
         private
@@ -80,6 +84,7 @@ module DTK::DSL
             hash[matching_key]
           end
         end
+
       end
     end
   end

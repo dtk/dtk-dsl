@@ -22,6 +22,8 @@ module DTK::DSL
   class FileParser                   
     require_relative('file_parser/template')
     require_relative('file_parser/yaml_parser')
+    require_relative('file_parser/input_output_common')
+    # input_output_common msut be before input and output
     require_relative('file_parser/input')
     require_relative('file_parser/output')
 

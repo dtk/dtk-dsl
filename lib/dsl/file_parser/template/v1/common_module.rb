@@ -15,21 +15,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-module DTK::DSL
-  class FileParser
-    class Output < InputOutputCommon
-      require_relative('output/hash')
-      require_relative('output/array')
+class DTK::DSL::FileParser::Template
+  class V1
+    class CommonModule < CommonModuleSummary
+      module Constant
+        include CommonModuleSummary::Constant
 
-      # opts can have keys
-      #  :output_type
-      #  :input
-      def self.create(opts = {})
-        unless opts[:output_type] or opts[:input]
-          raise Error, "opts must have one of the keys :output_type or :input"
+        module Variations
+          include CommonModuleSummary::Constant::Variations
         end
-        obj_type = opts[:output_type] || obj_type(opts[:input])
-        create_aux(obj_type)
+
+        extend ClassMixin::Constant
+        Assemblies = 'assemblies'
+      end
+
+      def parse!
+        super
+        assemblies = constant_matches(input_hash, :Assemblies)
+        @output.set(:Assemblies, parse_child(:assemblies, assemblies, :parent_key => Constant::Assemblies))
       end
     end
   end

@@ -104,7 +104,7 @@ module DTK::DSL
       end
 
       def input_array
-        @input_array = @input.kind_of?(Input::Array) ? @input : raise_input_error(::Array)
+        @input_array ||= @input.kind_of?(Input::Array) ? @input : raise_input_error(::Array)
       end
 
       def input_string

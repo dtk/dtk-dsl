@@ -21,19 +21,31 @@ module DTK::DSL
     #  :dir_path
     #  :current_dir
     #  :content 
+    #  :file_parser - this is class
     def initialize(file_type, file_path, opts = {})
-      @file_type   = file_type
-      @path        = file_path
-      @dir_path    = opts[:dir_path]
-      @current_dir = opts[:current_dir]  
-      @content     = opts[:content]
-
+      @file_type         = file_type
+      @path              = file_path
+      @dir_path          = opts[:dir_path]
+      @current_dir       = opts[:current_dir]  
+      @content           = opts[:content]
+      @file_parser_class = opts[:file_parser] || FileParser
       # below computed on demand
+      @parsed_templates = {}
       @yaml_parse_hash = nil
     end
 
     attr_accessor :yaml_parse_hash    
     attr_reader :file_type
+
+    # opts can have keys:
+    #  :dsl_version
+    def add_parse_content!(parse_template_type, opts = {})
+      parse_content(parse_template_type, opts)
+      self
+    end
+    def parse_content(parse_template_type, opts = {})
+      @parsed_templates[parse_template_type] ||= @file_parser_class.parse_content(parse_template_type, self, opts)
+    end
 
     def content_or_raise_error
       @content || raise(Error::Usage, error_msg_no_content)
@@ -59,7 +71,7 @@ module DTK::DSL
     end
 
     def hash_content?
-      FileParser.yaml_parse!(self) if exists?
+      @file_parser_class.yaml_parse!(self) if exists?
     end
 
     private

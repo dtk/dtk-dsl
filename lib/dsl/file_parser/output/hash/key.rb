@@ -16,21 +16,30 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class FileParser
-    class Output < InputOutputCommon
-      require_relative('output/hash')
-      require_relative('output/array')
+  class FileParser::Output::Hash
+    module Key
+      # Top level for common module
+      Assemblies = :assemblies
+      DependentModules = :dependent_modules
+      ModuleRef = :module
 
-      # opts can have keys
-      #  :output_type
-      #  :input
-      def self.create(opts = {})
-        unless opts[:output_type] or opts[:input]
-          raise Error, "opts must have one of the keys :output_type or :input"
+      # for assemblies
+      AssemblyName    = :name
+      AssemblyContent = :content
+
+      # Used at multiple levels
+      Namespace     = :namespace
+      ModuleName    = :module_name
+      ModuleVersion = :version
+      
+      def self.index(output_key)
+        begin
+          const_get(output_key.to_s)
+        rescue
+          raise Error, "Illegal output hash key '#{output_key}'"
         end
-        obj_type = opts[:output_type] || obj_type(opts[:input])
-        create_aux(obj_type)
       end
     end
   end
 end
+

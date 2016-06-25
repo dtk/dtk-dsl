@@ -17,20 +17,12 @@
 #
 module DTK::DSL
   class FileParser
-    class Input
+    class Input < InputOutputCommon
       require_relative('input/hash')
       require_relative('input/array')
 
       def self.create(raw_input)
-        if raw_input.kind_of?(::Hash)
-          Input::Hash.new(raw_input)
-        elsif raw_input.kind_of?(::Array)
-          Input::Array.new(raw_input)
-        elsif raw_input.kind_of?(::String)
-          ::String.new(raw_input)
-        else
-          raise Error, "Unexpected raw_input type '#{raw_input.class}'"
-        end
+        create_aux(obj_type(raw_input), raw_input)
       end
     end
   end

@@ -15,19 +15,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-class DTK::DSL::FileParser::Template
-  class V1
-    class Assemblies < self
-
-      MODULE_NAMESPACE_DELIMS = ['/', ':']
-
-      def output_type
-        :array
-      end
-
-      def parse!
-        input_hash.each_pair do |name, content|
-          @output << { :name => name, :content => content }
+class DTK::DSL::FileParser
+  class Template
+    class V1
+      class Assemblies < self
+        def output_type
+          :array
+        end
+        
+        def parse!
+          input_hash.each_with_index do |(name, content), i|
+            @output << parse_child(:assembly, { 'name' => name, 'content' => content }, :parent_key => parent_key?(i))
+          end
         end
       end
     end

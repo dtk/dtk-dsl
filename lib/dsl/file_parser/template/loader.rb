@@ -16,7 +16,7 @@
 # limitations under the License.
 #
 
-class DTK::DSL::FileParser
+module DTK::DSL; class FileParser
   class Template
     class Loader
       TEMPLATE_VERSIONS = [1]
@@ -51,11 +51,15 @@ class DTK::DSL::FileParser
       
       def self.template_class_aux(template_type, template_version)
         base_class = Template.const_get("V#{template_version}")
-        base_class.const_get(::DTK::Common::Aux.snake_to_camel_case(template_type.to_s))
+        begin 
+          base_class.const_get(::DTK::Common::Aux.snake_to_camel_case(template_type.to_s))
+        rescue
+          raise Error, "Invalid template_type '#{template_type}'"
+        end
       end
     end
   end
-end
+end; end
 
 
 
