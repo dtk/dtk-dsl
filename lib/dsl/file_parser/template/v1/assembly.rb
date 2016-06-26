@@ -20,7 +20,8 @@ class DTK::DSL::FileParser::Template
     class Assembly < self
       def parse!
         @output.set(:AssemblyName, input_hash[:name])
-        @output.set(:AssemblyContent, input_hash[:content])
+        # TODO: will be replaced by parse_children for the top level assembly parts 
+        @output.merge!(input_hash[:content])
       end
     end
   end
