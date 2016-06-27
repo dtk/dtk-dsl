@@ -23,15 +23,15 @@ module DTK::DSL
       DependentModules = :dependent_modules
       ModuleRef = :module
 
-      # for assemblies
-      AssemblyName    = :name
-      AssemblyContent = :content
 
       # Used at multiple levels
+      Name          = :name
+      Description   = :description
       Namespace     = :namespace
       ModuleName    = :module_name
       ModuleVersion = :version
-      
+      Attributes    = :attributes
+
       def self.index(output_key)
         begin
           const_get(output_key.to_s)

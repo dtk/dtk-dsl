@@ -119,6 +119,10 @@ module DTK::DSL
         constant_class.matches?(object, constant) || raise_missing_key_value(constant)
       end
 
+      def constant_matches?(object, constant)
+        constant_class.matches?(object, constant)
+      end
+
       def raise_missing_key_value(constant)
         key = constant_class.canonical_value(constant)
         raise parsing_error(:MissingKeyValue, key)

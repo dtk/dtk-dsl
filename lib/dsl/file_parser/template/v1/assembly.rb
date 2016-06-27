@@ -18,10 +18,29 @@
 class DTK::DSL::FileParser::Template
   class V1
     class Assembly < self
+      module Constant
+        module Variations
+        end
+
+        extend ClassMixin::Constant
+        # TODO: might put constants used in many templates in ClassMixin::Constant
+        Name = 'name'
+        Description = 'description'
+        Attributes  = 'attributes'
+      end
+
       def parse!
-        @output.set(:AssemblyName, input_hash[:name])
-        # TODO: will be replaced by parse_children for the top level assembly parts 
-        @output.merge!(input_hash[:content])
+        @output.set(:Name, constant_matches(input_hash, :Name))
+        @output.set(:Description, constant_matches?(input_hash, :Description))
+        # Aldin: 06/27/2016: replace @output.set(:Attributes, input_hash[:attributes])
+        # with a call to  parse_child(:attributes, ..) which then wil make calls if non empy list to parse_child(:attribute, ..) 
+        @output.set(:Attributes, constant_matches?(input_hash, :Attributes))
+
+        # TODO: This is a catchall that removes ones we so far are parsing and then has catch all
+        input_hash.delete('name')
+        input_hash.delete('description')
+        input_hash.delete('attributes')
+        @output.merge!(input_hash)
       end
     end
   end
