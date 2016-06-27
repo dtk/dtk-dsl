@@ -25,6 +25,8 @@ module DTK::DSL; class FileParser
       require_relative('v1/dependent_modules')
       require_relative('v1/assemblies')
       require_relative('v1/assembly')
+      require_relative('v1/attributes')
+      require_relative('v1/attribute')
 
       VERSION = 1
       def template_version

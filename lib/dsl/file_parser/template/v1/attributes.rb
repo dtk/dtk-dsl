@@ -15,30 +15,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-module DTK::DSL
-  class FileParser::Output::Hash
-    module Key
-      # Top level for common module
-      Assemblies = :assemblies
-      DependentModules = :dependent_modules
-      ModuleRef = :module
-
-
-      # Used at multiple levels
-      Name          = :name
-      Description   = :description
-      Namespace     = :namespace
-      ModuleName    = :module_name
-      ModuleVersion = :version
-      Attributes    = :attributes
-      Value         = :value
-      Nodes         = :nodes
-
-      def self.index(output_key)
-        begin
-          const_get(output_key.to_s)
-        rescue
-          raise Error, "Illegal output hash key '#{output_key}'"
+class DTK::DSL::FileParser
+  class Template
+    class V1
+      class Attributes < self
+        def output_type
+          :array
+        end
+        
+        def parse!
+          input_hash.each_with_index do |(name, value), i|
+            @output << parse_child(:attribute, { 'name' => name, 'value' => value}, :parent_key => parent_key?(i))
+          end
         end
       end
     end
