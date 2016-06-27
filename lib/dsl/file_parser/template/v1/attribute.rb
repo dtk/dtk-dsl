@@ -33,10 +33,6 @@ class DTK::DSL::FileParser::Template
       end
 
       def parse!
-        require 'debugger'
-        Debugger.wait_connection = true
-        Debugger.start_remote
-        debugger
         @output.set(:Name, constant_matches(input_hash, :Name))
         @output.set(:Value, constant_matches(input_hash, :Value))
 
