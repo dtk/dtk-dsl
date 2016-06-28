@@ -89,8 +89,12 @@ module DTK::DSL
       # opts can have keys
       #  :parent_key
       def parse_child(parse_template_type, input, opts = {})
-        parser_class = Loader.template_class(parse_template_type, :template_version => template_version)
-        parser_class.new(input, opts.merge(:file_obj => @file_obj)).parse
+        if input.nil?
+          nil
+        else
+          parser_class = Loader.template_class(parse_template_type, :template_version => template_version)
+          parser_class.new(input, opts.merge(:file_obj => @file_obj)).parse
+        end
       end
 
       def parent_key?(index = nil)
