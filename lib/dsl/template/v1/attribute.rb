@@ -15,22 +15,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-class DTK::DSL::FileParser
-  class Output
-    class Array < InputOutputCommon::Array 
-      def reify(obj)
-        if obj.kind_of?(self.class)
-          obj
-        elsif obj.kind_of?(::Array)
-          inject(self.class.new) { |a, el| a << reify(el) }
-        elsif obj.kind_of?(::Hash)
-          Output::Hash.new(obj)
-        else
-          obj
+class DTK::DSL::Template
+  class V1
+    class Attribute < self
+      module Constant
+        module Variations
         end
+
+        extend ClassMixin::Constant
+        # TODO: might put constants used in many templates in ClassMixin::Constant
+        Name  = 'name'
+        Value = 'value'
+      end
+
+      def output_type
+        :hash
+      end
+
+      def parse!
+        @output.set(:Name, constant_matches(input_hash, :Name))
+        @output.set(:Value, constant_matches(input_hash, :Value))
+
+        input_hash.delete('name')
+        input_hash.delete('value')
+
+        @output.merge!(input_hash)
       end
     end
   end
 end
-
 

@@ -15,31 +15,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-class DTK::DSL::FileParser::Template
-  class V1
-    class Attribute < self
-      module Constant
-        module Variations
+class DTK::DSL::InputOutputCommon
+  class Canonical
+    module HashKey
+      # Top level for common module
+      Assemblies = :assemblies
+      DependentModules = :dependent_modules
+      ModuleRef = :module
+
+
+      # Used at multiple levels
+      Name          = :name
+      Description   = :description
+      Namespace     = :namespace
+      ModuleName    = :module_name
+      ModuleVersion = :version
+      Attributes    = :attributes
+      Value         = :value
+      Nodes         = :nodes
+
+      def self.index(output_key)
+        begin
+          const_get(output_key.to_s)
+        rescue
+          raise Error, "Illegal output hash key '#{output_key}'"
         end
-
-        extend ClassMixin::Constant
-        # TODO: might put constants used in many templates in ClassMixin::Constant
-        Name  = 'name'
-        Value = 'value'
-      end
-
-      def output_type
-        :hash
-      end
-
-      def parse!
-        @output.set(:Name, constant_matches(input_hash, :Name))
-        @output.set(:Value, constant_matches(input_hash, :Value))
-
-        input_hash.delete('name')
-        input_hash.delete('value')
-
-        @output.merge!(input_hash)
       end
     end
   end

@@ -15,25 +15,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-class DTK::DSL::FileParser::Template
-  class V1
-    class CommonModule < CommonModuleSummary
-      module Constant
-        include CommonModuleSummary::Constant
+module DTK::DSL
+  class InputOutputCommon
+    class Canonical
+      class Array < InputOutputCommon::Array 
 
-        module Variations
-          include CommonModuleSummary::Constant::Variations
+        def reify(obj)
+          if obj.kind_of?(self.class)
+            obj
+          elsif obj.kind_of?(::Array)
+            inject(self.class.new) { |a, el| a << reify(el) }
+          elsif obj.kind_of?(::Hash)
+            Canonical::Hash.new(obj)
+          else
+            obj
+          end
         end
 
-        extend ClassMixin::Constant
-        Assemblies = 'assemblies'
-      end
-
-      def parse!
-        super
-        assemblies = constant_matches(input_hash, :Assemblies)
-        @output.set(:Assemblies, parse_child(:assemblies, assemblies, :parent_key => Constant::Assemblies))
       end
     end
   end
 end
+
+

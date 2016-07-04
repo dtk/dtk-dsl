@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-class DTK::DSL::FileParser; class Template                   
+module DTK::DSL; class Template                   
   class ParsingError
     class MissingKeyValue < self
       def initialize(key, opts = {})

@@ -16,7 +16,7 @@
 # limitations under the License.
 #
 
-module DTK::DSL; class FileParser
+module DTK::DSL
   class Template
     class Loader
       TEMPLATE_VERSIONS = [1]
@@ -59,7 +59,8 @@ module DTK::DSL; class FileParser
       end
     end
   end
-end; end
+end
+
 
 
 

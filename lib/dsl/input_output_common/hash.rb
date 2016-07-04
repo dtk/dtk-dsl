@@ -15,26 +15,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-module DTK::DSL; class FileParser
-  class Template
-    class V1 < self
-      require_relative('v1/common_module_summary')
-      # common_module_summar must be before common_module
-      require_relative('v1/common_module')
-      require_relative('v1/module_ref')
-      require_relative('v1/dependent_modules')
-      require_relative('v1/assemblies')
-      require_relative('v1/assembly')
-      require_relative('v1/attributes')
-      require_relative('v1/attribute')
-      require_relative('v1/nodes')
-      require_relative('v1/node')
-
-      VERSION = 1
-      def template_version
-        VERSION
+module DTK::DSL
+  class InputOutputCommon
+    class Hash < ::Hash
+      def initialize(hash = nil)
+        super()
+        replace(reify(hash)) if hash
       end
     end
   end
-end; end
+end
+
 

@@ -15,18 +15,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-class DTK::DSL::FileParser
-  class Template
-    class V1
-      class Attributes < self
-        def output_type
-          :array
+class DTK::DSL::Template
+  class V1
+    class ModuleRef < self
+
+      MODULE_NAMESPACE_DELIMS = ['/', ':']
+
+      def output_type
+        :hash
+      end
+
+      def parse!
+        split = split_by_delim(input_string)
+        unless split.size == 2
+          raise parsing_error("The term '#{input_string}' is an ill-formed module reference")
         end
-        
-        def parse!
-          input_hash.each_with_index do |(name, value), i|
-            @output << parse_child(:attribute, { 'name' => name, 'value' => value}, :parent_key => parent_key?(i))
-          end
+        namespace, module_name = split
+        @output.set(:Namespace, namespace)
+        @output.set(:ModuleName, module_name)
+      end
+      
+      def split_by_delim(str)
+        if matching_delim = MODULE_NAMESPACE_DELIMS.find { |delim| str =~ Regexp.new(delim) }
+          str.split(matching_delim)
+        else
+          [str]
         end
       end
     end

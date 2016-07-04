@@ -15,20 +15,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
 module DTK::DSL
-  class FileParser
-    class Output < InputOutputCommon::Canonical
-      # opts can have keys
-      #  :output_type
-      #  :input
-      # In both cases an empty object is created using :output_type or type of :input to determine its type
-      def self.create(opts = {})
-        unless opts[:output_type] or opts[:input]
-          raise Error, "opts must have one of the keys :output_type or :input"
-        end
-        obj_type = opts[:output_type] || obj_type(opts[:input])
-        create_aux(obj_type)
-      end
+  class Generate
+    def self.generate(parse_template_type, content, dsl_version)
+      generator_class = Template.template_class(parse_template_type, dsl_version)
+      generator_class.create_for_generation(content).generate
     end
   end
 end
+

@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-class DTK::DSL::FileParser::Template
+class DTK::DSL::Template
   class V1
     class CommonModuleSummary < self
       module Constant

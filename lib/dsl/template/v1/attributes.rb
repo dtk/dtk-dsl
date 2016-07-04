@@ -16,22 +16,20 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class FileParser::Template
-    class ParsingError < Error::Usage
-      require_relative('parsing_error/subclasses')
-
-      # opts can have keys
-      #  :file_obj
-      #  :qualified_key
-      def initialize(error_msg, opts = {})
-        @file_ref      = FileParser.file_ref_in_error(opts[:file_obj])
-        @qualified_key = opts[:qualified_key]
-        # TODO: later enhancment can use @qualified_key to find line numbers in yaml file
-        key_ref = @qualified_key ? " under key '#{@qualified_key}'" : ''
-        super("DTK parsing error#{key_ref}#{@file_ref}:\n  #{error_msg}")
+  class Template
+    class V1
+      class Attributes < self
+        def output_type
+          :array
+        end
+        
+        def parse!
+          input_hash.each_with_index do |(name, value), i|
+            @output << parse_child(:attribute, { 'name' => name, 'value' => value}, :parent_key => parent_key?(i))
+          end
+        end
       end
     end
   end
 end
-
 

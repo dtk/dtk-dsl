@@ -15,17 +15,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-class DTK::DSL::FileParser
+module DTK::DSL
   class Template
     class V1
-      class Nodes < self
+      class Assemblies < self
         def output_type
           :array
         end
         
         def parse!
           input_hash.each_with_index do |(name, content), i|
-            @output << parse_child(:node, content.merge('name' => name), :parent_key => parent_key?(i))
+            @output << parse_child(:assembly, content.merge('name' => name), :parent_key => parent_key?(i))
           end
         end
       end

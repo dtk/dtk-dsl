@@ -16,7 +16,7 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class FileParser::Template
+  class Template
     # assumption is that where this included could have a Variations module
     module ClassMixin
       module Constant

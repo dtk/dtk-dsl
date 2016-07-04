@@ -16,32 +16,13 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class FileParser::Output::Hash
-    module Key
-      # Top level for common module
-      Assemblies = :assemblies
-      DependentModules = :dependent_modules
-      ModuleRef = :module
-
-
-      # Used at multiple levels
-      Name          = :name
-      Description   = :description
-      Namespace     = :namespace
-      ModuleName    = :module_name
-      ModuleVersion = :version
-      Attributes    = :attributes
-      Value         = :value
-      Nodes         = :nodes
-
-      def self.index(output_key)
-        begin
-          const_get(output_key.to_s)
-        rescue
-          raise Error, "Illegal output hash key '#{output_key}'"
-        end
-      end
+  class InputOutputCommon
+    # Canonical form that during parsing is form passed to client or server
+    # for generation, this is form that client or server writes to which then leads to generation
+    class Canonical < self
+      require_relative('canonical/hash_key')
+      require_relative('canonical/hash')
+      require_relative('canonical/array')
     end
   end
 end
-

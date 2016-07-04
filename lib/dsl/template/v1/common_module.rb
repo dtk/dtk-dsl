@@ -15,34 +15,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-class DTK::DSL::FileParser::Template
+class DTK::DSL::Template
   class V1
-    class ModuleRef < self
+    class CommonModule < CommonModuleSummary
+      module Constant
+        include CommonModuleSummary::Constant
 
-      MODULE_NAMESPACE_DELIMS = ['/', ':']
+        module Variations
+          include CommonModuleSummary::Constant::Variations
+        end
 
-      def output_type
-        :hash
+        extend ClassMixin::Constant
+        Assemblies = 'assemblies'
       end
 
       def parse!
-        split = split_by_delim(input_string)
-        unless split.size == 2
-          raise parsing_error("The term '#{input_string}' is an ill-formed module reference")
-        end
-        namespace, module_name = split
-        @output.set(:Namespace, namespace)
-        @output.set(:ModuleName, module_name)
-      end
-      
-      def split_by_delim(str)
-        if matching_delim = MODULE_NAMESPACE_DELIMS.find { |delim| str =~ Regexp.new(delim) }
-          str.split(matching_delim)
-        else
-          [str]
-        end
+        super
+        assemblies = constant_matches(input_hash, :Assemblies)
+        @output.set(:Assemblies, parse_child(:assemblies, assemblies, :parent_key => Constant::Assemblies))
       end
     end
   end
 end
-

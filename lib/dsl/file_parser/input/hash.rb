@@ -15,33 +15,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-class DTK::DSL::FileParser
-  class Input
-    class Hash < InputOutputCommon::Hash
-      def reify(obj)
-        if obj.kind_of?(self.class)
-          obj
-        elsif obj.kind_of?(::Hash)
-          obj.inject(self.class.new) { |h, (k, v)| h.merge(k => reify(v)) }
-        elsif obj.kind_of?(::Array)
-          Input::Array.new(obj)
-        else
-          obj
+module DTK::DSL
+  class FileParser
+    class Input
+      class Hash < InputOutputCommon::Hash
+        def reify(obj)
+          if obj.kind_of?(self.class)
+            obj
+          elsif obj.kind_of?(::Hash)
+            obj.inject(self.class.new) { |h, (k, v)| h.merge(k => reify(v)) }
+          elsif obj.kind_of?(::Array)
+            Input::Array.new(obj)
+          else
+            obj
+          end
         end
-      end
-      
-      def [](index)
-        super(internal_key_form(index))
-      end
-      
-      def only_has_keys?(*only_has_keys)
-        (keys - only_has_keys.map{ |k| internal_key_form(k) }).empty?
-      end
-
-      private
-
-      def internal_key_form(key)
-        key.to_s
+        
+        def [](index)
+          super(internal_key_form(index))
+        end
+        
+        def only_has_keys?(*only_has_keys)
+          (keys - only_has_keys.map{ |k| internal_key_form(k) }).empty?
+        end
+        
+        private
+        
+        def internal_key_form(key)
+          key.to_s
+        end
+        
       end
     end
   end

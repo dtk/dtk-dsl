@@ -16,19 +16,25 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class FileParser
-    class Output < InputOutputCommon::Canonical
-      # opts can have keys
-      #  :output_type
-      #  :input
-      # In both cases an empty object is created using :output_type or type of :input to determine its type
-      def self.create(opts = {})
-        unless opts[:output_type] or opts[:input]
-          raise Error, "opts must have one of the keys :output_type or :input"
-        end
-        obj_type = opts[:output_type] || obj_type(opts[:input])
-        create_aux(obj_type)
+  class Template
+    class V1 < self
+      require_relative('v1/common_module_summary')
+      # common_module_summary must be before common_module
+      require_relative('v1/common_module')
+      require_relative('v1/module_ref')
+      require_relative('v1/dependent_modules')
+      require_relative('v1/assemblies')
+      require_relative('v1/assembly')
+      require_relative('v1/attributes')
+      require_relative('v1/attribute')
+      require_relative('v1/nodes')
+      require_relative('v1/node')
+
+      VERSION = 1
+      def template_version
+        VERSION
       end
     end
   end
 end
+
