@@ -21,7 +21,7 @@ class DTK::DSL::Template
 
       MODULE_NAMESPACE_DELIMS = ['/', ':']
 
-      def output_type
+      def parser_output_type
         :hash
       end
 

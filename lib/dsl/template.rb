@@ -41,14 +41,15 @@ module DTK::DSL
           raise Error, "Unexpected that opts[:raw_input] is nil"
         end
         @input      = FileParser::Input.create(raw_input)
-        @output     = empty_output(@input)
+        @output     = empty_parser_output(@input)
         @file_obj   = opts[:file_obj]
         @parent_key = opts[:parent_key]
       when :generation
         unless content = opts[:content]
-          raise Error, "Unexpected that opts[:content] i snil"
+          raise Error, "Unexpected that opts[:content] is nil"
         end
         @content = content
+        @output  = empty_generator_output(content)
       else
         raise Error, "Illegal type '#{type}'"
       end
@@ -72,16 +73,28 @@ module DTK::DSL
       raise Error::NoMethodForConcreteClass.new(self.class)
     end
     
-    # The method output_type can be set on concrete class; it wil be set if input and output types are different
-    def output_type
+    # The methods parser_output_type generator_output_type can be set on concrete class; it wil be set if input and output types are different
+    def parser_output_type
+      nil
+    end
+
+    def generator_output_type
       nil
     end
     
-    def empty_output(input)
-      if output_type 
-        FileParser::Output.create(:output_type => output_type)
+    def empty_parser_output(input)
+      if parser_output_type 
+        FileParser::Output.create(:output_type => parser_output_type)
       else
         FileParser::Output.create(:input => input)
+      end
+    end
+
+    def empty_generator_output(content_input)
+      if generator_output_type
+        FileGenerator::YamlObject.create(:output_type => generator_output_type)
+      else
+        FileGenerator::YamlObject.create(:input => content_input)
       end
     end
     

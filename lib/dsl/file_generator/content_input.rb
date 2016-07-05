@@ -16,20 +16,8 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class Template
-    class V1
-      class Attributes < self
-        def parser_output_type
-          :array
-        end
-        
-        def parse!
-          input_hash.each_with_index do |(name, value), i|
-            @output << parse_child(:attribute, { 'name' => name, 'value' => value}, :parent_key => parent_key?(i))
-          end
-        end
-      end
+  class FileGenerator
+    class ContentInput < InputOutputCommon::Canonical
     end
   end
 end
-

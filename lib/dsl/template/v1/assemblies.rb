@@ -19,7 +19,7 @@ module DTK::DSL
   class Template
     class V1
       class Assemblies < self
-        def output_type
+        def parser_output_type
           :array
         end
         

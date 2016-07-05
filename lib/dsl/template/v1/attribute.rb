@@ -28,7 +28,7 @@ class DTK::DSL::Template
         Value = 'value'
       end
 
-      def output_type
+      def parser_output_type
         :hash
       end
 

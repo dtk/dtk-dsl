@@ -15,13 +15,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 module DTK::DSL
-  class Generate
-    def self.generate(parse_template_type, content, dsl_version)
-      generator_class = Template.template_class(parse_template_type, dsl_version)
-      generator_class.create_for_generation(content).generate
+  class FileGenerator
+    class YamlObject < InputOutputCommon
     end
   end
 end
-

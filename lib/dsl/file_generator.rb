@@ -15,20 +15,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
 module DTK::DSL
-  class Template
-    class V1
-      class Attributes < self
-        def parser_output_type
-          :array
-        end
-        
-        def parse!
-          input_hash.each_with_index do |(name, value), i|
-            @output << parse_child(:attribute, { 'name' => name, 'value' => value}, :parent_key => parent_key?(i))
-          end
-        end
-      end
+  class FileGenerator
+    require_relative('file_generator/content_input')
+    require_relative('file_generator/yaml_object')
+
+    def self.generate(parse_template_type, content_input, dsl_version)
+      generator_class = Template.template_class(parse_template_type, dsl_version)
+      generator_class.create_for_generation(content_input).generate
     end
   end
 end

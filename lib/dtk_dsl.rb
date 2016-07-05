@@ -24,8 +24,9 @@ module DTK
     require_relative('dsl/file_obj')
     require_relative('dsl/directory_parser')
     require_relative('dsl/input_output_common')
-    # input_output_common must be before file_parser
+    # input_output_common must be before file_parser and file_generator
     require_relative('dsl/file_parser')
+    require_relative('dsl/file_generator')
     require_relative('dsl/template')
 
   end
