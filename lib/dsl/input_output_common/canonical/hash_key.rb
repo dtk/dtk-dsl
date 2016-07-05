@@ -15,15 +15,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-class DTK::DSL::InputOutputCommon
-  class Canonical
+module DTK::DSL
+  class InputOutputCommon::Canonical
     module HashKey
       # Top level for common module
+      DSLVersion = :dsl_version
       Assemblies = :assemblies
       DependentModules = :dependent_modules
       ModuleRef = :module
-
-
+      
+      
       # Used at multiple levels
       Name          = :name
       Description   = :description

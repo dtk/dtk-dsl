@@ -23,14 +23,17 @@ class DTK::DSL::Template
         end
         extend ClassMixin::Constant
 
+        DSLVersion = 'dsl_version'
+
         DependentModules = 'dependencies'
 
         Module = 'module'
         Variations::Module = ['module', 'module_name'] 
-
       end
 
       def parse!
+        @output.set(:DSLVersion, constant_matches(input_hash, :DSLVersion))
+
         module_ref = constant_matches(input_hash, :Module) 
         @output.merge!(parse_child(:module_ref, module_ref, :parent_key => Constant::Module))
 
