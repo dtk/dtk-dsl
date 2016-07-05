@@ -16,9 +16,19 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class FileParser
-    class Output < InputOutputCommon::Canonical
-      extend InputOutputCommon::OutputClassMixin
+  class InputOutputCommon
+    module OutputClassMixin
+      # opts can have keys
+      #  :output_type
+      #  :input
+      # In both cases an empty object is created using :output_type or type of :input to determine its type
+      def create(opts = {})
+        unless opts[:output_type] or opts[:input]
+          raise Error, "opts must have one of the keys :output_type or :input"
+        end
+        obj_type = opts[:output_type] || obj_type(opts[:input])
+        create_aux(obj_type)
+      end
     end
   end
 end

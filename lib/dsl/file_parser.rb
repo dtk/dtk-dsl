@@ -20,7 +20,6 @@ require 'dtk_common_core'
 
 module DTK::DSL
   class FileParser                   
-    require_relative('file_parser/yaml_parser')
     require_relative('file_parser/input')
     require_relative('file_parser/output')
 
@@ -43,10 +42,10 @@ module DTK::DSL
         if ret = file_obj.yaml_parse_hash
           ret
         else
-          file_obj.yaml_parse_hash = YamlParser.parse(file_obj)
+          file_obj.yaml_parse_hash = YamlHelper.parse(file_obj)
         end
       else
-        YamlParser.parse(file_obj)
+        YamlHelper.parse(file_obj)
       end
     end
 

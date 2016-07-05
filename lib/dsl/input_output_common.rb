@@ -19,6 +19,7 @@ module DTK::DSL
   # Base classes for getting input from file to map to canonical form and to store canonical form that 
   # is used for generation
   class InputOutputCommon
+    require_relative('input_output_common/output_class_mixin')
     require_relative('input_output_common/hash')
     require_relative('input_output_common/array')
     # hash and array must g before canonical

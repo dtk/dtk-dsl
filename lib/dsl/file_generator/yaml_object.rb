@@ -18,6 +18,7 @@
 module DTK::DSL
   class FileGenerator
     class YamlObject < InputOutputCommon
+      extend InputOutputCommon::OutputClassMixin
     end
   end
 end

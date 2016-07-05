@@ -65,11 +65,22 @@ module DTK::DSL
       # return @output
       @output
     end
+
+    def generate
+      generate!
+      # return @output
+      @output
+    end
     
     private
     
     # Main parse call; Each concrete class should overwrite this
     def parse!
+      raise Error::NoMethodForConcreteClass.new(self.class)
+    end
+
+    # Main generate call; Each concrete class should overwrite this
+    def generate!
       raise Error::NoMethodForConcreteClass.new(self.class)
     end
     

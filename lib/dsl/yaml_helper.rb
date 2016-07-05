@@ -17,24 +17,26 @@
 #
 require 'yaml'
 module DTK::DSL
-  class FileParser                   
-    module YamlParser
-      # Returns hash if succsefully parse; otehrwise raises error
-      def self.parse(file_obj)
-        begin
-          ::YAML.load(file_obj.content)
-        rescue Exception => e
-          raise Error::Usage, yaml_parsing_error_msg(e, file_obj)
-        end
+  module YamlHelper
+    # Returns hash if succsefully parse; otehrwise raises error
+    def self.parse(file_obj)
+      begin
+        ::YAML.load(file_obj.content)
+      rescue Exception => e
+        raise Error::Usage, yaml_parsing_error_msg(e, file_obj)
       end
+    end
 
-      private
+    def self.generate(yaml_object, f)
+      f << ::YAML.dump(yaml_object)
+    end
 
-      def self.yaml_parsing_error_msg(e, file_obj)
-        file_ref = FileParser.file_ref_in_error(file_obj)
-        yaml_err_msg = e.message.gsub(/\(<unknown>\): /,'').capitalize 
-        "YAML parsing error#{file_ref}:\n#{yaml_err_msg}"
-      end
+    private
+    
+    def self.yaml_parsing_error_msg(e, file_obj)
+      file_ref = FileParser.file_ref_in_error(file_obj)
+      yaml_err_msg = e.message.gsub(/\(<unknown>\): /,'').capitalize 
+      "YAML parsing error#{file_ref}:\n#{yaml_err_msg}"
     end
   end
 end
