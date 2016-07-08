@@ -25,7 +25,7 @@ module DTK::DSL
         
         def parse!
           input_hash.each_with_index do |(name, content), i|
-            @output << parse_child(:assembly, content.merge('name' => name), :parent_key => parent_key?(i))
+            add parse_child(:assembly, content.merge('name' => name), :parent_key => parent_key?(i))
           end
         end
       end

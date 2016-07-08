@@ -22,14 +22,16 @@ module DTK::DSL
     Types = 
       [
        {
-         :type => :common_module,
-         :regexp => "/dtk\.module\.(yml|yaml)/",
-         :print_name => 'module DSL file'
+         :type           => :common_module,
+         :regexp         => "/dtk\.module\.(yml|yaml)/",
+         :canonical_path => 'dtk.module.yaml', 
+         :print_name     => 'module DSL file'
        },
        {
-         :type => :service_instance,
-         :regexp => "/dtk\.service\.(yml|yaml)/",
-         :print_name => 'service DSL file'
+         :type           => :service_instance,
+         :regexp         => "/dtk\.service\.(yml|yaml)/",
+         :canonical_path => 'dtk.service.yaml', 
+         :print_name     => 'service DSL file'
        }
       ]
       # regexps purposely do not have ^ or $ so calling function can insert these depending on context
@@ -44,6 +46,9 @@ module DTK::DSL
            end
            def self.print_name
              '#{type_info[:print_name]}'
+           end
+           def self.canonical_path
+             '#{type_info[:canonical_path]}'
            end
 
            private

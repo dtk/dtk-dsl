@@ -15,21 +15,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+class DTK::DSL::Template
+  class V1
+    class ServiceInstance < self
+      module Constant
+        module Variations
+        end
+        extend ClassMixin::Constant
 
-module DTK::DSL
-  class FileGenerator
-    require_relative('file_generator/content_input')
-    require_relative('file_generator/yaml_object')
+        DSLVersion = 'dsl_version'
+        Name = 'module'
+        Variations::Name = ['name', 'service_name'] 
+      end
 
-    def self.generate_yaml_object(parse_template_type, content_input, dsl_version)
-      template_class = Template.template_class(parse_template_type, dsl_version)
-      template_class.create_for_generation(content_input).generate_yaml_object
-    end
-
-    def self.generate_yaml_text(parse_template_type, content_input, dsl_version)
-      template_class = Template.template_class(parse_template_type, dsl_version)
-      template_class.create_for_generation(content_input).generate_yaml_text
+      def generate!
+        set :DSLVersion, req(:DSLVersion)
+        set :Name, req(:Name)
+        merge generate_child(:assembly, req(:Assembly))
+      end
     end
   end
 end
-

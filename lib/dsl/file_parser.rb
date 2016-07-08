@@ -33,8 +33,8 @@ module DTK::DSL
       dsl_version =  opts[:dsl_version] || dsl_version__raise_error_if_illegal(input_hash, file_obj)
 
       # parsing with respect to the parse_template_type
-      parser_class = Template.template_class(parse_template_type, dsl_version)
-      parser_class.create_for_parsing(input_hash, :file_obj => file_obj).parse
+      template_class = Template.template_class(parse_template_type, dsl_version)
+      template_class.create_for_parsing(input_hash, :file_obj => file_obj).parse
     end
 
     def self.yaml_parse!(file_obj)

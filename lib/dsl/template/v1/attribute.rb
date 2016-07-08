@@ -33,13 +33,14 @@ class DTK::DSL::Template
       end
 
       def parse!
-        @output.set(:Name, constant_matches(input_hash, :Name))
-        @output.set(:Value, constant_matches(input_hash, :Value))
+        set :Name, constant_matches(input_hash, :Name)
+        set :Value, constant_matches(input_hash, :Value)
 
+        # TODO: catchall
         input_hash.delete('name')
         input_hash.delete('value')
 
-        @output.merge!(input_hash)
+        merge(input_hash)
       end
     end
   end

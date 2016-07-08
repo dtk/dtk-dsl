@@ -22,7 +22,7 @@ module DTK::DSL
     require_relative('input_output_common/output_class_mixin')
     require_relative('input_output_common/hash')
     require_relative('input_output_common/array')
-    # hash and array must g before canonical
+    # hash and array must go before canonical
     require_relative('input_output_common/canonical')
     
     private

@@ -29,13 +29,13 @@ class DTK::DSL::Template
       end
 
       def parse!
-        @output.set(:Name, constant_matches(input_hash, :Name))
-        @output.set(:Attributes, parse_child(:attributes, constant_matches?(input_hash, :Attributes), :parent_key => Constant::Attributes))
+        set :Name, constant_matches(input_hash, :Name)
+        set :Attributes, parse_child(:attributes, constant_matches?(input_hash, :Attributes), :parent_key => Constant::Attributes)
 
         # TODO: This is a catchall that removes ones we so far are parsing and then has catch all
         input_hash.delete('name')
         input_hash.delete('attributes')
-        @output.merge!(input_hash)
+        merge input_hash
       end
     end
   end

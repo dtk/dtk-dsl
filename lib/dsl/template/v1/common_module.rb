@@ -32,7 +32,7 @@ class DTK::DSL::Template
       def parse!
         super
         assemblies = constant_matches(input_hash, :Assemblies)
-        @output.set(:Assemblies, parse_child(:assemblies, assemblies, :parent_key => Constant::Assemblies))
+        set :Assemblies, parse_child(:assemblies, assemblies, :parent_key => Constant::Assemblies)
       end
     end
   end

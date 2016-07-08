@@ -25,7 +25,7 @@ module DTK::DSL
         
         def parse!
           input_hash.each_with_index do |(name, value), i|
-            @output << parse_child(:attribute, { 'name' => name, 'value' => value}, :parent_key => parent_key?(i))
+            add parse_child(:attribute, { 'name' => name, 'value' => value}, :parent_key => parent_key?(i))
           end
         end
       end

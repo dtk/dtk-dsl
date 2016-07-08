@@ -15,23 +15,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-module DTK::DSL
-  class Template
-    class ParsingError < Error::Usage
-      require_relative('parsing_error/subclasses')
 
-      # opts can have keys
-      #  :file_obj
-      #  :qualified_key
-      def initialize(error_msg, opts = {})
-        @file_ref      = FileParser.file_ref_in_error(opts[:file_obj])
-        @qualified_key = opts[:qualified_key]
-        # TODO: later enhancment can use @qualified_key to find line numbers in yaml file
-        key_ref = @qualified_key ? " under key '#{@qualified_key}'" : ''
-        super("DTK parsing error#{key_ref}#{@file_ref}:\n  #{error_msg}")
-      end
+module DTK::DSL
+  # Abstract class; application that uses this library must provide a concrete class that inherits from this
+  class DirectoryGenerator
+    # Adds or modifies file; returns true if new file or any change
+    def self.add_file?(file_type, file_content, opts = {})
+      raise Error::NoMethodForConcreteClass.new(self.class)
     end
   end
 end
-
-

@@ -27,8 +27,8 @@ module DTK::DSL
       end
     end
 
-    def self.generate(yaml_object, f)
-      f << ::YAML.dump(yaml_object)
+    def self.generate(yaml_object)
+      ::YAML.dump(yaml_object)
     end
 
     private

@@ -32,13 +32,13 @@ class DTK::DSL::Template
       end
 
       def parse!
-        @output.set(:DSLVersion, constant_matches(input_hash, :DSLVersion))
+        set :DSLVersion, constant_matches(input_hash, :DSLVersion)
 
         module_ref = constant_matches(input_hash, :Module) 
-        @output.merge!(parse_child(:module_ref, module_ref, :parent_key => Constant::Module))
+        merge parse_child(:module_ref, module_ref, :parent_key => Constant::Module)
 
         dependent_modules = constant_matches(input_hash, :DependentModules)
-        @output.set(:DependentModules, parse_child(:dependent_modules, dependent_modules, :parent_key => Constant::DependentModules))
+        set :DependentModules, parse_child(:dependent_modules, dependent_modules, :parent_key => Constant::DependentModules)
       end
     end
   end

@@ -17,7 +17,7 @@
 #
 
 module DTK::DSL
-  # Abstract class; application taht uses this library must provide a concrete class that inherits from this
+  # Abstract class; application that uses this library must provide a concrete class that inherits from this
   class DirectoryParser
     require_relative('directory_parser/path_info')
     # file_types - a single or array of FileObj objects

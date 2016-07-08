@@ -21,6 +21,7 @@ module DTK::DSL
       require_relative('v1/common_module_summary')
       # common_module_summary must be before common_module
       require_relative('v1/common_module')
+      require_relative('v1/service_instance')
       require_relative('v1/module_ref')
       require_relative('v1/dependent_modules')
       require_relative('v1/assemblies')

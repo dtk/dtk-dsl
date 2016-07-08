@@ -19,12 +19,14 @@ module DTK::DSL
   class InputOutputCommon::Canonical
     module HashKey
       # Top level for common module
-      DSLVersion = :dsl_version
-      Assemblies = :assemblies
+      DSLVersion       = :dsl_version
+      Assemblies       = :assemblies
       DependentModules = :dependent_modules
-      ModuleRef = :module
-      
-      
+      ModuleRef        = :module
+
+      # Top level for Service Instance
+      Assembly = :asssembly
+
       # Used at multiple levels
       Name          = :name
       Description   = :description

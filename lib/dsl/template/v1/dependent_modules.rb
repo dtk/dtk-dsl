@@ -20,7 +20,7 @@ class DTK::DSL::Template
     class DependentModules < self
       def parse!
         input_array.each_with_index do |module_ref, i|
-          @output << parse_child(:module_ref, module_ref, :parent_key => parent_key?(i))
+          add parse_child(:module_ref, module_ref, :parent_key => parent_key?(i))
         end
       end
     end
