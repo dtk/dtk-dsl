@@ -17,24 +17,16 @@
 #
 module DTK::DSL
   class Template
-    class V1 < self
-      require_relative('v1/common_module_summary')
-      # common_module_summary must be before common_module
-      require_relative('v1/common_module')
-      require_relative('v1/service_instance')
-      require_relative('v1/module_ref')
-      require_relative('v1/dependent_modules')
-      require_relative('v1/assemblies')
-      require_relative('v1/assembly')
-      require_relative('v1/attributes')
-      require_relative('v1/attribute')
-      require_relative('v1/nodes')
-      require_relative('v1/node')
-      require_relative('v1/assembly_components')
-
-      VERSION = 1
-      def template_version
-        VERSION
+    class V1
+      class AssemblyComponents < self
+        def parser_output_type
+          :hash
+        end
+        
+        def parse!
+          # TODO: later will parse components array as well
+          merge(:name => 'assembly_wide', 'components' => input_array)
+        end
       end
     end
   end

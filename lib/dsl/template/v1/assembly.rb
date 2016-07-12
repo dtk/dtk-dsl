@@ -28,6 +28,7 @@ class DTK::DSL::Template
         Description = 'description'
         Attributes  = 'attributes'
         Nodes       = 'nodes'
+        Components  = 'components'
       end
 
       def generate!
@@ -39,8 +40,16 @@ class DTK::DSL::Template
         set :Name, constant_matches(input_hash, :Name)
         set :Description, constant_matches?(input_hash, :Description)
         set :Attributes, parse_child(:attributes, constant_matches?(input_hash, :Attributes), :parent_key => Constant::Attributes)
-        # set :Nodes, constant_matches?(input_hash, :Nodes)
-        set :Nodes, parse_child(:nodes, constant_matches?(input_hash, :Nodes), :parent_key => Constant::Nodes)
+
+        nodes               = parse_child(:nodes, constant_matches?(input_hash, :Nodes), :parent_key => Constant::Nodes)
+        assembly_components = parse_child(:assembly_components, constant_matches?(input_hash, :Components), :parent_key => Constant::Components)
+
+        # add assembly wide components to nodes as part of assembly_wide_node
+        if assembly_components && !assembly_components.empty?
+          nodes << assembly_components
+        end
+
+        set :Nodes, nodes
 
         # TODO: This is a catchall that removes ones we so far are parsing and then has catch all
         input_hash.delete('name')
