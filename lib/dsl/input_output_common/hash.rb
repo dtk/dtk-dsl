@@ -18,10 +18,25 @@
 module DTK::DSL
   class InputOutputCommon
     class Hash < ::Hash
-      def initialize(hash = nil)
+      def initialize(parent_class, hash = nil)
         super()
-        replace(reify(hash)) if hash
+        replace(reify(parent_class, hash)) if hash
       end
+
+      private
+      
+      def reify(parent_class, obj)
+        if obj.kind_of?(self.class)
+          obj
+        elsif obj.kind_of?(::Hash)
+          obj.inject(self.class.new(parent_class)) { |h, (k, v)| h.merge(k => reify(parent_class, v)) }
+        elsif obj.kind_of?(::Array)
+          parent_class::Array.new(parent_class, obj)
+        else
+          obj
+        end
+      end
+      
     end
   end
 end

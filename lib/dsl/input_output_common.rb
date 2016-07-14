@@ -43,10 +43,10 @@ module DTK::DSL
       case type
       when :hash 
         # if obj.class not ::Hash then reified already
-        (obj.nil? or obj.class == ::Hash) ? self::Hash.new(obj) : obj
+        (obj.nil? or obj.class == ::Hash) ? self::Hash.new(self, obj) : obj
       when :array 
         # if obj.class not ::Array then reified already
-        (obj.nil? or obj.class == ::Array) ? self::Array.new(obj) : obj
+        (obj.nil? or obj.class == ::Array) ? self::Array.new(self, obj) : obj
       when :string 
         # no reification for string
         ::String.new(obj || '') 

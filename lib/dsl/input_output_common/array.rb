@@ -18,9 +18,24 @@
 module DTK::DSL
   class InputOutputCommon
     class Array < ::Array
-      def initialize(array = nil)
-        array.each { |el| self << reify(el) } if array
+      def initialize(parent_class, array = nil)
+        array.each { |el| self << reify(parent_class, el) } if array
       end
+
+      private
+
+      def reify(parent_class, obj)
+        if obj.kind_of?(self.class)
+          obj
+        elsif obj.kind_of?(::Array)
+          inject(self.class.new(parent_class)) { |a, el| a << reify(parent_class, el) }
+        elsif obj.kind_of?(::Hash)
+          parent_class::Hash.new(parent_class, obj)
+        else
+          obj
+        end
+      end
+
     end
   end
 end

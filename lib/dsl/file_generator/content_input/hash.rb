@@ -16,12 +16,16 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class InputOutputCommon
-    class Canonical
-      class Array < InputOutputCommon::Array 
+  class FileGenerator
+    class ContentInput
+      class Hash < InputOutputCommon::Canonical::Hash
+        def initialize(*args)
+          super
+          @tags = {}
+          pp [:debug_tags, @tags, caller[0..4]]
+        end
       end
     end
   end
 end
-
 

@@ -18,6 +18,7 @@
 module DTK::DSL
   class FileGenerator
     class ContentInput < InputOutputCommon::Canonical
+      require_relative('content_input/hash')
     end
   end
 end

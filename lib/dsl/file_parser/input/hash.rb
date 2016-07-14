@@ -19,18 +19,6 @@ module DTK::DSL
   class FileParser
     class Input
       class Hash < InputOutputCommon::Hash
-        def reify(obj)
-          if obj.kind_of?(self.class)
-            obj
-          elsif obj.kind_of?(::Hash)
-            obj.inject(self.class.new) { |h, (k, v)| h.merge(k => reify(v)) }
-          elsif obj.kind_of?(::Array)
-            Input::Array.new(obj)
-          else
-            obj
-          end
-        end
-        
         def [](index)
           super(internal_key_form(index))
         end

@@ -19,19 +19,6 @@ module DTK::DSL
   class InputOutputCommon
     class Canonical
       class Hash < InputOutputCommon::Hash
-        
-        def reify(obj)
-          if obj.kind_of?(self.class)
-            obj
-          elsif obj.kind_of?(::Hash)
-            obj.inject(self.class.new) { |h, (k, v)| h.merge(k => reify(v)) }
-          elsif obj.kind_of?(::Array)
-            Canonical::Array.new(obj)
-          else
-            obj
-          end
-        end
-        
         def set(output_key, val)
           self[canonical_key_form_from_output_key(output_key)] = val
         end
