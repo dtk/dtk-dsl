@@ -22,7 +22,41 @@ module DTK::DSL
         def initialize(*args)
           super
           @tags = {}
-          pp [:debug_tags, @tags, caller[0..4]]
+        end
+
+        # opts can have keys
+        #  :tags
+        #  :tag
+        def set(output_key, val, opts = {})
+          ret = super(output_key, val)
+          tags = opts[:tag] || opts[:tags]
+          add_tags!(output_key, tags) unless tags.nil?  
+          ret
+        end
+
+        # opts can have keys
+        #  :tag - tag to filter on
+        def val(output_key, opts = {})
+          ret = super(output_key)
+          if tag = opts[:tag]
+            ret = nil unless tags(output_key).include?(tag)
+          end
+          ret
+        end
+
+        private
+
+        def add_tags!(output_key, tags)
+          tags = [tags] unless tags.kind_of?(Array)
+          key = canonical_key_form_from_output_key(output_key)
+          existing_tags = @tags[key] ||= []
+          tags.each { |tag| existing_tags << tag unless existing_tags.include?(tag)}
+          self
+        end
+        
+        def tags(output_key)
+          key = canonical_key_form_from_output_key(output_key)
+          @tags[key] || []
         end
       end
     end
