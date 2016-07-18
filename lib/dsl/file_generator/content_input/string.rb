@@ -17,12 +17,15 @@
 #
 module DTK::DSL
   class FileGenerator
-    class ContentInput < InputOutputCommon::Canonical
-      require_relative('content_input/tags_mixin')
-      # tags_mixin must go first
-      require_relative('content_input/hash')
-      require_relative('content_input/array')
-      require_relative('content_input/string')
+    class ContentInput
+      class String < ::String
+        include TagsMixin
+
+        def initialize(*args)
+          super
+          initialize_tags!
+        end
+      end
     end
   end
 end

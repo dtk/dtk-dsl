@@ -27,6 +27,9 @@ module DTK::DSL
       # Top level for Service Instance
       Assembly = :asssembly
 
+      # Used in assembly
+      Components = :components
+
       # Used at multiple levels
       Name          = :name
       Description   = :description

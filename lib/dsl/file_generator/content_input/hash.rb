@@ -19,9 +19,10 @@ module DTK::DSL
   class FileGenerator
     class ContentInput
       class Hash < InputOutputCommon::Canonical::Hash
+        include TagsMixin
         def initialize(*args)
           super
-          @tags = {}
+          initialize_tags!
         end
 
         # opts can have keys
@@ -30,7 +31,7 @@ module DTK::DSL
         def set(output_key, val, opts = {})
           ret = super(output_key, val)
           tags = opts[:tag] || opts[:tags]
-          add_tags!(output_key, tags) unless tags.nil?  
+          add_tags_to_obj?(ret, tags) unless tags.nil?
           ret
         end
 
@@ -39,25 +40,11 @@ module DTK::DSL
         def val(output_key, opts = {})
           ret = super(output_key)
           if tag = opts[:tag]
-            ret = nil unless tags(output_key).include?(tag)
+            ret = nil unless obj_has_tag?(ret, tag)
           end
           ret
         end
 
-        private
-
-        def add_tags!(output_key, tags)
-          tags = [tags] unless tags.kind_of?(Array)
-          key = canonical_key_form_from_output_key(output_key)
-          existing_tags = @tags[key] ||= []
-          tags.each { |tag| existing_tags << tag unless existing_tags.include?(tag)}
-          self
-        end
-        
-        def tags(output_key)
-          key = canonical_key_form_from_output_key(output_key)
-          @tags[key] || []
-        end
       end
     end
   end
