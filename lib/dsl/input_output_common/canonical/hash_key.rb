@@ -29,6 +29,7 @@ module DTK::DSL
 
       # Used in assembly
       Components = :components
+      TaskTemplates = :task_templates
 
       # Used at multiple levels
       Name          = :name

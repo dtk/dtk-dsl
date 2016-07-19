@@ -31,6 +31,8 @@ module DTK::DSL
       require_relative('v1/nodes')
       require_relative('v1/node')
       require_relative('v1/assembly_components')
+      require_relative('v1/workflows')
+      require_relative('v1/workflow')
 
       VERSION = 1
       def template_version
