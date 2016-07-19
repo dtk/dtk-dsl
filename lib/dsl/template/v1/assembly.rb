@@ -46,7 +46,6 @@ class DTK::DSL::Template
         set :Attributes, parse_child(:attributes, constant_matches?(input_hash, :Attributes), :parent_key => Constant::Attributes)
         set :Nodes, parsed_nodes
         set :TaskTemplates, parse_child(:workflows, constant_matches?(input_hash, :Workflows), :parent_key => Constant::Workflows)
-        # TODO: DTK-2554: workflows: Aldin: see bottom of page for what should be under task templates
     
         # TODO: This is a catchall that removes ones we so far are parsing and then has catch all
         input_hash.delete('name')
@@ -64,10 +63,9 @@ class DTK::DSL::Template
 
         # add assembly wide components to nodes as part of assembly_wide_node
         if assembly_components && !assembly_components.empty?
-          # TODO: DTK-2554: Aldin is below right?; should it be nodes += assembly_components
-          # also at this level put in node name is assembly_wide, not in component
           nodes << assembly_components
         end
+
         nodes
       end
 

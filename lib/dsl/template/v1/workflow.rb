@@ -28,20 +28,69 @@ class DTK::DSL::Template
         end
 
         extend ClassMixin::Constant
-        # TODO: might put constants used in many templates in ClassMixin::Constant
-        # TODO: DTK-2554: workflows: Aldin: put in sample cut and paste constant from
-        # https://github.com/dtk/dtk-server/blob/DTK-2554/application/model/module/service_module/dsl/assembly_import/adapters/v4.rb
-        CreateWorkflowAction = 'create'
 
+        CreateWorkflowAction = 'create'
       end
 
       def parser_output_type
         :hash
       end
 
+      # TODO: DTK-2554 Aldin: need to refactor this
       def parse!
         # TODO: catchall
-        merge(input_hash)
+        merge(parse_and_ret_workflow(input_hash))
+      end
+
+      def parse_and_ret_workflow(input_hash, opts = {})
+        ret = input_hash.inject({}) do  |h, (workflow_action, r)|
+          workflow_hash = r || {}
+          # we explicitly want to delete from workflow_hash; workflow_action can be nil
+          # action_under_key = (workflow_hash.kind_of?(Hash) ? workflow_hash.delete(Constant::WorkflowAction) : nil)
+          # workflow_action = r[:action] || action_under_key
+          parsed_workflow = parse_workflow(workflow_hash, workflow_action, {}, opts)
+          h.merge(parsed_workflow)
+        end
+
+        ret
+      end
+
+      def parse_workflow(workflow_hash, workflow_action, assembly_hash, opts = {})
+        # raise_error_if_parsing_error(workflow_hash, workflow_action, opts)
+        # check_if_invalid_component_in_workflow(assembly_hash, workflow_hash)
+
+        normalized_workflow_action =
+          if opts[:service_module_workflow]
+            normalized_service_module_action(workflow_hash, workflow_action)
+          else
+            normalized_assembly_action(workflow_action)
+          end
+
+        task_template_ref = normalized_workflow_action
+        task_template = {
+          'task_action' => normalized_workflow_action,
+          'content'     => workflow_hash
+        }
+
+        { task_template_ref => task_template }
+      end
+
+      def raise_error_if_parsing_error(workflow_hash, workflow_action, opts = {})
+        if parse_error = Task::Template::ConfigComponents.find_parse_error?(workflow_hash, {workflow_action: workflow_action}.merge(opts))
+          fail parse_error
+        end
+      end
+
+      def normalized_service_module_action(workflow_hash, workflow_action)
+        workflow_action || workflow_hash['name']
+      end
+
+      def normalized_assembly_action(workflow_action)
+        if workflow_action.nil? or Constant.matches?(workflow_action, :CreateWorkflowAction)
+          '__create_action'
+        else
+          workflow_action
+        end
       end
     end
   end
