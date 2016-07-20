@@ -19,7 +19,7 @@ module DTK::DSL
   class FileGenerator
     class ContentInput
       class Array < InputOutputCommon::Canonical::Array
-        include TagsMixin
+        include Tags::Mixin
 
         def initialize(*args)
           super

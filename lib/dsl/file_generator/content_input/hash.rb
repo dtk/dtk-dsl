@@ -19,7 +19,8 @@ module DTK::DSL
   class FileGenerator
     class ContentInput
       class Hash < InputOutputCommon::Canonical::Hash
-        include TagsMixin
+        include Tags::Mixin
+ 
         def initialize(*args)
           super
           initialize_tags!

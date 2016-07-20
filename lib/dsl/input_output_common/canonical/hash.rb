@@ -22,6 +22,10 @@ module DTK::DSL
         def set(output_key, val)
           self[canonical_key_form_from_output_key(output_key)] = val
         end
+
+        def set?(output_key, val)
+          set(output_key, val) unless val.nil?
+        end
         
         # value at index output_key
         def val(output_key)
