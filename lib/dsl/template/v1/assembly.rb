@@ -36,8 +36,10 @@ class DTK::DSL::Template
       end
 
       def generate!
-        # TODO: stub that dumps out uninterpreted
-        merge @content
+        # TODO: add attributes, workflows
+        set :Description, val(:Description)
+        set :Components, generate_child(:assembly_components, val(:Components))
+#        set :Nodes, generate_child(:nodes, val(:Nodes))
       end
 
       def parse!

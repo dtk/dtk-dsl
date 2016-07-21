@@ -36,12 +36,16 @@ module DTK::DSL
         end
         
         private
-
+        
+        # opts can have keys
+        #  :content (required)
+        #  :filter
         def generation_initialize(opts = {})
           unless content = opts[:content]
             raise Error, "Unexpected that opts[:content] is nil"
           end
-          @content = content
+          @content     = content
+          @filter      = opts[:filter]
           @yaml_object = empty_yaml_object(content)
         end
 
@@ -51,13 +55,13 @@ module DTK::DSL
         end
 
         # opts can have keys
-        #  :parent_key
+        #  :filter
         def generate_child(parse_template_type, content)
           if content.nil?
             nil
           else
             template_class = Loader.template_class(parse_template_type, :template_version => template_version)
-            template_class.create_for_generation(content).generate_yaml_object
+            template_class.create_for_generation(content, :filter => @filter).generate_yaml_object
           end
         end
         
@@ -70,7 +74,7 @@ module DTK::DSL
         end
 
         def generation_set(constant, val)
-          @yaml_object[canonical_key(constant)] = val
+          @yaml_object[canonical_key(constant)] = val unless val.nil?
         end
 
         def generation_merge(hash)

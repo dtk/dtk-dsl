@@ -18,9 +18,15 @@
 module DTK::DSL
   class Template
     class V1
+      # TODO: change so have both Components and Component and use for assembly level and under nodes
       class AssemblyComponents < self
         def parser_output_type
           :hash
+        end
+
+        def generate!
+          # TODO: stub; components would be child generate to component
+          @content.each { |component| add component}
         end
         
         def parse!

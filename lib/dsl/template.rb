@@ -33,8 +33,10 @@ module DTK::DSL
     end
       
     # Content is of type InputOutput::Canonical Array or Hash
-    def self.create_for_generation(content)
-      new(:generation, :content => content)
+    # opts can have keys
+    #   :filter
+    def self.create_for_generation(content, opts = {})
+      new(:generation, opts.merge(:content => content))
     end
 
     def initialize(type, opts = {})

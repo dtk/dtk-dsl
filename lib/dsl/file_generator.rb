@@ -21,14 +21,18 @@ module DTK::DSL
     require_relative('file_generator/content_input')
     require_relative('file_generator/yaml_object')
 
-    def self.generate_yaml_object(parse_template_type, content_input, dsl_version)
+    # opts can have keys
+    #   :filter
+    def self.generate_yaml_object(parse_template_type, content_input, dsl_version, opts = {})
       template_class = Template.template_class(parse_template_type, dsl_version)
-      template_class.create_for_generation(content_input).generate_yaml_object
+      template_class.create_for_generation(content_input, opts).generate_yaml_object
     end
 
-    def self.generate_yaml_text(parse_template_type, content_input, dsl_version)
+    # opts can have keys
+    #   :filter
+    def self.generate_yaml_text(parse_template_type, content_input, dsl_version, opts = {})
       template_class = Template.template_class(parse_template_type, dsl_version)
-      template_class.create_for_generation(content_input).generate_yaml_text
+      template_class.create_for_generation(content_input, opts).generate_yaml_text
     end
   end
 end
