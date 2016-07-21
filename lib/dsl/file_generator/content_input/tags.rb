@@ -23,9 +23,10 @@ module DTK::DSL
       #
       DELIMITER = '__'
       BASE_LEVEL_TAGS = 
-        [:asserted, 
-         :derived__default, 
-         :derived__propagated, 
+        [:desired__asserted, 
+         :desired__derived__default, 
+         :desired__derived__propagated, 
+         :actual,
          :hidden
         ]
       
