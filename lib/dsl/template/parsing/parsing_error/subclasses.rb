@@ -26,21 +26,28 @@ module DTK::DSL; class Template
       end
       
       class WrongObjectType < self
-        def initialize(obj, correct_ruby_type, opts = {})
-          error_msg = "The key's value should be of type #{correct_ruby_type}, but has type #{input_class_string(obj)}"
+        def initialize(obj, correct_ruby_types, opts = {})
+          correct_ruby_types = [correct_ruby_types] unless correct_ruby_types.kind_of?(::Array)
+          error_msg = 
+            if correct_ruby_types.size == 1
+              "The key's value should havetype #{correct_ruby_types.first}"
+            else
+              "The key's value should be one of the types (#{correct_ruby_types.join(' ')})"
+            end
+          error_msg << ", but has type #{input_class_string(obj)}"
           super(error_msg, opts)
         end
         
         private
         
         def input_class_string(obj)
-          # The special casing on Input::Hash is not needed since end with Hash and Array, but this makes it more robust
-          # if change the Input subclasses
           klass = 
-            if obj.kind_of?(Input::Hash) 
+            if obj.kind_of?(::Hash) 
               ::Hash 
-            elsif obj.kind_of?(Input::Array)
+            elsif obj.kind_of?(::Array)
               ::Array
+            elsif obj.kind_of?(::String)
+              ::String
             else
               obj.class
             end

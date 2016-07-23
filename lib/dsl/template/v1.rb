@@ -30,7 +30,8 @@ module DTK::DSL
       require_relative('v1/attribute')
       require_relative('v1/nodes')
       require_relative('v1/node')
-      require_relative('v1/assembly_components')
+      require_relative('v1/components')
+      require_relative('v1/component')
       require_relative('v1/workflows')
       require_relative('v1/workflow')
 

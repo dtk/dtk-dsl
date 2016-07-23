@@ -38,7 +38,7 @@ class DTK::DSL::Template
       def generate!
         # TODO: add attributes, workflows
         set :Description, val(:Description)
-        set :Components, generate_child(:assembly_components, val(:Components))
+        set :Components, generate_child(:components, val(:Components))
 #        set :Nodes, generate_child(:nodes, val(:Nodes))
       end
 
@@ -46,29 +46,19 @@ class DTK::DSL::Template
         set :Name, constant_matches(input_hash, :Name)
         set :Description, constant_matches?(input_hash, :Description)
         set :Attributes, parse_child(:attributes, constant_matches?(input_hash, :Attributes), :parent_key => Constant::Attributes)
-        set :Nodes, parsed_nodes
-        set :TaskTemplates, parse_child(:workflows, constant_matches?(input_hash, :Workflows), :parent_key => Constant::Workflows)
+        set :Nodes, parse_child(:nodes, constant_matches?(input_hash, :Nodes), :parent_key => Constant::Nodes)
+        set :Components, parse_child(:components, constant_matches?(input_hash, :Components), :parent_key => Constant::Components) 
+        set :Workflows, parse_child(:workflows, constant_matches?(input_hash, :Workflows), :parent_key => Constant::Workflows)
     
         # TODO: This is a catchall that removes ones we so far are parsing and then has catch all
         input_hash.delete('name')
         input_hash.delete('description')
         input_hash.delete('attributes')
         input_hash.delete('nodes')
+        input_hash.delete('components')
         input_hash.delete('workflow')
         input_hash.delete('workflows')
         merge input_hash
-      end
-
-      def parsed_nodes
-        nodes               = parse_child(:nodes, constant_matches?(input_hash, :Nodes), :parent_key => Constant::Nodes)
-        assembly_components = parse_child(:assembly_components, constant_matches?(input_hash, :Components), :parent_key => Constant::Components)
-
-        # add assembly wide components to nodes as part of assembly_wide_node
-        if assembly_components && !assembly_components.empty?
-          nodes << assembly_components
-        end
-
-        nodes
       end
 
     end

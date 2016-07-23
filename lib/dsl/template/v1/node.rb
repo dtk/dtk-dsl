@@ -23,18 +23,20 @@ class DTK::DSL::Template
         end
 
         extend ClassMixin::Constant
-        # TODO: might put constants used in many templates in ClassMixin::Constant
         Name        = 'name'
         Attributes  = 'attributes'
+        Components  = 'components'
       end
 
       def parse!
         set :Name, constant_matches(input_hash, :Name)
         set :Attributes, parse_child(:attributes, constant_matches?(input_hash, :Attributes), :parent_key => Constant::Attributes)
+        set :Components, parse_child(:components, constant_matches?(input_hash, :Components), :parent_key => Constant::Components)
 
         # TODO: This is a catchall that removes ones we so far are parsing and then has catch all
         input_hash.delete('name')
         input_hash.delete('attributes')
+        input_hash.delete('components')
         merge input_hash
       end
     end

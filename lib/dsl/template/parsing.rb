@@ -84,17 +84,29 @@ module DTK::DSL
             index ? "#{@parent_key}[#{index}]" : parent_key
           end
         end
-        
+
+        def input_hash?
+          @input if @input.kind_of?(FileParser::Input::Hash) 
+        end
+
         def input_hash
-          @input_hash ||= @input.kind_of?(FileParser::Input::Hash) ? @input : raise_input_error(::Hash)
+          @input_hash ||= input_hash? || raise_input_error(::Hash)
         end
         
+        def input_array?
+          @input if @input.kind_of?(FileParser::Input::Array)
+        end
+
         def input_array
-          @input_array ||= @input.kind_of?(FileParser::Input::Array) ? @input : raise_input_error(::Array)
+          @input_array ||= input_array? || raise_input_error(::Array)
         end
         
+        def input_string?
+          @input if @input.kind_of?(::String)
+        end
+
         def input_string
-          @input_string ||= @input.kind_of?(::String) ? @input : raise_input_error(::String)
+          @input_string ||= input_string? || raise_input_error(::String)
         end
         
         def constant_matches(object, constant)
@@ -105,8 +117,9 @@ module DTK::DSL
           constant_class.matches?(object, constant)
         end
 
-        def raise_input_error(correct_ruby_type)
-          raise parsing_error(:WrongObjectType, @input, correct_ruby_type)
+        # correct_ruby_types can also be scalar
+        def raise_input_error(correct_ruby_types)
+          raise parsing_error(:WrongObjectType, @input, correct_ruby_types)
         end
         
         def raise_missing_key_value(constant)

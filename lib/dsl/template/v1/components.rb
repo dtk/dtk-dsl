@@ -18,20 +18,20 @@
 module DTK::DSL
   class Template
     class V1
-      # TODO: change so have both Components and Component and use for assembly level and under nodes
-      class AssemblyComponents < self
+      class Components < self
         def parser_output_type
-          :hash
+          :array
         end
 
         def generate!
           # TODO: stub; components would be child generate to component
-          @content.each { |component| add component}
+          #@content.each { |component| add component}
         end
         
         def parse!
-          # TODO: later will parse components array as well
-          merge(:name => 'assembly_wide', 'components' => input_array)
+          input_array.each_with_index do |component, i|
+            add parse_child(:component, component, :parent_key => parent_key?(i))
+          end
         end
       end
     end

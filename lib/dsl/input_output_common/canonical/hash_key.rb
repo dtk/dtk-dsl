@@ -29,7 +29,7 @@ module DTK::DSL
 
       # Used in assembly
       Components = :components
-      TaskTemplates = :task_templates
+      Workflows  = :workflows
 
       # Used at multiple levels
       Name          = :name
