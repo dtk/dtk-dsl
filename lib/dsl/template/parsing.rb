@@ -78,39 +78,47 @@ module DTK::DSL
             template_class.create_for_parsing(input, opts.merge(:file_obj => @file_obj)).parse
           end
         end
-        
+
+        ### TODO: get rid of array classes and then can use name of node, assembly etc, rather than assembly[1]
         def parent_key?(index = nil)
           if @parent_key
             index ? "#{@parent_key}[#{index}]" : parent_key
           end
         end
+        def nested_parent_key(relative_key)
+          @parent_key ? "#{@parent_key}/#{relative_key}" : relative_key
+        end        
+
 
         def input_hash?
-          @input if @input.kind_of?(FileParser::Input::Hash) 
+          @input.kind_of?(FileParser::Input::Hash) 
         end
 
         def input_hash
-          @input_hash ||= input_hash? || raise_input_error(::Hash)
+          @input_hash ||= input_hash? ? @input : raise_input_error(::Hash)
         end
         
         def input_array?
-          @input if @input.kind_of?(FileParser::Input::Array)
+          @input.kind_of?(FileParser::Input::Array)
         end
 
         def input_array
-          @input_array ||= input_array? || raise_input_error(::Array)
+          @input_array ||= input_array? ? @input : raise_input_error(::Array)
         end
         
         def input_string?
-          @input if @input.kind_of?(::String)
+          @input.kind_of?(::String)
         end
 
         def input_string
-          @input_string ||= input_string? || raise_input_error(::String)
+          @input_string ||= input_string? ? @input : raise_input_error(::String)
         end
         
+        # This cannot be used for an assignment that is has with nil value
         def constant_matches(object, constant)
-          constant_class.matches?(object, constant) || raise_missing_key_value(constant)
+          ret = constant_class.matches?(object, constant) 
+          raise_missing_key_value(constant) if ret.nil?
+          ret
         end
         
         def constant_matches?(object, constant)
@@ -138,7 +146,6 @@ module DTK::DSL
             ParsingError.new(*args, :file_obj => @file_obj, :qualified_key => @parent_key)
           end
         end
-        
 
       end
     end

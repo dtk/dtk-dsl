@@ -23,7 +23,6 @@ class DTK::DSL::Template
         end
 
         extend ClassMixin::Constant
-        # TODO: might put constants used in many templates in ClassMixin::Constant
         Name  = 'name'
         Value = 'value'
       end
@@ -34,13 +33,8 @@ class DTK::DSL::Template
 
       def parse!
         set :Name, constant_matches(input_hash, :Name)
-        set :Value, constant_matches(input_hash, :Value)
-
-        # TODO: catchall
-        input_hash.delete('name')
-        input_hash.delete('value')
-
-        merge(input_hash)
+        # constant_matches? in case null value
+        set :Value, constant_matches?(input_hash, :Value)
       end
     end
   end

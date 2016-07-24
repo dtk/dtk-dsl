@@ -35,14 +35,33 @@ module DTK::DSL
         
         def parse!
           # TODO: This is a catchall that removes ones we so far are parsing and then has catch all
-          if input_string = input_string?
-            merge(input_string => FileParser::Output.create(:output_type => :hash))
+          if input_string?
+            parse_when_string!
           elsif input_hash = input_hash?
-            merge(input_hash)
+            parse_when_hash!
           else
             raise parsing_error(:WrongObjectType, @input, [::String, ::Hash])
           end
         end
+
+        def parse_when_string!
+          set :Name, input_string
+        end
+
+        def parse_when_hash!
+          unless input_hash.size == 1 and input_hash.values.first.kind_of?(::Hash)
+            raise parsing_error("Component is ill-formed; it must be string or hash with has value")
+          end
+          name = input_hash.keys.first
+          properties = input_hash.values.first
+          set :Name, name
+          set? :Attributes, parse_child(:attributes, constant_matches?(properties, :Attributes), :parent_key => nested_parent_key(Constant::Attributes))
+
+          # TODO: This is a catchall that removes ones we so far are parsing and then has catch all
+          properties.delete('attributes')
+          merge properties
+        end
+
       end
     end
   end

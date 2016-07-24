@@ -23,7 +23,6 @@ class DTK::DSL::Template
         end
 
         extend ClassMixin::Constant
-        # TODO: might put constants used in many templates in ClassMixin::Constant
         Name        = 'name'
         Description = 'description'
         Attributes  = 'attributes'
