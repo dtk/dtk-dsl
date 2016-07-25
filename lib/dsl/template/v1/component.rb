@@ -33,6 +33,14 @@ module DTK::DSL
           :hash
         end
         
+        def self.parse_elements(input, parent_info)
+          ret = file_parser_output_array
+          input_array(input).each do |component|
+            ret << parse_element(component, parent_info, :index => name(component))
+          end
+          ret
+        end
+
         def parse!
           # TODO: This is a catchall that removes ones we so far are parsing and then has catch all
           if input_string?
@@ -44,18 +52,33 @@ module DTK::DSL
           end
         end
 
+        private
+
+        def self.name(input)
+          if input.kind_of?(::String)
+            input
+          elsif input.kind_of?(::Hash) and input.size > 0
+            input.keys.first
+          else
+             raise parsing_error(:WrongObjectType, input, [::String, ::Hash])
+          end
+        end
+
+        def name
+          self.class.name(@input)
+        end
+
         def parse_when_string!
-          set :Name, input_string
+          set :Name, name
         end
 
         def parse_when_hash!
           unless input_hash.size == 1 and input_hash.values.first.kind_of?(::Hash)
             raise parsing_error("Component is ill-formed; it must be string or hash with has value")
           end
-          name = input_hash.keys.first
           properties = input_hash.values.first
-          set :Name, name
-          set? :Attributes, parse_child(:attributes, constant_matches?(properties, :Attributes), :parent_key => nested_parent_key(Constant::Attributes))
+          set  :Name, name
+          set? :Attributes, parse_child(:attributes, constant_matches?(properties, :Attributes), :parent_key => Constant::Attributes)
 
           # TODO: This is a catchall that removes ones we so far are parsing and then has catch all
           properties.delete('attributes')

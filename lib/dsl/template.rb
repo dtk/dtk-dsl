@@ -23,6 +23,7 @@ module DTK::DSL
     require_relative('template/loader')
 
     include Parsing::Mixin
+    extend Parsing::ClassMixin
     include Generation::Mixin
     
     # opts can have keys

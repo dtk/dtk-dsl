@@ -41,13 +41,21 @@ class DTK::DSL::Template
 #        set :Nodes, generate_child(:nodes, val(:Nodes))
       end
 
+      def self.parse_elements(input, parent_info)
+        ret = file_parser_output_array
+        input_hash(input).each do |name, content|
+          ret << parse_element(content.merge('name' => name), parent_info, :index => name)
+        end
+        ret
+      end
+
       def parse!
-        set :Name, constant_matches(input_hash, :Name)
-        set :Description, constant_matches?(input_hash, :Description)
-        set :Attributes, parse_child(:attributes, constant_matches?(input_hash, :Attributes), :parent_key => Constant::Attributes)
-        set :Nodes, parse_child(:nodes, constant_matches?(input_hash, :Nodes), :parent_key => Constant::Nodes)
-        set :Components, parse_child(:components, constant_matches?(input_hash, :Components), :parent_key => Constant::Components) 
-        set :Workflows, parse_child(:workflows, constant_matches?(input_hash, :Workflows), :parent_key => Constant::Workflows)
+        set  :Name, constant_matches(input_hash, :Name)
+        set  :Description, constant_matches?(input_hash, :Description)
+        set  :Attributes, parse_child(:attribute, constant_matches?(input_hash, :Attributes), :parent_key => Constant::Attributes)
+        set  :Nodes, parse_child_elements(:node, constant_matches?(input_hash, :Nodes))
+        set? :Components, parse_child_elements?(:component, constant_matches?(input_hash, :Components))
+        set  :Workflows, parse_child(:workflows, constant_matches?(input_hash, :Workflows), :parent_key => Constant::Workflows)
     
         # TODO: This is a catchall that removes ones we so far are parsing and then has catch all
         input_hash.delete('name')
