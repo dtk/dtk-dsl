@@ -16,14 +16,15 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class InputOutputCommon
-    # Canonical form that during parsing is form passed to client or server
-    # for generation, this is form that client or server writes to which then leads to generation
-    class Canonical < self
-      require_relative('canonical/hash_key')
-      require_relative('canonical/hash')
-      require_relative('canonical/array')
-      require_relative('canonical/diff')
+  class InputOutputCommon::Canonical
+    class Diff
+      require_relative('diff/base')
+      require_relative('diff/array')
+      require_relative('diff/hash')
+
+      def initialize(object_type)
+        @type = object_type
+      end
     end
   end
 end
