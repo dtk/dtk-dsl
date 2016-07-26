@@ -41,9 +41,9 @@ class DTK::DSL::Template
       end
 
       def parse!
-        set :Name, constant_matches(input_hash, :Name)
-        # constant_matches? in case null value
-        set :Value, constant_matches?(input_hash, :Value)
+        set :Name, input_key(:Name)
+        # input_key? in case null value
+        set :Value, input_key?(:Value)
       end
 
       ### For diffs

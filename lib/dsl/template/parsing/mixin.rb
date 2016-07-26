@@ -123,15 +123,17 @@ module DTK::DSL
           @input_string ||= input_string? ? @input : raise_input_error(::String)
         end
         
-        # This cannot be used for an assignment that is has with nil value
-        def constant_matches(object, constant)
-          ret = constant_class.matches?(object, constant) 
+        # This cannot be used for an assignment that can have with nil values
+        # opts can have key
+        #  :input_hash
+        def input_key(constant, opts = {})
+          ret = input_key?(constant, opts)
           raise_missing_key_value(constant) if ret.nil?
           ret
         end
-        
-        def constant_matches?(object, constant)
-          constant_class.matches?(object, constant)
+        def input_key?(constant, opts = {})
+          input_hash = opts[:input_hash] || input_hash()
+          constant_class.matches?(input_hash, constant)
         end
 
         # correct_ruby_types can also be scalar
