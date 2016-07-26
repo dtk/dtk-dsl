@@ -80,9 +80,12 @@ module DTK::DSL
             template_class.parse_elements(input, ParentInfo.new(self, key_type))
           end
         end
+
         def parse_child_elements?(parse_template_type, input, opts = {})
-          ret = parse_child_elements(parse_template_type, input, opts)
-          ret.empty? ? nil : ret
+          unless input.nil?
+            ret = parse_child_elements(parse_template_type, input, opts)
+            (ret.nil? or ret.empty?) ? nil : ret
+          end
         end
 
         # opts can have keys
@@ -93,13 +96,6 @@ module DTK::DSL
           else
             template_class = Loader.template_class(parse_template_type, :template_version => template_version)
             template_class.create_for_parsing(input, opts.merge(:file_obj => @file_obj)).parse
-          end
-        end
-
-        ### TODO: get rid of array classes and then can use name of node, assembly etc, rather than assembly[1]
-        def parent_key?(index = nil)
-          if @parent_key
-            index ? "#{@parent_key}[#{index}]" : parent_key
           end
         end
 

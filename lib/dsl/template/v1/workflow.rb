@@ -26,100 +26,68 @@ class DTK::DSL::Template
       module Constant
         module Variations
         end
-
+        
         extend ClassMixin::Constant
-
+        
         CreateWorkflowAction = 'create'
       end
-
+      
       def parser_output_type
         :hash
       end
-
-      # TODO: DTK-2554 Aldin: need to refactor this
-      def parse!
-        # TODO: catchall
-        merge(parse_and_ret_workflow(input_hash))
-      end
-
-      def parse_and_ret_workflow(input_hash, opts = {})
-        ret = input_hash.inject({}) do  |h, (workflow_action, r)|
-          workflow_hash = r || {}
-          # we explicitly want to delete from workflow_hash; workflow_action can be nil
-          # action_under_key = (workflow_hash.kind_of?(Hash) ? workflow_hash.delete(Constant::WorkflowAction) : nil)
-          # workflow_action = r[:action] || action_under_key
-          parsed_workflow = parse_workflow(workflow_hash, workflow_action, {}, opts)
-          h.merge(parsed_workflow)
+      
+      def self.parse_elements(input, parent_info)
+        workflows =
+          if input_hash?(input)
+            [input]
+          elsif input_array?(input)
+            input
+          else
+            raise parsing_error("Ill-formed workflow(s) section")
+          end
+        
+        ret = file_parser_output_hash
+        workflows.each_with_index do |workflow, i|
+          ret.merge!(parse_element(workflow, parent_info, :index => name?(workflow) || i))
         end
-
         ret
       end
-
-      def parse_workflow(workflow_hash, workflow_action, assembly_hash, opts = {})
-        # raise_error_if_parsing_error(workflow_hash, workflow_action, opts)
-        # check_if_invalid_component_in_workflow(assembly_hash, workflow_hash)
-
-        normalized_workflow_action =
-          if opts[:service_module_workflow]
-            normalized_service_module_action(workflow_hash, workflow_action)
-          else
-            normalized_assembly_action(workflow_action)
-          end
-
-        task_template_ref = normalized_workflow_action
-        task_template = {
-          'task_action' => normalized_workflow_action,
-          'content'     => workflow_hash
-        }
-
-        { task_template_ref => task_template }
+      
+      def parse!
+        input_hash.each_pair { |name, workflow_hash| merge(parse_workflow(name, workflow_hash)) }
       end
-
-      def raise_error_if_parsing_error(workflow_hash, workflow_action, opts = {})
-        if parse_error = Task::Template::ConfigComponents.find_parse_error?(workflow_hash, {workflow_action: workflow_action}.merge(opts))
-          fail parse_error
+      
+      private
+      
+      def self.name?(workflow)
+        if input_hash?(workflow)
+          workflow.keys.first if workflow.size == 1
         end
       end
-
-      def normalized_service_module_action(workflow_hash, workflow_action)
-        workflow_action || workflow_hash['name']
+      
+      def parse_workflow(name, workflow_hash)
+        # Put in fine grain parsing
+        # TODO: change to canonical output form and make output be array that has canonical fields for workflow_hash
+        # TODO: handle normalize create to be on server side
+        normalized_name = normalized_name(name)
+        { normalized_name => {
+            'task_action' => normalized_name,
+            'content'     => workflow_hash
+          }
+        }
       end
+      
+      INTERNAL_CREATE_ACTION_NAME = '__create_action'
 
-      def normalized_assembly_action(workflow_action)
-        if workflow_action.nil? or Constant.matches?(workflow_action, :CreateWorkflowAction)
+      def normalized_name(name)
+        if name.nil? or Constant.matches?(name, :CreateWorkflowAction)
           '__create_action'
         else
-          workflow_action
+          name
         end
+
       end
     end
   end
 end
 
-# TODO: DTK-2554: workflows: Aldin: 
-# here is an example of output form for one element; this is vcase that is treated specially; if match
-# CreateWorkflowAction use __create_action
-=begin
-
-{"__create_action"=>
-  {"task_action"=>"__create_action",
-   "content"=>
-    {"subtasks"=>
-      [{"name"=>"bigtop_multiservice", "components"=>["bigtop_multiservice"]},
-       {"name"=>"bigtop hiera", "components"=>["bigtop_multiservice::hiera"]},
-       {"name"=>"bigtop_base", "components"=>["bigtop_base"]},
-       {"name"=>"namenode", "components"=>["hadoop::namenode"]},
-       {"name"=>"if needed leave safemode",
-        "actions"=>["hadoop::namenode.leave_safemode"]},
-       {"name"=>"namenode smoke test",
-        "actions"=>["hadoop::namenode.smoke_test"]},
-       {"name"=>"datanodes",
-        "ordered_components"=>["hadoop::common_hdfs", "hadoop::datanode"]},
-       {"name"=>"hdfs directories for spark",
-        "component"=>["hadoop::hdfs_directories"]},
-       {"name"=>"spark master and client",
-        "components"=>["spark::master", "spark::client"]},
-       {"name"=>"spark workers",
-        "ordered_components"=>["spark::common", "spark::worker"]},
-       {"name"=>"zeppelin server", "components"=>["zeppelin::server"]}]}}}
-=end

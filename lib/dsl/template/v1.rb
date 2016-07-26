@@ -23,13 +23,10 @@ module DTK::DSL
       require_relative('v1/common_module')
       require_relative('v1/service_instance')
       require_relative('v1/module_ref')
-      require_relative('v1/dependent_modules')
       require_relative('v1/assembly')
-      require_relative('v1/attributes')
       require_relative('v1/attribute')
       require_relative('v1/node')
       require_relative('v1/component')
-      require_relative('v1/workflows')
       require_relative('v1/workflow')
 
       VERSION = 1

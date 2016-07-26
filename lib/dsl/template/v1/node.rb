@@ -38,7 +38,7 @@ class DTK::DSL::Template
 
       def parse!
         set  :Name, constant_matches(input_hash, :Name)
-        set? :Attributes, parse_child(:attributes, constant_matches?(input_hash, :Attributes), :parent_key => Constant::Attributes)
+        set? :Attributes, parse_child_elements?(:attribute, constant_matches?(input_hash, :Attributes))
         set? :Components, parse_child_elements?(:component, constant_matches?(input_hash, :Components))
 
         # TODO: This is a catchall that removes ones we so far are parsing and then has catch all

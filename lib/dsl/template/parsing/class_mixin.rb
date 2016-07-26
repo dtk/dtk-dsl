@@ -31,7 +31,7 @@ module DTK::DSL
           if input.nil?
             nil
           else
-            file_obj = parent_info.parent.file_obj 
+            file_obj   = parent_info.parent.file_obj 
             parent_key = parent_key(parent_info, opts[:index])
             create_for_parsing(input, :file_obj => file_obj, :parent_key => parent_key).parse
           end
@@ -53,12 +53,20 @@ module DTK::DSL
           FileParser::Output.create(:output_type => :hash)
         end
 
+        def input_hash?(input)
+          input.kind_of?(FileParser::Input::Hash)
+        end
+
         def input_hash(input)
-          input.kind_of?(FileParser::Input::Hash) ? input : raise_input_error(::Hash)
+          input_hash?(input) ? input : raise_input_error(::Hash)
+        end
+
+        def input_array?(input)
+          input.kind_of?(FileParser::Input::Array)
         end
 
         def input_array(input)
-          input.kind_of?(FileParser::Input::Array) ? input : raise_input_error(::Array)
+          input_array?(input) ? input : raise_input_error(::Array)
         end
       end
     end

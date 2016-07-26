@@ -31,6 +31,14 @@ class DTK::DSL::Template
         :hash
       end
 
+      def self.parse_elements(input, parent_info)
+        ret = file_parser_output_array
+        input_hash(input).each do |name, value|
+          ret << parse_element({ 'name' => name, 'value' => value}, parent_info, :index => name)
+        end
+        ret
+      end
+
       def parse!
         set :Name, constant_matches(input_hash, :Name)
         # constant_matches? in case null value

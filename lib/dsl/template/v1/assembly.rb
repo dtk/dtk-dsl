@@ -51,11 +51,11 @@ class DTK::DSL::Template
 
       def parse!
         set  :Name, constant_matches(input_hash, :Name)
-        set  :Description, constant_matches?(input_hash, :Description)
-        set  :Attributes, parse_child(:attribute, constant_matches?(input_hash, :Attributes), :parent_key => Constant::Attributes)
-        set  :Nodes, parse_child_elements(:node, constant_matches?(input_hash, :Nodes))
+        set? :Description, constant_matches?(input_hash, :Description)
+        set? :Attributes, parse_child_elements?(:attribute, constant_matches?(input_hash, :Attributes))
+        set? :Nodes, parse_child_elements?(:node, constant_matches?(input_hash, :Nodes))
         set? :Components, parse_child_elements?(:component, constant_matches?(input_hash, :Components))
-        set  :Workflows, parse_child(:workflows, constant_matches?(input_hash, :Workflows), :parent_key => Constant::Workflows)
+        set? :Workflows, parse_child_elements?(:workflow, constant_matches?(input_hash, :Workflows))
     
         # TODO: This is a catchall that removes ones we so far are parsing and then has catch all
         input_hash.delete('name')

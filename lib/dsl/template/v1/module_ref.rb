@@ -25,6 +25,14 @@ class DTK::DSL::Template
         :hash
       end
 
+      def self.parse_elements(input, parent_info)
+        ret = file_parser_output_array
+        input_array(input).each_with_index do |module_ref, i|
+          ret << parse_element(module_ref, parent_info, :index => i)
+        end
+        ret
+      end
+
       def parse!
         split = split_by_delim(input_string)
         unless split.size == 2
@@ -34,7 +42,9 @@ class DTK::DSL::Template
         set :Namespace, namespace
         set :ModuleName, module_name
       end
-      
+
+      private
+
       def split_by_delim(str)
         if matching_delim = MODULE_NAMESPACE_DELIMS.find { |delim| str =~ Regexp.new(delim) }
           str.split(matching_delim)
