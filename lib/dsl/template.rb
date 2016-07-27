@@ -26,9 +26,10 @@ module DTK::DSL
     include Parsing::Mixin
     extend Parsing::ClassMixin
     include Generation::Mixin
+    extend Generation::ClassMixin
     include Diff::Mixin
     extend Diff::ClassMixin
-    
+
     # opts can have keys
     #   :file_obj
     #   :parent_key
@@ -49,10 +50,6 @@ module DTK::DSL
       when :generation then generation_initialize(opts)
       else raise Error, "Illegal type '#{type}'"
       end
-    end
-
-    def self.template_class(parse_template_type, dsl_version)
-      Loader.template_class(parse_template_type, :dsl_version => dsl_version)
     end
 
     def set(constant, val)
@@ -92,6 +89,16 @@ module DTK::DSL
       when :parsing then parsing_add(array_element)
       when :generation then generation_add(array_element)
       end
+    end
+
+    private
+
+    def self.template_class(parse_template_type, dsl_version)
+      Loader.template_class(parse_template_type, :dsl_version => dsl_version)
+    end
+
+    def template_class(parse_template_type)
+      self.class.template_class(parse_template_type, template_version)
     end
 
     def canonical_key(constant)

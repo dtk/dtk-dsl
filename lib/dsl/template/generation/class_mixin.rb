@@ -18,9 +18,19 @@
 module DTK::DSL
   class Template
     module Generation
-      require_relative('generation/mixin')
-      require_relative('generation/class_mixin')
+      module ClassMixin
+        # Main template-specfic generate call; Concrete classes overwrite this
+        def generate_elements(_content_elements, _parent)
+          raise Error::NoMethodForConcreteClass.new(self)
+        end
+
+        private
+
+        def generate_element(content, parent)
+          create_for_generation(content, :filter => parent.filter).generate_yaml_object
+        end
+
+      end
     end
   end
 end
-

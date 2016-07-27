@@ -28,6 +28,7 @@ class DTK::DSL::Template
         Components  = 'components'
       end
 
+      ### For parsing
       def self.parse_elements(input, parent_info)
         ret = file_parser_output_array
         input_hash(input).each do |name, content|
@@ -46,6 +47,27 @@ class DTK::DSL::Template
         input_hash.delete('attributes')
         input_hash.delete('components')
         merge input_hash
+      end
+
+      ### For generation
+      def self.generate_elements(nodes_content, parent)
+        nodes_content.map { |node| generate_element(node, parent) }
+      end
+
+      def generate!
+        merge(req(:Name) => generate_node_hash)
+      end
+
+      ### For diffs
+      # TODO: ..
+
+      private
+
+      def generate_node_hash
+        ret = {}
+        set_generation_hash(ret, :Attributes, generate_child_elements(:attribute, val(:Attributes)))
+        set_generation_hash(ret, :Components, generate_child_elements(:component, val(:Components)))
+        ret
       end
 
     end

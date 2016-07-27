@@ -28,7 +28,8 @@ module DTK::DSL
           Attributes     = 'attributes'
           ComponentLinks = 'component_links'
         end
-        
+
+        ### For parsing
         def parser_output_type 
           :hash
         end
@@ -40,7 +41,7 @@ module DTK::DSL
           end
           ret
         end
-
+        
         def parse!
           # TODO: This is a catchall that removes ones we so far are parsing and then has catch all
           if input_string?
@@ -52,22 +53,48 @@ module DTK::DSL
           end
         end
 
+        ### For generation
+        def self.generate_elements(components_content, parent)
+          components_content.map { |component| generate_element(component, parent) }
+        end
+        
+        def generate!
+          component_name = req(:Name)
+          component_hash = generate_component_hash
+          if generate_component_hash.empty?
+            generation_set_scalar component_name
+          else
+            merge(component_name => component_hash)
+          end
+        end
+
+        
+        ### For diffs
+        # TODO: ..
+        
         private
 
+        def generate_component_hash
+          ret = {}
+          set_generation_hash(ret, :Attributes, generate_child_elements(:attribute, val(:Attributes)))
+          #TODO: set component_links
+          ret
+        end
+        
         def self.name(input)
           if input.kind_of?(::String)
             input
           elsif input.kind_of?(::Hash) and input.size > 0
             input.keys.first
           else
-             raise parsing_error(:WrongObjectType, input, [::String, ::Hash])
+            raise parsing_error(:WrongObjectType, input, [::String, ::Hash])
           end
         end
-
+        
         def name
           self.class.name(@input)
         end
-
+        
         def parse_when_string!
           set :Name, name
         end

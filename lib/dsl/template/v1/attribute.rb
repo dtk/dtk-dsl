@@ -46,6 +46,15 @@ class DTK::DSL::Template
         set :Value, input_key?(:Value)
       end
 
+      ### For generation
+      def self.generate_elements(attributes_content, parent)
+        attributes_content.inject({}) { |h, attribute| h.merge(generate_element(attribute, parent)) }
+      end
+
+      def generate!
+        merge(req(:Name) => val(:Value))
+      end
+
       ### For diffs
       def self.compute_diff_object?(attributes1, attributes2)
         Diff.objects_in_array?(:attribute, attributes1, attributes2)

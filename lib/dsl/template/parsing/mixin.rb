@@ -19,6 +19,12 @@ module DTK::DSL
   class Template
     module Parsing
       module Mixin
+        # Main template-specfic parse call; Concrete classes overwrite this
+        def parse!
+          raise Error::NoMethodForConcreteClass.new(self.class)
+        end
+        private :parse!
+
         attr_reader :file_obj, :parent_key
 
         def parsing_initialize(opts = {})
@@ -52,11 +58,6 @@ module DTK::DSL
           end
         end
 
-        # Main parse call; Each concrete class should overwrite this
-        def parse!
-          raise Error::NoMethodForConcreteClass.new(self.class)
-        end
-
         def parsing_set(constant, val)
           @output.set(constant, val)
         end
@@ -75,9 +76,8 @@ module DTK::DSL
           if input.nil?
             nil
           else
-            template_class = Loader.template_class(parse_template_type, :template_version => template_version)
             key_type = opts[:key_type] || parse_template_type
-            template_class.parse_elements(input, ParentInfo.new(self, key_type))
+            template_class(parse_template_type).parse_elements(input, ParentInfo.new(self, key_type))
           end
         end
 
@@ -94,8 +94,7 @@ module DTK::DSL
           if input.nil?
             nil
           else
-            template_class = Loader.template_class(parse_template_type, :template_version => template_version)
-            template_class.create_for_parsing(input, opts.merge(:file_obj => @file_obj)).parse
+            template_class(parse_template_type).create_for_parsing(input, opts.merge(:file_obj => @file_obj)).parse
           end
         end
 

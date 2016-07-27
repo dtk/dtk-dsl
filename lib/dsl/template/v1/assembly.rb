@@ -34,12 +34,7 @@ class DTK::DSL::Template
 
       end
 
-      def generate!
-        # TODO: add attributes, workflows
-        set :Description, val(:Description)
-        set :Components, generate_child(:components, val(:Components))
-#        set :Nodes, generate_child(:nodes, val(:Nodes))
-      end
+      ### For parsing
 
       def self.parse_elements(input, parent_info)
         ret = file_parser_output_array
@@ -66,6 +61,14 @@ class DTK::DSL::Template
         input_hash.delete('workflow')
         input_hash.delete('workflows')
         merge input_hash
+      end
+
+      ### For generation
+      def generate!
+        # TODO: add attributes, workflows
+        set :Description, val(:Description)
+        set :Components, generate_child_elements(:component, val(:Components))
+        set :Nodes, generate_child_elements(:node, val(:Nodes))
       end
 
     end
