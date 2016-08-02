@@ -15,26 +15,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-module DTK::DSL
-  class Template
-    class V1 < self
-      require_relative('v1/service_module_summary')
-      require_relative('v1/common_module_summary')
-      # common_module_summary must be before common_module
-      require_relative('v1/common_module')
-      require_relative('v1/service_instance')
-      require_relative('v1/module_ref')
-      require_relative('v1/assembly')
-      require_relative('v1/attribute')
-      require_relative('v1/node')
-      require_relative('v1/component')
-      require_relative('v1/workflow')
+class DTK::DSL::Template
+  class V1
+    class ServiceModuleSummary < self
+      module Constant
+        module Variations
+        end
+        extend ClassMixin::Constant
 
-      VERSION = 1
-      def template_version
-        VERSION
+        DSLVersion = 'dsl_version'
+        Module = 'module'
+        Variations::Module = ['module', 'module_name', 'name'] 
+      end
+
+      def parse!
+        set :DSLVersion, input_key(:DSLVersion)
+        set :Name, input_key(:Module)
       end
     end
   end
 end
-
