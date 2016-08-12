@@ -55,7 +55,9 @@ module DTK::DSL
 
         ### For generation
         def self.generate_elements(components_content, parent)
-          components_content.map { |component| generate_element(component, parent) }
+          components_content.map do |component| 
+            generate_element(component, parent) unless component.matches_tag_type?(:hidden) 
+          end.compact
         end
         
         def generate!
