@@ -26,8 +26,8 @@ module DTK::DSL
 
         private
 
-        def generate_element(content, parent)
-          create_for_generation(content, :filter => parent.filter).generate_yaml_object
+        def generate_element?(content, parent)
+          create_for_generation(content, :filter => parent.filter).generate_yaml_object?
         end
 
       end

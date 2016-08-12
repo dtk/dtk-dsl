@@ -23,7 +23,11 @@ module DTK::DSL
         def generate!
           raise Error::NoMethodForConcreteClass.new(self.class)
         end
-        private :generate!
+
+        # This is overwritten if template can conditionally generate elements
+        def generate?
+          generate!
+        end
 
         attr_reader :filter
 
@@ -40,6 +44,11 @@ module DTK::DSL
         end
         private :generation_initialize
         
+        def generate_yaml_object?
+          generate?
+          is_empty?(@yaml_object) ? nil : @yaml_object
+        end
+
         def generate_yaml_object
           generate!
           @yaml_object
@@ -80,9 +89,17 @@ module DTK::DSL
         end
 
         def set_generation_hash(hash, constant, val)
-          unless val.nil? or (val.respond_to?(:empty?) and val.empty?)
+          unless val.nil? or is_empty?(val)
             hash[canonical_key(constant)] = val
           end
+        end
+
+        def is_empty?(obj)
+          obj.respond_to?(:empty?) and obj.empty?
+        end
+
+        def matches_tag_type?(tag_type)
+          @content.matches_tag_type?(tag_type)
         end
 
         def generation_set(constant, val)

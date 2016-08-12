@@ -51,7 +51,7 @@ class DTK::DSL::Template
 
       ### For generation
       def self.generate_elements(nodes_content, parent)
-        nodes_content.map { |node| generate_element(node, parent) }
+        nodes_content.map { |node| generate_element?(node, parent) }.compact
       end
 
       def generate!
