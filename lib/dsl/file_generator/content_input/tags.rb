@@ -34,8 +34,8 @@ module DTK::DSL
         tag_type_split = split(tag_type)
         tag_split = split(tag)
         if tag_split.size >= tag_type_split.size
-          tag_split.each_with_index do |tag_part, i|
-            return nil unless tag_part == tag_type_split[i]
+          tag_type_split.each_with_index do |tag_type_part, i|
+            return nil unless tag_type_part == tag_split[i]
           end
           true
         end

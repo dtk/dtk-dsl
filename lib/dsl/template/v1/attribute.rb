@@ -48,8 +48,14 @@ class DTK::DSL::Template
 
       ### For generation
       def self.generate_elements(attributes_content, parent)
-        attributes_content.inject({}) { |h, attribute| h.merge(generate_element(attribute, parent)) }
+        attributes_content.inject({}) do |h, attribute| 
+          # dont render any hidden attributes
+          attribute.matches_tag_type?(:hidden) ? h : h.merge(generate_element(attribute, parent)) 
+        end
       end
+      # if wanted to filter out derived attributes as well as hidden would use:
+      #(attribute.matches_tag_type?(:hidden) or attribute.matches_tag_type?(:desired__derived)) ? h : h.merge(generate_element(attribute, parent)) 
+
 
       def generate!
         merge(req(:Name) => val(:Value))
