@@ -19,7 +19,7 @@ module DTK::DSL
   class Template
     module Generation
       module ClassMixin
-        # Main template-specfic generate call; Concrete classes overwrite this
+        # Main template-specific generate call; Concrete classes overwrite this
         def generate_elements(_content_elements, _parent)
           raise Error::NoMethodForConcreteClass.new(self)
         end

@@ -17,7 +17,7 @@
 #
 
 module DTK::DSL
-  # This has specfic file type meta info
+  # This has specific file type meta info
   class FileType
     Types = 
       [

@@ -19,7 +19,7 @@ module DTK::DSL
   class Template
     module Diff
       module Mixin
-        # Main template-specfic diff instance method call; Concrete classes overwrite this
+        # Main template-specific diff instance method call; Concrete classes overwrite this
         def diff?(_object2)
           raise Error::NoMethodForConcreteClass.new(self.class)
         end
@@ -31,7 +31,7 @@ module DTK::DSL
       end
       
       module ClassMixin
-        # Main template-specfic diff class method call; Concrete classes overwrite this
+        # Main template-specific diff class method call; Concrete classes overwrite this
         def compute_diff_object?(_objects1, _objects2)
           raise Error::NoMethodForConcreteClass.new(self)
         end

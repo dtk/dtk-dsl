@@ -19,7 +19,7 @@ module DTK::DSL
   class Template
     module Parsing
       module Mixin
-        # Main template-specfic parse call; Concrete classes overwrite this
+        # Main template-specific parse call; Concrete classes overwrite this
         def parse!
           raise Error::NoMethodForConcreteClass.new(self.class)
         end
