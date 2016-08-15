@@ -33,10 +33,14 @@ module DTK::DSL
         def parser_output_type 
           :hash
         end
+
+        def self.elements_collection_type
+          :array
+        end
         
-        def self.parse_elements(input, parent_info)
+        def self.parse_elements(input_array, parent_info)
           ret = file_parser_output_array
-          input_array(input).each do |component|
+          input_array.each do |component|
             ret << parse_element(component, parent_info, :index => name(component))
           end
           ret

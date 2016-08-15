@@ -25,9 +25,13 @@ class DTK::DSL::Template
         :hash
       end
 
-      def self.parse_elements(input, parent_info)
+      def self.elements_collection_type
+        :array
+      end
+
+      def self.parse_elements(input_array, parent_info)
         ret = file_parser_output_array
-        input_array(input).each_with_index do |module_ref, i|
+        input_array.each_with_index do |module_ref, i|
           ret << parse_element(module_ref, parent_info, :index => i)
         end
         ret

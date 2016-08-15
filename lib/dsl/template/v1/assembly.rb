@@ -36,6 +36,10 @@ class DTK::DSL::Template
 
       ### For parsing
 
+      def self.elements_collection_type
+        :hash
+      end
+
       def self.parse_elements(input_hash, parent_info)
         ret = file_parser_output_array
         input_hash.each do |name, content|

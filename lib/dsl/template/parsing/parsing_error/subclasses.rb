@@ -30,7 +30,7 @@ module DTK::DSL; class Template
           correct_ruby_types = [correct_ruby_types] unless correct_ruby_types.kind_of?(::Array)
           error_msg = 
             if correct_ruby_types.size == 1
-              "The key's value should havetype #{correct_ruby_types.first}"
+              "The key's value should have type #{correct_ruby_types.first}"
             else
               "The key's value should be one of the types (#{correct_ruby_types.join(' ')})"
             end

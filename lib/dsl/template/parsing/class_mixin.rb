@@ -23,8 +23,15 @@ module DTK::DSL
         def parse_elements(_input_elements, _parent_info)
           raise Error::NoMethodForConcreteClass.new(self)
         end
+
+        # Indicates whether collection of elements to parse is a hash or array
+        # This can be overwritten
+        def elements_collection_type
+          nil
+        end
         
         private
+
 
         # opts can have keys
         #  :index
@@ -58,17 +65,10 @@ module DTK::DSL
           input.kind_of?(FileParser::Input::Hash)
         end
 
-        def input_hash(input)
-          input_hash?(input) ? input : raise_input_error(::Hash)
-        end
-
         def input_array?(input)
           input.kind_of?(FileParser::Input::Array)
         end
 
-        def input_array(input)
-          input_array?(input) ? input : raise_input_error(::Array)
-        end
       end
     end
   end

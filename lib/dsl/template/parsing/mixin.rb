@@ -64,9 +64,10 @@ module DTK::DSL
           unless key_and_value = input_key_and_value?(key_constant, opts)
             nil
           else
-            input = key_and_value.values.first
+            template_class = template_class(parse_template_type)
+            input = check_type_and_ret_input(template_class, key_and_value)
             key_type = opts[:key_type] || parse_template_type
-            template_class(parse_template_type).parse_elements(input, ParentInfo.new(self, key_type))
+            template_class.parse_elements(input, ParentInfo.new(self, key_type))
           end
         end
 
@@ -118,16 +119,29 @@ module DTK::DSL
           @output << array_element
         end
 
-        def input_hash?
-          @input.kind_of?(FileParser::Input::Hash) 
+        def check_type_and_ret_input(template_class, key_and_value)
+          input = key_and_value.values.first
+          key = key_and_value.keys.first
+
+          case template_class.elements_collection_type
+          when :hash
+            raise_input_error(::Hash, :input => input, :key => key) unless input_hash?(input)
+          when :array
+            raise_input_error(::Array, :input => input, :key => key) unless input_array?(input)
+          end
+          input
+        end
+
+        def input_hash?(input = nil)
+          (input || @input).kind_of?(FileParser::Input::Hash) 
         end
 
         def input_hash
           @input_hash ||= input_hash? ? @input : raise_input_error(::Hash)
         end
         
-        def input_array?
-          @input.kind_of?(FileParser::Input::Array)
+        def input_array?(input = nil)
+          (input || @input).kind_of?(FileParser::Input::Array)
         end
 
         def input_array
@@ -141,10 +155,14 @@ module DTK::DSL
         def input_string
           @input_string ||= input_string? ? @input : raise_input_error(::String)
         end
-        
+
+        # opts can have keys
+        #   :input
+        #   :key
         # correct_ruby_types can also be scalar
-        def raise_input_error(correct_ruby_types)
-          raise parsing_error(:WrongObjectType, @input, correct_ruby_types)
+        def raise_input_error(correct_ruby_types, opts = {})
+          input = opts[:input] || @input
+          raise parsing_error_with_opts([:WrongObjectType, input, correct_ruby_types], opts)
         end
         
         def raise_missing_key_value(constant)
@@ -156,11 +174,27 @@ module DTK::DSL
         #  (:ParsingErrorName,*parsing_error_params) or
         #  (*parsing_error_params)
         def parsing_error(*args)
+          parsing_error_with_opts(args)
+        end
+
+        # opts can have keys
+        #   :key
+        def parsing_error_with_opts(args, opts = {})
+          qualified_key = qualified_key(opts[:key]) 
           if error_class = ParsingError.error_class?(args)
             error_params = args[1..args.size-1]
-            error_class.new(*error_params, :file_obj => @file_obj, :qualified_key => @parent_key)
+            error_class.new(*error_params, :file_obj => @file_obj, :qualified_key => qualified_key)
           else
-            ParsingError.new(*args, :file_obj => @file_obj, :qualified_key => @parent_key)
+            ParsingError.new(*args, :file_obj => @file_obj, :qualified_key => qualified_key)
+          end
+        end
+
+        def qualified_key(key = nil)
+          if key.nil?
+            @parent_key
+          else
+            # TODO: find common function that appends keys
+            @parent_key.nil? ? key : "#{@parent_key}/#{key}"
           end
         end
 
