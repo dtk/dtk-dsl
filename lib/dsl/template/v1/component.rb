@@ -75,10 +75,7 @@ module DTK::DSL
         def generate?
           generate! unless matches_tag_type?(:hidden)
         end
-        
-        ### For diffs
-        # TODO: ..
-        
+
         private
 
         def generate_component_hash

@@ -25,6 +25,56 @@ module DTK::DSL
       def initialize(object_type)
         @type = object_type
       end
+
+      # The arguments hash1 and hash2 are canonical hashes with values being of type object_type
+      def self.objects_in_hash?(object_type, hash1, hash2)
+        objects_in_array_or_hash?(:hash, object_type, hash1, hash2)
+      end
+
+      # The arguments array1 and array2 are canonical arrays with values being of type object_type
+      def self.objects_in_array?(object_type, array1, array2)
+        ndx_array1 = array1.inject({}) { |h, object1| h.merge(object1.diff_key => object1) }
+        ndx_array2 = array2.inject({}) { |h, object2| h.merge(object2.diff_key => object2) }
+        objects_in_array_or_hash?(:array, ndx_array1, ndx_array2) 
+      end
+
+      def self.base_new(object1, object2)
+        diff_class::Base.new(object1, object2)
+      end
+
+      private
+
+      def self.objects_in_array_or_hash?(array_or_hash, object_type, hash1, hash2)
+        added    = {}
+        deleted  = {}
+        modified = {}
+        hash2.each do |key, object2|
+          if hash1.has_key?(key)
+            if diff = diff?(hash1[key], object2)
+              modified.merge!(key => diff)
+            else
+              added.merge!(key => object2)
+            end
+          end
+        end
+        
+        hash1.each do |key, object1|
+          deleted.merge!(key => object1) unless hash2.has_key?(key)
+        end
+
+        unless added.empty? and deleted.empty? and modified.empty?
+          case array_or_hash
+          when :hash
+            diff_class::Hash.new(object_type, added, deleted, modified)
+            when :array
+            diff_class::Array.new(object_type, added.values, deleted.values, modified.values)
+          end
+        end
+      end
+
+      def self.diff_class
+        InputOutputCommon::Canonical::Diff
+      end
     end
   end
 end

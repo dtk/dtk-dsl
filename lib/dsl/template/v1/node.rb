@@ -65,9 +65,6 @@ class DTK::DSL::Template
         merge(req(:Name) => generate_node_hash)
       end
 
-      ### For diffs
-      # TODO: ..
-
       private
 
       def generate_node_hash

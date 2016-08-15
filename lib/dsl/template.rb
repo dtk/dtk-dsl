@@ -20,15 +20,12 @@ module DTK::DSL
     require_relative('template/constant_class_mixin')
     require_relative('template/parsing')
     require_relative('template/generation')
-    require_relative('template/diff')
     require_relative('template/loader')
 
     include Parsing::Mixin
     extend Parsing::ClassMixin
     include Generation::Mixin
     extend Generation::ClassMixin
-    include Diff::Mixin
-    extend Diff::ClassMixin
 
     # opts can have keys
     #   :file_obj

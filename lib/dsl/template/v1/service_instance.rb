@@ -28,17 +28,20 @@ class DTK::DSL::Template
         Variations::Name = ['name', 'service_name'] 
       end
 
+      ### For parsing
       def parse!
         set :DSLVersion, input_key_value(:DSLVersion)
         set :Name, input_key_value(:DSLVersion)
         merge parse_child(:assembly, input_hash)
       end
 
+      ### For generation
       def generate!
         set :DSLVersion, req(:DSLVersion)
         set :Name, req(:Name)
         merge generate_child(:assembly, req(:Assembly))
       end
+
     end
   end
 end
