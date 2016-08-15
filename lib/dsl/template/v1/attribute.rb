@@ -41,9 +41,9 @@ class DTK::DSL::Template
       end
 
       def parse!
-        set :Name, input_key(:Name)
-        # input_key? in case null value
-        set :Value, input_key?(:Value)
+        set :Name, input_key_value(:Name)
+        # input_key_value? in case null value
+        set :Value, input_key_value?(:Value)
       end
 
       ### For generation

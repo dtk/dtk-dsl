@@ -38,9 +38,9 @@ class DTK::DSL::Template
       end
 
       def parse!
-        set  :Name, input_key(:Name)
-        set? :Attributes, parse_child_elements?(:attribute, input_key?(:Attributes))
-        set? :Components, parse_child_elements?(:component, input_key?(:Components))
+        set  :Name, input_key_value(:Name)
+        set? :Attributes, parse_child_elements?(:attribute, :Attributes)
+        set? :Components, parse_child_elements?(:component, :Components)
 
         # TODO: This is a catchall that removes ones we so far are parsing and then has catch all
         input_hash.delete('name')

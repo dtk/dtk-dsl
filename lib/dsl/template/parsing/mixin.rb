@@ -60,20 +60,19 @@ module DTK::DSL
 
         # opts can have key
         #   :key_type
-        def parse_child_elements(parse_template_type, input, opts = {})
-          if input.nil?
+        def parse_child_elements(parse_template_type, key_constant, opts = {})
+          unless key_and_value = input_key_and_value?(key_constant, opts)
             nil
           else
+            input = key_and_value.values.first
             key_type = opts[:key_type] || parse_template_type
             template_class(parse_template_type).parse_elements(input, ParentInfo.new(self, key_type))
           end
         end
 
-        def parse_child_elements?(parse_template_type, input, opts = {})
-          unless input.nil?
-            ret = parse_child_elements(parse_template_type, input, opts)
-            (ret.nil? or ret.empty?) ? nil : ret
-          end
+        def parse_child_elements?(parse_template_type, key_constant, opts = {})
+          ret = parse_child_elements(parse_template_type, key_constant, opts)
+          (ret.nil? or ret.empty?) ? nil : ret
         end
 
         # opts can have keys
@@ -84,6 +83,27 @@ module DTK::DSL
           else
             template_class(parse_template_type).create_for_parsing(input, opts.merge(:file_obj => @file_obj)).parse
           end
+        end
+
+        # This cannot be used for an assignment that can have with nil values
+        # opts can have key
+        #  :input_hash
+        def input_key_value(constant, opts = {})
+          ret = input_key_value?(constant, opts)
+          raise_missing_key_value(constant) if ret.nil?
+          ret
+        end
+        def input_key_value?(constant, opts = {})
+          input_hash = opts[:input_hash] || input_hash()
+          constant_class.matches?(input_hash, constant)
+        end
+
+        # returns nil or {key => value}
+        # opts can have keys
+        #   :input_hash
+        def input_key_and_value?(constant, opts = {})
+          input_hash = opts[:input_hash] || input_hash()
+          constant_class.matching_key_and_value?(input_hash, constant)
         end
 
         def parsing_set(constant, val)
@@ -122,19 +142,6 @@ module DTK::DSL
           @input_string ||= input_string? ? @input : raise_input_error(::String)
         end
         
-        # This cannot be used for an assignment that can have with nil values
-        # opts can have key
-        #  :input_hash
-        def input_key(constant, opts = {})
-          ret = input_key?(constant, opts)
-          raise_missing_key_value(constant) if ret.nil?
-          ret
-        end
-        def input_key?(constant, opts = {})
-          input_hash = opts[:input_hash] || input_hash()
-          constant_class.matches?(input_hash, constant)
-        end
-
         # correct_ruby_types can also be scalar
         def raise_input_error(correct_ruby_types)
           raise parsing_error(:WrongObjectType, @input, correct_ruby_types)
@@ -147,7 +154,7 @@ module DTK::DSL
 
         # args can have form 
         #  (:ParsingErrorName,*parsing_error_params) or
-        #  (parsing_error_params)
+        #  (*parsing_error_params)
         def parsing_error(*args)
           if error_class = ParsingError.error_class?(args)
             error_params = args[1..args.size-1]

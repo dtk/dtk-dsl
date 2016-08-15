@@ -29,8 +29,8 @@ class DTK::DSL::Template
       end
 
       def parse!
-        set :DSLVersion, input_key(:DSLVersion)
-        set :Name, input_key(:Module)
+        set :DSLVersion, input_key_value(:DSLVersion)
+        set :Name, input_key_value(:Module)
       end
     end
   end

@@ -108,7 +108,7 @@ module DTK::DSL
           end
           properties = input_hash.values.first
           set  :Name, name
-          set? :Attributes, parse_child_elements?(:attribute, input_key?(:Attributes, :input_hash => properties))
+          set? :Attributes, parse_child_elements?(:attribute, :Attributes, :input_hash => properties)
 
           # TODO: This is a catchall that removes ones we so far are parsing and then has catch all
           properties.delete('attributes')

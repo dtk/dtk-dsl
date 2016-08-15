@@ -29,9 +29,9 @@ class DTK::DSL::Template
       end
 
       def parse!
-        set :DSLVersion, input_key(:DSLVersion)
-        set :Name, input_key(:DSLVersion)
-        merge Assembly.parse_element(input_hash, Parsing::ParentInfo.new(self, :service_instance))
+        set :DSLVersion, input_key_value(:DSLVersion)
+        set :Name, input_key_value(:DSLVersion)
+        merge parse_child(:assembly, input_hash)
       end
 
       def generate!
