@@ -58,18 +58,6 @@ module DTK::DSL
           end
         end
 
-        def parsing_set(constant, val)
-          @output.set(constant, val)
-        end
-
-        def parsing_merge(hash)
-          @output.merge!(hash)
-        end
-
-        def parsing_add(array_element)
-          @output << array_element
-        end
-
         # opts can have key
         #   :key_type
         def parse_child_elements(parse_template_type, input, opts = {})
@@ -96,6 +84,18 @@ module DTK::DSL
           else
             template_class(parse_template_type).create_for_parsing(input, opts.merge(:file_obj => @file_obj)).parse
           end
+        end
+
+        def parsing_set(constant, val)
+          @output.set(constant, val)
+        end
+
+        def parsing_merge(hash)
+          @output.merge!(hash)
+        end
+
+        def parsing_add(array_element)
+          @output << array_element
         end
 
         def input_hash?

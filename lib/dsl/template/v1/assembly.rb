@@ -36,9 +36,9 @@ class DTK::DSL::Template
 
       ### For parsing
 
-      def self.parse_elements(input, parent_info)
+      def self.parse_elements(input_hash, parent_info)
         ret = file_parser_output_array
-        input_hash(input, :parent_info => parent_info).each do |name, content|
+        input_hash.each do |name, content|
           ret << parse_element(content.merge('name' => name), parent_info, :index => name)
         end
         ret
