@@ -34,20 +34,16 @@ class DTK::DSL::Template
       end
 
       def self.parse_elements(input_hash, parent_info)
-        ret = file_parser_output_array
-        input_hash.each do |name, content|
-          ret << parse_element(content.merge('name' => name), parent_info, :index => name)
+        input_hash.inject(file_parser_output_hash) do |h, (name, content)|
+          h.merge(name => parse_element(content, parent_info, :index => name))
         end
-        ret
       end
 
       def parse!
-        set  :Name, input_key_value(:Name)
         set? :Attributes, parse_child_elements?(:attribute, :Attributes)
         set? :Components, parse_child_elements?(:component, :Components)
 
         # TODO: This is a catchall that removes ones we so far are parsing and then has catch all
-        input_hash.delete('name')
         input_hash.delete('attributes')
         input_hash.delete('components')
         merge input_hash
@@ -55,14 +51,14 @@ class DTK::DSL::Template
 
       ### For generation
       def self.generate_elements(nodes_content, parent)
-        nodes_content.inject({}) do |h, node| 
-          el = generate_element?(node, parent)
-          el ? h.merge(el) : h
+        nodes_content.inject({}) do |h, (name, node)| 
+          node_hash = generate_element?(node, parent)
+          node_hash ? h.merge(name => node_hash) : h
         end
       end
 
       def generate!
-        merge(req(:Name) => generate_node_hash)
+        merge(generate_node_hash)
       end
 
       private

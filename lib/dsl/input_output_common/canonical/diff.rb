@@ -26,40 +26,40 @@ module DTK::DSL
         @type = object_type
       end
 
-      # The arguments hash1 and hash2 are canonical hashes with values being of type object_type
-      def self.objects_in_hash?(object_type, hash1, hash2)
-        objects_in_array_or_hash?(:hash, object_type, hash1, hash2)
+      # The arguments gen_hash is caonical hash produced by generation and parse_hash is caonical hash produced by parse with values being of type object_type
+      def self.objects_in_hash?(object_type, gen_hash, parse_hash)
+        objects_in_array_or_hash?(:hash, object_type, gen_hash, parse_hash)
       end
 
       # The arguments array1 and array2 are canonical arrays with values being of type object_type
       def self.objects_in_array?(object_type, array1, array2)
-        ndx_array1 = array1.inject({}) { |h, object1| h.merge(object1.diff_key => object1) }
-        ndx_array2 = array2.inject({}) { |h, object2| h.merge(object2.diff_key => object2) }
+        ndx_array1 = array1.inject({}) { |h, gen_object| h.merge(gen_object.diff_key => gen_object) }
+        ndx_array2 = array2.inject({}) { |h, parse_object| h.merge(parse_object.diff_key => parse_object) }
         objects_in_array_or_hash?(:array, ndx_array1, ndx_array2) 
       end
 
-      def self.base_new(object1, object2)
-        diff_class::Base.new(object1, object2)
+      def self.base_new(gen_object, parse_object)
+        diff_class::Base.new(gen_object, parse_object)
       end
 
       private
 
-      def self.objects_in_array_or_hash?(array_or_hash, object_type, hash1, hash2)
+      def self.objects_in_array_or_hash?(array_or_hash, object_type, gen_hash, parse_hash)
         added    = {}
         deleted  = {}
         modified = {}
-        hash2.each do |key, object2|
-          if hash1.has_key?(key)
-            if diff = diff?(hash1[key], object2)
+        parse_hash.each do |key, parse_object|
+          if gen_hash.has_key?(key)
+            if diff = gen_hash[key].diff?(parse_object)
               modified.merge!(key => diff)
             else
-              added.merge!(key => object2)
+              added.merge!(key => parse_object)
             end
           end
         end
         
-        hash1.each do |key, object1|
-          deleted.merge!(key => object1) unless hash2.has_key?(key)
+        gen_hash.each do |key, gen_object|
+          deleted.merge!(key => gen_object) unless parse_hash.has_key?(key)
         end
 
         unless added.empty? and deleted.empty? and modified.empty?
