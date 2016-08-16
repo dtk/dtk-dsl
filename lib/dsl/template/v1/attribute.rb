@@ -23,7 +23,6 @@ class DTK::DSL::Template
         end
 
         extend ClassMixin::Constant
-        Name  = 'name'
         Value = 'value'
       end
 
@@ -37,29 +36,26 @@ class DTK::DSL::Template
       end
 
       def self.parse_elements(input_hash, parent_info)
-        ret = file_parser_output_array
-        input_hash.each do |name, value|
-          ret << parse_element({ 'name' => name, 'value' => value}, parent_info, :index => name)
+        input_hash.inject(file_parser_output_hash) do |h, (name, value)|
+          h.merge(name => parse_element({ 'value' => value}, parent_info, :index => name))
         end
-        ret
       end
 
       def parse!
-        set :Name, input_key_value(:Name)
-        # input_key_value? in case null value
+        # using 'input_key_value?' (i.e., with '?') in case null value
         set :Value, input_key_value?(:Value)
       end
 
       ### For generation
       def self.generate_elements(attributes_content, parent)
-        attributes_content.inject({}) do |h, attribute| 
+        attributes_content.inject({}) do |h, (name, attribute)| 
           element = generate_element?(attribute, parent)
           element.nil? ? h : h.merge(element)
         end
       end
 
       def generate!
-        merge(req(:Name) => val(:Value))
+        set :Value, val(:Value)
       end
 
       def generate?
