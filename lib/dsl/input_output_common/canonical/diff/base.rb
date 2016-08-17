@@ -18,14 +18,29 @@
 module DTK::DSL
   class InputOutputCommon::Canonical
     class Diff
-      ####
-      # Represents two objects of same type that are different
       class Base < self
-        def initialize(object_type, object1, object2)
-          super(object_type)
-          @object1 = object1
-          @object2 = object2
+        def initialize(object_type, key, current_val, new_val)
+          @type        = object_type
+          @key         = key
+          @current_val = current_val
+          @new_val     = new_val
         end
+      end
+
+      def self.diff?(object_type, key, current_val, new_val)
+        new(object_type, key, current_val, new_val) if has_diff?(current_val, new_val)
+      end
+
+      private
+
+      def self.has_diff?(current_val, new_val)
+        no_diff = false
+        if current_val.respond_to?(:to_s) and new_val.respond_to?(:to_s) and current_val.to_s == new_val.to_s
+          no_diff = true
+        elsif current_val.class == new_val.class and current_val == new_val
+          no_diff = true
+        end
+        !no_diff
       end
     end
   end
