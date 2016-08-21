@@ -36,21 +36,21 @@ module DTK::DSL
         end
         
         
-        # The arguments gen_hash is caonical hash produced by generation and parse_hash is canonical hash produced by parse with values being of type object_type
-        def self.between_hashes(object_type, gen_hash, parse_hash)
-          between_arrays_or_hashes(:hash, object_type, gen_hash, parse_hash)
+        # The arguments gen_hash is canonical hash produced by generation and parse_hash is canonical hash produced by parse with values being elements of same type
+        def self.between_hashes(gen_hash, parse_hash)
+          between_arrays_or_hashes(:hash, gen_hash, parse_hash)
         end
         
-        # The arguments gen_array is caonical array produced by generation and parse_array is canonical array produced by parse with values being of type object_type
-        def self.between_arrays(object_type, gen_array, parse_array)
+        # The arguments gen_array is canonical array produced by generation and parse_array is canonical array produced by parse with values being elements of same type
+        def self.between_arrays(gen_array, parse_array)
           ndx_gen_array = (gen_array || []).inject({}) { |h, gen_object| h.merge(gen_object.diff_key => gen_object) }
           ndx_parse_array = (parse_array || []).inject({}) { |h, parse_object| h.merge(parse_object.diff_key => parse_object) }
-          between_arrays_or_hashes(:array, object_type, ndx_gen_array, ndx_parse_array) 
+          between_arrays_or_hashes(:array, ndx_gen_array, ndx_parse_array) 
         end
         
         private
         
-        def self.between_arrays_or_hashes(array_or_hash, object_type, gen_hash, parse_hash)
+        def self.between_arrays_or_hashes(array_or_hash, gen_hash, parse_hash)
           added    = []
           deleted  = []
           modified = []

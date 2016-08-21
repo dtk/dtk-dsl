@@ -19,16 +19,15 @@ module DTK::DSL
   class InputOutputCommon::Canonical
     class Diff
       class Base < self
-        def initialize(object_type, key, current_val, new_val)
-          @type        = object_type
+        def initialize(key, current_val, new_val)
           @key         = key
           @current_val = current_val
           @new_val     = new_val
         end
       end
 
-      def self.diff?(object_type, key, current_val, new_val)
-        new(object_type, key, current_val, new_val) if has_diff?(current_val, new_val)
+      def self.diff?(key, current_val, new_val)
+        new(key, current_val, new_val) if has_diff?(current_val, new_val)
       end
 
       private

@@ -20,7 +20,6 @@ module DTK::DSL
     class Diff
       require_relative('diff/base')
       require_relative('diff/set')
-
     end
   end
 end
