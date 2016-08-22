@@ -20,6 +20,31 @@ module DTK::DSL
     class Diff
       require_relative('diff/base')
       require_relative('diff/set')
+
+      def self.diff?(key, current_val, new_val)
+        bass_class.diff?(key, current_val, new_val)
+      end
+
+      # The arguments gen_hash is canonical hash produced by generation and parse_hash is canonical hash produced by parse with values being elements of same type
+      def self.between_hashes(gen_hash, parse_hash)
+        set_class.between_hashes(gen_hash, parse_hash)
+      end
+      
+      # The arguments gen_array is canonical array produced by generation and parse_array is canonical array produced by parse with values being elements of same type
+      def self.between_arrays(gen_array, parse_array)
+        set_class.between_arrays(gen_array, parse_array)
+      end
+
+      private
+
+      def self.bass_class
+        kind_of?(Base) ? self : Base
+      end
+
+      def self.set_class
+        kind_of?(Set) ? self : Set
+      end
+
     end
   end
 end

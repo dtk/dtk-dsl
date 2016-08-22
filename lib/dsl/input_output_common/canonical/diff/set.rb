@@ -17,25 +17,35 @@
 #
 module DTK::DSL
   class InputOutputCommon::Canonical
-    class Diff
+    class Diff 
       class Set < self
-        attr_accessor :added, :deleted, :modified
-        def initialize(added, deleted, modified)
+        # args will have form
+        # [added, deleted, modified]
+        # or
+        # [diff_set]
+        def initialize(*args)
           super()
-          @added    = added || []
-          @deleted  = deleted || []
-          @modified = modified || []
+          if args.size == 1 and args[0].kind_of?(Diff::Set)
+            diff_set = args[0]
+            @added    = diff_set.added
+            @deleted  = diff_set.deleted
+            @modified = diff_set.modified
+          elsif args.size == 3 and ! args.find { |arg| ! (arg.kind_of?(::Array) or arg.nil?) }
+            @added    = args[0] || []
+            @deleted  = args[1] || []
+            @modified = args[2] || []
+          else
+            raise Error, "The params args has unexepcetd form"
+          end
+          @key = nil
         end
-        
-        def empty?
-          @added.empty? and @deleted.empty? and @modified.empty?
+        private :initialize
+        attr_accessor :added, :deleted, :modified
+        attr_writer :key
+        def key
+          @key || raise(Error, "Unexpected that @key is nil")
         end
-        
-        def +(diff_set)
-          new(@added + diff_set.added, @deleted + diff_set.deleted, @modified + diff_set.modified) 
-        end
-        
-        
+
         # The arguments gen_hash is canonical hash produced by generation and parse_hash is canonical hash produced by parse with values being elements of same type
         def self.between_hashes(gen_hash, parse_hash)
           between_arrays_or_hashes(:hash, gen_hash, parse_hash)
@@ -46,6 +56,33 @@ module DTK::DSL
           ndx_gen_array = (gen_array || []).inject({}) { |h, gen_object| h.merge(gen_object.diff_key => gen_object) }
           ndx_parse_array = (parse_array || []).inject({}) { |h, parse_object| h.merge(parse_object.diff_key => parse_object) }
           between_arrays_or_hashes(:array, ndx_gen_array, ndx_parse_array) 
+        end
+
+        # opts can have keys
+        #   :key
+        def self.aggregate?(diff_sets, opts = {})
+          ret = nil
+          diff_sets = diff_sets.kind_of?(::Array) ? diff_sets : [diff_sets]
+          diff_sets.each do |diff_set|
+            next if diff_set.empty?
+            if ret
+              ret.add!(diff_set)
+            else
+              ret = new(diff_set)
+            end
+          end
+          ret.key = opts[:key] if ret
+          ret
+        end
+        
+        def empty?
+          @added.empty? and @deleted.empty? and @modified.empty?
+        end
+        
+        def add!(diff_set)
+          @added    += diff_set.added
+          @deleted  += diff_set.deleted
+          @modified += diff_set.modified
         end
         
         private

@@ -20,26 +20,28 @@ module DTK::DSL
     class Diff
       class Base < self
         def initialize(key, current_val, new_val)
+          super()
           @key         = key
           @current_val = current_val
           @new_val     = new_val
         end
-      end
 
-      def self.diff?(key, current_val, new_val)
-        new(key, current_val, new_val) if has_diff?(current_val, new_val)
-      end
-
-      private
-
-      def self.has_diff?(current_val, new_val)
-        no_diff = false
-        if current_val.respond_to?(:to_s) and new_val.respond_to?(:to_s) and current_val.to_s == new_val.to_s
-          no_diff = true
-        elsif current_val.class == new_val.class and current_val == new_val
-          no_diff = true
+        def self.diff?(key, current_val, new_val)
+          new(key, current_val, new_val) if has_diff?(current_val, new_val)
         end
-        !no_diff
+        
+        private
+        
+        def self.has_diff?(current_val, new_val)
+          no_diff = false
+          if current_val.respond_to?(:to_s) and new_val.respond_to?(:to_s) and current_val.to_s == new_val.to_s
+            no_diff = true
+          elsif current_val.class == new_val.class and current_val == new_val
+            no_diff = true
+          end
+          !no_diff
+        end
+
       end
     end
   end
