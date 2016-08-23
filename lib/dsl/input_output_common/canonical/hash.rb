@@ -19,6 +19,10 @@ module DTK::DSL
   class InputOutputCommon
     class Canonical
       class Hash < InputOutputCommon::Hash
+        def initialize(*args)
+          super
+        end
+
         def set(output_key, val)
           self[canonical_key_form_from_output_key(output_key)] = val
         end

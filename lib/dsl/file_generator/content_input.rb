@@ -19,7 +19,8 @@ module DTK::DSL
   class FileGenerator
     class ContentInput < InputOutputCommon::Canonical
       require_relative('content_input/tags')
-      # tags must go first
+      require_relative('content_input/mixin')
+      # mixin must go before the files below
       require_relative('content_input/hash')
       require_relative('content_input/array')
       require_relative('content_input/string')

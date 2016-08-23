@@ -21,16 +21,47 @@ module DTK::DSL
       require_relative('diff/base')
       require_relative('diff/set')
 
-      def self.diff?(key, current_val, new_val)
-        bass_class.diff?(key, current_val, new_val)
+      attr_writer :key, :id_handle
+      # opts can have keys
+      #   :key
+      #   :id_handle
+      def initialize(opts = {})
+        @key        = opts[:key]
+        @id_handle  = opts[:id_handle]
+      end
+      private :initialize
+
+      def key
+        @key || raise(Error, "Unexpected that @key is nil")
       end
 
-      # The arguments gen_hash is canonical hash produced by generation and parse_hash is canonical hash produced by parse with values being elements of same type
+      def id_handle
+        @id_handle || raise(Error, "Unexpected that @id_handle is nil")
+      end
+
+      # opts can have keys
+      #   :key
+      #   :id_handle
+      def self.diff?(current_val, new_val, opts = {})
+        bass_class.diff?(current_val, new_val, opts)
+      end
+
+      # opts can have keys
+      #   :key
+      #   :id_handle
+      def self.aggregate?(diff_sets, opts = {})
+        set_class.aggregate?(diff_sets, opts)
+      end
+
+
+      # The arguments gen_hash is canonical hash produced by generation and parse_hash is canonical hash produced by parse 
+      # with values being elements of same type
       def self.between_hashes(gen_hash, parse_hash)
         set_class.between_hashes(gen_hash, parse_hash)
       end
-      
-      # The arguments gen_array is canonical array produced by generation and parse_array is canonical array produced by parse with values being elements of same type
+
+      # The arguments gen_array is canonical array produced by generation and parse_array is canonical array produced by parse 
+      # with values being elements of same type
       def self.between_arrays(gen_array, parse_array)
         set_class.between_arrays(gen_array, parse_array)
       end

@@ -19,32 +19,31 @@ module DTK::DSL
   class InputOutputCommon::Canonical
     class Diff 
       class Set < self
-        # args will have form
-        # [added, deleted, modified]
-        # or
-        # [diff_set]
-        def initialize(*args)
-          super()
-          if args.size == 1 and args[0].kind_of?(Diff::Set)
-            diff_set = args[0]
+        # opts can have keys
+        #   :triplet - array with elememts [added, deleted, modified]
+        #   :diff_set
+        #   :id_handle
+        #   :key
+        def initialize(opts = {})
+          super(opts)
+          # The object attributes are
+          #  @added - array, possibly empty, with objects to add
+          #  @deleted - array, possibly empty, with id handles of objects to delete
+          #  @modified - array, possibly empty, of hierachical diff objects
+          if diff_set = opts[:diff_set]
             @added    = diff_set.added
             @deleted  = diff_set.deleted
             @modified = diff_set.modified
-          elsif args.size == 3 and ! args.find { |arg| ! (arg.kind_of?(::Array) or arg.nil?) }
-            @added    = args[0] || []
-            @deleted  = args[1] || []
-            @modified = args[2] || []
+          elsif triplet = opts[:triplet]
+            @added    = triplet[0] || []
+            @deleted  = triplet[1] || []
+            @modified = triplet[2] || []
           else
-            raise Error, "The params args has unexepcetd form"
+            raise Error, "The params args has unexpected form"
           end
-          @key = nil
         end
         private :initialize
         attr_accessor :added, :deleted, :modified
-        attr_writer :key
-        def key
-          @key || raise(Error, "Unexpected that @key is nil")
-        end
 
         # The arguments gen_hash is canonical hash produced by generation and parse_hash is canonical hash produced by parse with values being elements of same type
         def self.between_hashes(gen_hash, parse_hash)
@@ -60,6 +59,7 @@ module DTK::DSL
 
         # opts can have keys
         #   :key
+        #   :id_handle
         def self.aggregate?(diff_sets, opts = {})
           ret = nil
           diff_sets = diff_sets.kind_of?(::Array) ? diff_sets : [diff_sets]
@@ -68,10 +68,9 @@ module DTK::DSL
             if ret
               ret.add!(diff_set)
             else
-              ret = new(diff_set)
+              ret = new(opts.merge(:diff_set => diff_set))
             end
           end
-          ret.key = opts[:key] if ret
           ret
         end
         
@@ -102,22 +101,18 @@ module DTK::DSL
               end
             else
               added << parse_object
-              # TODO: think we need key somewhere
-              # added.merge!(key => parse_object)
             end
           end
           
           gen_hash.each do |key, gen_object|
-            # TODO: think we need key somewhere
-            #deleted.merge!(key => gen_object) unless parse_hash.has_key?(key)
-            deleted << gen_object unless parse_hash.has_key?(key)
+            deleted << gen_object.id_handle unless parse_hash.has_key?(key)
           end
           
           case array_or_hash
           when :hash
-            new(added, deleted, modified)
+            new(:triplet => [added, deleted, modified])
           when :array
-            new(added.values, deleted.values, modified.values)
+            new(:triplet => [added.values, deleted.values, modified.values])
           end
         end
         

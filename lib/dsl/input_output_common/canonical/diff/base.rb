@@ -19,15 +19,20 @@ module DTK::DSL
   class InputOutputCommon::Canonical
     class Diff
       class Base < self
-        def initialize(key, current_val, new_val)
-          super()
-          @key         = key
+        # opts can have keys
+        #   :key
+        #   :id_handle
+        def initialize(current_val, new_val, opts = {})
+          super(opts)
           @current_val = current_val
           @new_val     = new_val
         end
-
-        def self.diff?(key, current_val, new_val)
-          new(key, current_val, new_val) if has_diff?(current_val, new_val)
+        
+        # opts can have keys
+        #   :key
+        #   :id_handle
+        def self.diff?(current_val, new_val, opts = {})
+          new(current_val, new_val, opts) if has_diff?(current_val, new_val)
         end
         
         private

@@ -81,46 +81,6 @@ module DTK::DSL
         t_split.map(&:to_s).join(DELIMITER).to_sym
       end
 
-      module Mixin
-        attr_reader :tags
-        
-        def initialize_tags!
-          @tags = []
-        end
-        private :initialize_tags!
-        
-        def add_tags!(new_tags)
-          Tags.raise_error_if_invalid(new_tags)
-          new_tags = [new_tags] unless new_tags.kind_of?(::Array)
-          @tags += new_tags
-          @tags.uniq!
-          self
-        end
-
-        def add_tags?(new_tags)
-          add_tags!(new_tags) unless new_tags.nil? or new_tags.empty?
-        end
-
-        def matches_tag_type?(tag_type)
-          Tags.raise_error_if_invalid(tag_type)
-          !! @tags.find { |tag| Tags.matches_tag_type?(tag_type, tag) }
-        end
-
-        def add_tags_to_obj?(obj, new_tags) 
-          obj.add_tags!(new_tags) if obj.respond_to?(:add_tags!)
-          obj
-        end
-      
-        def obj_has_tag_type?(obj, tag_type)  
-          if obj.respond_to?(:matches_tag_type?)
-            obj.matches_tag_type?(tag_type)
-          else
-            # vacuously succeeds
-            true
-          end
-        end
-
-      end
     end
   end
 end
