@@ -48,14 +48,19 @@ class DTK::DSL::Template
 
       ### For generation
       def self.generate_elements(attributes_content, parent)
-        attributes_content.inject({}) do |h, (name, attribute)| 
+        attributes_content.inject({}) do |h, (attribute_name, attribute)| 
+          attribute.set(:Name, attribute_name)
           element = generate_element?(attribute, parent)
           element.nil? ? h : h.merge(element)
         end
       end
 
       def generate!
-        set :Value, val(:Value)
+        value = val(:Value)
+        unless value.nil?
+          merge(req(:Name) => val(:Value))
+          self
+        end
       end
 
       def generate?

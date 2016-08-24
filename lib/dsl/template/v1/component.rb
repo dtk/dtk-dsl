@@ -39,13 +39,12 @@ module DTK::DSL
         end
         
         def self.parse_elements(input_array, parent_info)
-          ret = file_parser_output_array
-          input_array.each do |component|
-            ret << parse_element(component, parent_info, :index => name(component))
+          input_array.inject(file_parser_output_hash) do |h, component|
+            name = name(component)
+            h.merge(name => parse_element(component, parent_info, :index => name))
           end
-          ret
         end
-        
+
         def parse!
           # TODO: This is a catchall that removes ones we so far are parsing and then has catch all
           if input_string?
@@ -100,7 +99,6 @@ module DTK::DSL
         end
         
         def parse_when_string!
-          set :Name, name
         end
 
         def parse_when_hash!
@@ -108,7 +106,6 @@ module DTK::DSL
             raise parsing_error("Component is ill-formed; it must be string or hash with has value")
           end
           properties = input_hash.values.first
-          set  :Name, name
           set? :Attributes, parse_child_elements?(:attribute, :Attributes, :input_hash => properties)
 
           # TODO: This is a catchall that removes ones we so far are parsing and then has catch all
