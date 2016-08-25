@@ -58,23 +58,22 @@ module DTK::DSL
 
         ### For generation
         def self.generate_elements(components_content, parent)
-          components_content.map { |component| generate_element?(component, parent) }.compact
-        end
-        
-        def generate!
-          component_name = req(:Name)
-          component_hash = generate_component_hash
-          if generate_component_hash.empty?
-            generation_set_scalar component_name
-          else
-            merge(component_name => component_hash)
-          end
-        end
-        
-        def generate?
-          generate! unless matches_tag_type?(:hidden)
+          components_content.map do |name, component| 
+            if component_hash = generate_element?(component, parent)
+              component_hash.empty? ? name : { name => component_hash }
+            end
+          end.compact
         end
 
+        def generate!
+          merge(generate_component_hash)
+        end
+
+        # Ovewritting this function because dont want to return nil when empty content
+        def generate_yaml_object?
+          generate! unless matches_tag_type?(:hidden)
+        end
+        
         private
 
         def generate_component_hash

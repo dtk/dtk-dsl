@@ -43,7 +43,8 @@ module DTK::DSL
           @yaml_object = empty_yaml_object(content)
         end
         private :generation_initialize
-        
+
+        # generate_yaml_object? can be ovewritten
         def generate_yaml_object?
           generate?
           is_empty?(@yaml_object) ? nil : @yaml_object
