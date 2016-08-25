@@ -56,14 +56,23 @@ module DTK::DSL
 
       # The arguments gen_hash is canonical hash produced by generation and parse_hash is canonical hash produced by parse 
       # with values being elements of same type
+      # Returns a Diff::Set object
       def self.between_hashes(gen_hash, parse_hash)
         set_class.between_hashes(gen_hash, parse_hash)
       end
 
       # The arguments gen_array is canonical array produced by generation and parse_array is canonical array produced by parse 
       # with values being elements of same type
+      # Returns a Diff::Set object
       def self.between_arrays(gen_array, parse_array)
         set_class.between_arrays(gen_array, parse_array)
+      end
+
+      # The arguments gen_hash is canonical hash produced by generation and parse_hash is canonical hash produced by parse 
+      # with values being elements of same type
+      # Returns an array of Diff objects
+      def self.array_of_diffs_from_hashes(gen_hash, parse_hash)
+        set_class.array_of_diffs_from_hashes(gen_hash, parse_hash)
       end
 
       private

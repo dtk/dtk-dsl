@@ -24,22 +24,23 @@ module DTK::DSL
         #   :diff_set
         #   :id_handle
         #   :key
+        AddElement = Struct.new(:key, :info)
+        DeleteElement = Struct.new(:key, :id_handle)
         def initialize(opts = {})
           super(opts)
           # The object attributes are
-          #  @added - array, possibly empty, with objects to add
-          #  @deleted - array, possibly empty, with id handles of objects to delete
-          #  @modified - array, possibly empty, of hierachical diff objects
+          #  @added - array, possibly empty, of AddElements
+          #  @deleted - array, possibly empty, of DeleteElements
+          #  @modified - array, possibly empty, of Diff objects
           if diff_set = opts[:diff_set]
             @added    = diff_set.added
             @deleted  = diff_set.deleted
             @modified = diff_set.modified
-          elsif triplet = opts[:triplet]
+          else
+            triplet = opts[:triplet] || [[], [], []]
             @added    = triplet[0] || []
             @deleted  = triplet[1] || []
             @modified = triplet[2] || []
-          else
-            raise Error, "The params args has unexpected form"
           end
         end
         private :initialize
@@ -60,31 +61,49 @@ module DTK::DSL
         # opts can have keys
         #   :key
         #   :id_handle
-        def self.aggregate?(diff_sets, opts = {})
-          ret = nil
-          diff_sets = diff_sets.kind_of?(::Array) ? diff_sets : [diff_sets]
-          diff_sets.each do |diff_set|
-            next if diff_set.empty?
-            if ret
-              ret.add!(diff_set)
-            else
-              ret = new(opts.merge(:diff_set => diff_set))
+        def self.aggregate?(opts = {}, &body)
+          diff_set = new(opts)
+          # the code passed into body will call diff_set.add?
+          # which conditionally adds to @modified
+          body.call(diff_set)
+          diff_set.modified_empty? ? nil : diff_set
+        end
+        
+        def add?(diff_set_or_array)
+          add_to_modified?(diff_set_or_array)
+        end
+        
+        def modified_empty?
+          @modified.empty?
+        end
+
+        def empty?
+          @added.empty? and @deleted.empty? and @modified.empty?
+        end
+
+        def self.array_of_diffs_from_hashes(gen_hash, parse_hash)
+          ret = []
+          parse_hash.each do |key, parse_object|
+            if gen_hash.has_key?(key)
+              if diff = gen_hash[key].diff?(parse_object, key)
+                ret << diff
+              end
             end
           end
           ret
         end
-        
-        def empty?
-          @added.empty? and @deleted.empty? and @modified.empty?
-        end
-        
-        def add!(diff_set)
-          @added    += diff_set.added
-          @deleted  += diff_set.deleted
-          @modified += diff_set.modified
-        end
-        
+
         private
+
+        def add_to_modified?(diff_set_or_array)
+          unless diff_set_or_array.nil? or diff_set_or_array.empty?
+            if diff_set_or_array.kind_of?(::Array)
+              @modified += diff_set_or_array 
+            else
+              @modified << diff_set_or_array
+            end
+          end
+        end
         
         def self.between_arrays_or_hashes(array_or_hash, gen_hash, parse_hash)
           added    = []
@@ -100,12 +119,12 @@ module DTK::DSL
                 modified << diff
               end
             else
-              added << parse_object
+              added << AddElement.new(key, parse_object)
             end
           end
           
           gen_hash.each do |key, gen_object|
-            deleted << gen_object.id_handle unless parse_hash.has_key?(key)
+            deleted << DeleteElement.new(key, gen_object.id_handle) unless parse_hash.has_key?(key)
           end
           
           case array_or_hash
