@@ -23,7 +23,6 @@ module DTK::DSL
       require_relative('canonical/hash_key')
       require_relative('canonical/hash')
       require_relative('canonical/array')
-      require_relative('canonical/diff')
     end
   end
 end
