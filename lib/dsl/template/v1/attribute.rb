@@ -64,14 +64,7 @@ class DTK::DSL::Template
       end
 
       def generate?
-        # dont render any hidden attributes
-        if matches_tag_type?(:hidden)
-          nil
-        else
-          # if wanted to filter out derived attributes as well as hidden would use:
-          #(matches_tag_type?(:hidden) or matches_tag_type?(:desired__derived)
-          generate!
-        end
+        generate! unless skip_for_generation?
       end
 
     end

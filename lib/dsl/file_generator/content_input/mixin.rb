@@ -46,7 +46,6 @@ module DTK::DSL
       end
       
       def matches_tag_type?(tag_type)
-        Tags.raise_error_if_invalid(tag_type)
         !! @tags.find { |tag| Tags.matches_tag_type?(tag_type, tag) }
       end
 

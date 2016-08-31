@@ -99,8 +99,8 @@ module DTK::DSL
           obj.respond_to?(:empty?) and obj.empty?
         end
 
-        def matches_tag_type?(tag_type)
-          @content.matches_tag_type?(tag_type)
+        def skip_for_generation?
+          @content.skip_for_generation?
         end
 
         def generation_set(constant, val)

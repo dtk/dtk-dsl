@@ -71,7 +71,7 @@ module DTK::DSL
 
         # Ovewritting this function because dont want to return nil when empty content
         def generate_yaml_object?
-          generate! unless matches_tag_type?(:hidden)
+          generate! unless skip_for_generation?
         end
         
         private
