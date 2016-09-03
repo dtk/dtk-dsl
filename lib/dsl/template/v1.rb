@@ -26,6 +26,8 @@ module DTK::DSL
       require_relative('v1/module_ref')
       require_relative('v1/assembly')
       require_relative('v1/attribute')
+      # attribute must go before node_attribute
+      require_relative('v1/node_attribute')
       require_relative('v1/node')
       require_relative('v1/component')
       require_relative('v1/workflow')

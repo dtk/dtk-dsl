@@ -36,13 +36,12 @@ class DTK::DSL::Template
 
       def self.parse_elements(input_hash, parent_info)
         input_hash.inject(file_parser_output_hash) do |h, (name, content)|
-          h.merge(name => parse_element(content.merge('name' => name), parent_info, :index => name))
+          h.merge(name => parse_element(content, parent_info, :index => name))
         end
       end
 
       def parse!
-        set  :Name, input_key_value(:Name)
-        set? :Attributes, parse_child_elements?(:attribute, :Attributes)
+        set? :Attributes, parse_child_elements?(:node_attribute, :Attributes)
         set? :Components, parse_child_elements?(:component, :Components)
       end
 
@@ -62,7 +61,7 @@ class DTK::DSL::Template
 
       def generate_node_hash
         ret = {}
-        set_generation_hash(ret, :Attributes, generate_child_elements(:attribute, val(:Attributes)))
+        set_generation_hash(ret, :Attributes, generate_child_elements(:node_attribute, val(:Attributes)))
         set_generation_hash(ret, :Components, generate_child_elements(:component, val(:Components)))
         ret
       end
