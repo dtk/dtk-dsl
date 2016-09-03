@@ -33,13 +33,15 @@ module DTK::DSL
           elsif type_value == 'group'
             :node_group
           else
-            # TODO: passing in name
-            #            fail Error::Usage, "The type attribute value '#{type_value}' on node '#{@name}' is not a legal node type"
-            raise Error::Usage, "The type attribute value '#{type_value}' is not a legal node type"
+            fail Error::Usage, "The value '#{type_value}' of attribute '#{name}/type' is not a legal node type"
           end
         end
         
         private
+
+        def name
+          val(:Name)
+        end
 
         def attributes
           # TODO: change to be computed during semantic parse to be a hash of Attribute::SemanticParse objects 

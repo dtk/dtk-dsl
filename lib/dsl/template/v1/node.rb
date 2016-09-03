@@ -36,18 +36,14 @@ class DTK::DSL::Template
 
       def self.parse_elements(input_hash, parent_info)
         input_hash.inject(file_parser_output_hash) do |h, (name, content)|
-          h.merge(name => parse_element(content, parent_info, :index => name))
+          h.merge(name => parse_element(content.merge('name' => name), parent_info, :index => name))
         end
       end
 
       def parse!
+        set  :Name, input_key_value(:Name)
         set? :Attributes, parse_child_elements?(:attribute, :Attributes)
         set? :Components, parse_child_elements?(:component, :Components)
-
-        # TODO: This is a catchall that removes ones we so far are parsing and then has catch all
-        input_hash.delete('attributes')
-        input_hash.delete('components')
-        merge input_hash
       end
 
       ### For generation
