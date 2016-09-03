@@ -51,7 +51,9 @@ module DTK::DSL
         private
         
         def empty_parser_output(input)
-          if parser_output_type 
+          if self.class.const_defined? 'SemanticParse'
+            self.class::SemanticParse.new(FileParser::Output)
+          elsif parser_output_type 
             FileParser::Output.create(:output_type => parser_output_type)
           else
             FileParser::Output.create(:input => input)

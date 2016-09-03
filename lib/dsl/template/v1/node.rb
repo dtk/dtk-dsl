@@ -18,6 +18,7 @@
 class DTK::DSL::Template
   class V1
     class Node < self
+      require_relative('node/semantic_parse')
       module Constant
         module Variations
         end
