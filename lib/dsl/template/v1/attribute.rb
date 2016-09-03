@@ -18,6 +18,8 @@
 class DTK::DSL::Template
   class V1
     class Attribute < self
+      require_relative('attribute/semantic_parse')
+
       module Constant
         module Variations
         end

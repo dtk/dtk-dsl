@@ -40,17 +40,9 @@ module DTK::DSL
             nil
           else
             file_obj   = parent_info.parent.file_obj 
-            parent_key = parent_key(parent_info, opts[:index])
+            parent_key = ParentKey.parent_key(parent_info, opts[:index])
             create_for_parsing(input, :file_obj => file_obj, :parent_key => parent_key).parse
           end
-        end
-
-        def parent_key(parent_info, index)
-          ret = "#{parent_info.parent.parent_key}"
-          ret << '/' unless ret.empty?
-          ret << parent_info.key_type.to_s
-          ret << "[#{index}]" unless index.nil?
-          ret
         end
 
         def file_parser_output_array

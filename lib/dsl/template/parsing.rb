@@ -19,6 +19,7 @@ module DTK::DSL
   class Template
     module Parsing
       require_relative('parsing/parsing_error')
+      require_relative('parsing/parent_key')
       require_relative('parsing/class_mixin')
       require_relative('parsing/mixin')
 
