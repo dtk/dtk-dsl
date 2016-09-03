@@ -18,7 +18,7 @@
 module DTK::DSL
   class Template::V1
     class Node
-      class SemanticParse < InputOutputCommon::Canonical::Hash
+      class SemanticParse < InputOutputCommon::SemanticParse::Hash
         def attribute_value(attr_name)
           if attribute = attributes[attr_name.to_s]
             value_from_attribute_object(attribute)
@@ -33,23 +33,18 @@ module DTK::DSL
           elsif type_value == 'group'
             :node_group
           else
-            fail Error::Usage, "The value '#{type_value}' of attribute '#{name}/type' is not a legal node type"
+            # TODO: when move this to be on node_attribute semantic model, we can just use refernce to attribute by 'qualified_name' 
+            fail Error::Usage, "The value '#{type_value}' assigned to attribute '#{qualified_name}/type' is not a legal node type"
           end
         end
         
         private
 
-        def name
-          val(:Name)
-        end
-
         def attributes
-          # TODO: change to be computed during semantic parse to be a hash of Attribute::SemanticParse objects 
           @attributes ||= val(:Attributes) || {}
         end
 
         def value_from_attribute_object(attribute)
-          # TODO: change when change attributes to be semantic parse object
           attribute.req(:Value)
         end
       end

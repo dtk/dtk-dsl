@@ -16,9 +16,31 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class Template::V1
-    class Component
-      class SemanticParse < InputOutputCommon::SemanticParse::Hash
+  class InputOutputCommon
+    module SemanticParse
+      module Mixin
+        private
+        # opts can have keys
+        #  :qualified_key
+        def initialize_semantic_parse(opts = {})
+          @qualified_key = opts[:qualified_key]
+        end
+
+        private
+        def name 
+          @name ||= name? || ''
+        end
+        def name?
+          @qualified_key && @qualified_key.relative_distinguished_name
+        end
+
+        def qualified_name
+          @qualified_name ||= qualified_name? || ''
+        end
+        def qualified_name?
+          @qualified_key && @qualified_key.print_form
+        end
+
       end
     end
   end

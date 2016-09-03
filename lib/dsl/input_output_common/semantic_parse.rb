@@ -16,11 +16,11 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class Template::V1
-    class Component
-      class SemanticParse < InputOutputCommon::SemanticParse::Hash
-      end
+  class InputOutputCommon
+    module SemanticParse
+      require_relative('semantic_parse/mixin')
+      # mixin needs to go before hash
+      require_relative('semantic_parse/hash')
     end
   end
 end
-

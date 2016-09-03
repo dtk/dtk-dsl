@@ -24,7 +24,9 @@ module DTK::DSL
     require_relative('input_output_common/array')
     # hash and array must go before canonical
     require_relative('input_output_common/canonical')
-    
+    # semantic_parse needs to go before canonical
+    require_relative('input_output_common/semantic_parse')
+
     private
     
     def self.obj_type(obj)

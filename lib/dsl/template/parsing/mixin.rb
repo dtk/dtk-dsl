@@ -27,14 +27,20 @@ module DTK::DSL
 
         attr_reader :file_obj, :parent_key
 
+        # opts can have keys:
+        #   :raw_input
+        #   :file_obj
+        #   :parent_key
         def parsing_initialize(opts = {})
           unless raw_input = opts[:raw_input]
             raise Error, "Unexpected that opts[:raw_input] is nil"
           end
+          parent_key = opts[:parent_key]
+
           @input      = FileParser::Input.create(raw_input)
-          @output     = empty_parser_output(@input)
+          @output     = empty_parser_output(@input, parent_key)
           @file_obj   = opts[:file_obj]
-          @parent_key = opts[:parent_key]
+          @parent_key = parent_key
         end
         private :parsing_initialize
 
@@ -50,9 +56,10 @@ module DTK::DSL
 
         private
         
-        def empty_parser_output(input)
+        def empty_parser_output(input, parent_key)
           if self.class.const_defined? 'SemanticParse'
-            self.class::SemanticParse.new(FileParser::Output)
+            qualified_key = parent_key && parent_key.create_qualified_key
+            self.class::SemanticParse.new(FileParser::Output, :qualified_key => qualified_key)
           elsif parser_output_type 
             FileParser::Output.create(:output_type => parser_output_type)
           else

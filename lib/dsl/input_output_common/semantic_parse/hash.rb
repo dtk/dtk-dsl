@@ -16,9 +16,16 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class Template::V1
-    class Component
-      class SemanticParse < InputOutputCommon::SemanticParse::Hash
+  class InputOutputCommon
+    module SemanticParse
+      class Hash < Canonical::Hash
+        include Mixin
+        # opts can have keys
+        #  :qualified_key
+        def initialize(parent_class, opts = {})
+          super(parent_class)
+          initialize_semantic_parse(opts)      
+        end
       end
     end
   end
