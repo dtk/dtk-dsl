@@ -19,6 +19,8 @@ module DTK::DSL
   class Template
     class V1
       class Component < self
+        require_relative('component/semantic_parse')
+
         module Constant
           module Variations
           end
