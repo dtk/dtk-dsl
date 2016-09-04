@@ -26,23 +26,17 @@ module DTK::DSL
         end
         private :initialize_semantic_parse
 
+        def qualified_key
+          @qualified_key || fail(Error, "Unexepcetd that @qualified_key is nil")
+        end
+
         def name 
-          @name ||= name? || ''
+          qualified_key.relative_distinguished_name
         end
 
         def qualified_name
-          @qualified_name ||= qualified_name? || ''
+          qualified_key.print_form
         end
-
-        private
-        def name?
-          @qualified_key && @qualified_key.relative_distinguished_name
-        end
-
-        def qualified_name?
-          @qualified_key && @qualified_key.print_form
-        end
-
       end
     end
   end
