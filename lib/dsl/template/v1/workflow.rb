@@ -56,6 +56,17 @@ class DTK::DSL::Template
       def parse!
         input_hash.each_pair { |name, workflow_hash| merge(parse_workflow(name, workflow_hash)) }
       end
+
+      ### For generation
+      def self.generate_elements(workflows_content, parent)
+        workflows_content.inject({}) do |h, (name, workflow)| 
+          h.merge(name => generate_element(workflow, parent))
+        end
+      end
+
+      def generate!
+        merge(@content)
+      end
       
       private
       

@@ -69,10 +69,11 @@ class DTK::DSL::Template
 
       ### For generation
       def generate!
-        # TODO: add attributes, workflows
+        # TODO: add attributes
         set :Description, val(:Description)
         set :Components, generate_child_elements(:component, val(:Components))
         set :Nodes, generate_child_elements(:node, val(:Nodes))
+        set :Workflows, generate_child_elements(:workflow, val(:Workflows))
       end
 
     end
