@@ -35,7 +35,6 @@ class DTK::DSL::Template
         set :DSLVersion, input_key_value(:DSLVersion)
         set :ModuleVersion, input_key_value(:ModuleVersion)
         merge parse_child(:module_ref, input_key_value(:Module), :parent_key => Constant::Module)
-        test = parse_child_elements?(:dependency, :DependentModules)
         set? :DependentModules, parse_child_elements?(:dependency, :DependentModules)
       end
     end
