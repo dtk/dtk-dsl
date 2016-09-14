@@ -26,12 +26,14 @@ class DTK::DSL::Template
         DSLVersion = 'dsl_version'
         Name = 'name'
         Variations::Name = ['name', 'service_name'] 
+        DependentModules = 'dependencies'
       end
 
       ### For parsing
       def parse!
         set :DSLVersion, input_key_value(:DSLVersion)
         set :Name, input_key_value(:DSLVersion)
+        set? :DependentModules, input_key_value?(:DependentModules)
         merge parse_child(:assembly, input_hash)
       end
 
@@ -39,6 +41,7 @@ class DTK::DSL::Template
       def generate!
         set :DSLVersion, req(:DSLVersion)
         set :Name, req(:Name)
+        set? :DependentModules, val(:DependentModules)
         merge generate_child(:assembly, req(:Assembly))
       end
 

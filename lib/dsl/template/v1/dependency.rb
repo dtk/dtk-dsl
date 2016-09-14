@@ -17,48 +17,46 @@
 #
 class DTK::DSL::Template
   class V1
-    class Workflow < self
-      require_relative('workflow/semantic_parse')
+    class Dependency < self
 
-      module Constant
-        module Variations
-        end
-        
-        extend ClassMixin::Constant
-      end
-      
+      MODULE_NAMESPACE_DELIMS = ['/', ':']
+
       def parser_output_type
         :hash
       end
-      
+
       def self.parse_elements(input_hash, parent_info)
-        input_hash.inject(file_parser_output_hash) do |h, (name, workflow)|
-          h.merge(name => parse_element(workflow, parent_info, :index => name))
+        ret = file_parser_output_array
+        input_hash.each do |name, version|
+          ret << parse_element({ 'name' => name, 'version' => version }, parent_info, :index => name)
         end
+        ret
       end
-      
+
       def parse!
-        merge parse_workflow(input_hash)
+        name = input_hash['name']
+        version = input_hash['version']
+
+        split = split_by_delim(name)
+        unless split.size == 2
+          raise parsing_error("The term '#{input_string}' is an ill-formed module reference")
+        end
+        namespace, module_name = split
+
+        set :Namespace, namespace
+        set :ModuleName, module_name
+        set :ModuleVersion, version
       end
 
-      ### For generation
-      def self.generate_elements(workflows_content, parent)
-        workflows_content.inject({}) do |h, (name, workflow)| 
-          h.merge(name => generate_element(workflow, parent))
+      private
+
+      def split_by_delim(str)
+        if matching_delim = MODULE_NAMESPACE_DELIMS.find { |delim| str =~ Regexp.new(delim) }
+          str.split(matching_delim)
+        else
+          [str]
         end
       end
-
-      def generate!
-        merge(@content)
-      end
-      
-      private
-      
-      def parse_workflow(workflow_hash)
-        # TODO: put in fine grain parsing of workflow_hash
-        workflow_hash
-      end
-
     end
   end
 end

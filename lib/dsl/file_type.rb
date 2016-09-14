@@ -25,12 +25,14 @@ module DTK::DSL
          :type           => :common_module,
          :regexp         => "/dtk\.module\.(yml|yaml)/",
          :canonical_path => 'dtk.module.yaml', 
+         :backup_path    => 'dtk.module.bak.yaml', 
          :print_name     => 'module DSL file'
        },
        {
          :type           => :service_instance,
          :regexp         => "/dtk\.service\.(yml|yaml)/",
          :canonical_path => 'dtk.service.yaml', 
+         :backup_path    => 'dtk.service.bak.yaml', 
          :print_name     => 'service DSL file'
        }
       ]
@@ -49,6 +51,9 @@ module DTK::DSL
            end
            def self.canonical_path
              '#{type_info[:canonical_path]}'
+           end
+           def self.backup_path
+             '#{type_info[:backup_path]}'
            end
 
            private
