@@ -62,6 +62,11 @@ module DTK::DSL
       self
     end
 
+    def raise_error_if_no_content_flag(type)
+      raise(Error::Usage, error_msg_no_content_flag(type)) unless @content
+      self
+    end
+
     def exists?
       ! @content.nil?
     end
@@ -81,6 +86,16 @@ module DTK::DSL
         "No #{file_ref} found at '#{@path}'"
       else
         "Cannot find a #{file_ref} in the #{dir_ref} or ones nested under it"
+      end
+    end
+
+    def error_msg_no_content_flag(type)
+      type = type.to_s
+      type = type.slice!(0..(type.index('_')-1))
+      if @path
+        "No #{file_ref} found at '#{@path}'"
+      else
+        "Cannot find a #{type} #{file_ref} in the #{dir_ref}"
       end
     end
 
