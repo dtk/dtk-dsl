@@ -37,6 +37,10 @@ module DTK::DSL
       def template_version
         VERSION
       end
+
+      def dsl_version
+        '1.0.0'
+      end
     end
   end
 end

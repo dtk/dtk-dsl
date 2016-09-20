@@ -19,6 +19,7 @@
 module DTK::DSL
   # This refers to semnatic dsl version
   class DSLVersion < ::String
+    #versions in DSL_VERIONS are ordered so that most recent versions are last
     DSL_VERSIONS = ['1.0.0']
 
     def self.legal?(str)
