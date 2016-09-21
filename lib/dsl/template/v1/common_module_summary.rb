@@ -32,7 +32,7 @@ class DTK::DSL::Template
       end
 
       def parse!
-        set :DSLVersion, input_key_value(:DSLVersion)
+        set :DSLVersion, input_key_value?(:DSLVersion) || dsl_version
         set :ModuleVersion, input_key_value(:ModuleVersion)
         merge parse_child(:module_ref, input_key_value(:Module), :parent_key => Constant::Module)
         set? :DependentModules, parse_child_elements?(:dependency, :DependentModules)
