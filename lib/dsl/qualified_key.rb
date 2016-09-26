@@ -18,6 +18,8 @@
 module DTK
   module DSL
     class QualifiedKey 
+      attr_reader :key_elements
+
       Element = Struct.new(:type, :key)
       def initialize(elements_to_copy = [])
         @key_elements = copy(elements_to_copy)
