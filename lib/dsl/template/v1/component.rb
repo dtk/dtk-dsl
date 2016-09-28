@@ -104,7 +104,7 @@ module DTK::DSL
 
         def parse_when_hash!
           unless input_hash.size == 1 and input_hash.values.first.kind_of?(::Hash)
-            raise parsing_error("Component is ill-formed; it must be string or hash with has value")
+            raise parsing_error("Component is ill-formed; it must be string or hash")
           end
           properties = input_hash.values.first
           set? :Attributes, parse_child_elements?(:attribute, :Attributes, :input_hash => properties)
