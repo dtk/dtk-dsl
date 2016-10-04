@@ -16,22 +16,27 @@
 # limitations under the License.
 #
 
-module DTK
-  module DSL    
-    require_relative('dsl/aux')
-    require_relative('dsl/error')
-    require_relative('dsl/dsl_version')
-    require_relative('dsl/file_type')
-    require_relative('dsl/file_obj')
-    require_relative('dsl/yaml_helper')
-    require_relative('dsl/directory_parser')
-    require_relative('dsl/directory_generator')
-    require_relative('dsl/qualified_key')
-    require_relative('dsl/input_output_common')
-    # input_output_common must be before file_parser and file_generator
-    require_relative('dsl/file_parser')
-    require_relative('dsl/file_generator')
-    require_relative('dsl/template')
+module DTK::DSL
+  class FileType
+    class CommonModule < self
+    end
 
+    class ServiceInstance < self
+    end
+
+    class ServiceInstanceNestedModule < self
+      def initialize(module_name)
+        @module_name = module_name
+      end
+
+      def canonical_path
+        self.class.canonical_path_lambda.call(:module_name => @module_name)
+      end
+
+      def base_dir
+        TYPES[self.class][:base_dir].call(:module_name => @module_name)
+      end
+
+    end
   end
 end

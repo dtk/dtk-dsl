@@ -15,23 +15,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 module DTK
-  module DSL    
-    require_relative('dsl/aux')
-    require_relative('dsl/error')
-    require_relative('dsl/dsl_version')
-    require_relative('dsl/file_type')
-    require_relative('dsl/file_obj')
-    require_relative('dsl/yaml_helper')
-    require_relative('dsl/directory_parser')
-    require_relative('dsl/directory_generator')
-    require_relative('dsl/qualified_key')
-    require_relative('dsl/input_output_common')
-    # input_output_common must be before file_parser and file_generator
-    require_relative('dsl/file_parser')
-    require_relative('dsl/file_generator')
-    require_relative('dsl/template')
+  module DSL
+    module Aux
+      def self.snake_to_camel_case(string)
+        ::DTK::Common::Aux.snake_to_camel_case(string)
+      end
 
+      def self.camel_case_to_snake(string)
+        string.gsub(/(.)([A-Z])/,'\1_\2').downcase
+      end
+
+    end
   end
 end

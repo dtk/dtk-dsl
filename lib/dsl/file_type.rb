@@ -17,62 +17,90 @@
 #
 
 module DTK::DSL
-  # This has specific file type meta info
   class FileType
-    Types = 
-      [
-       {
-         :type           => :common_module,
-         :regexp         => "/dtk\.module\.(yml|yaml)/",
-         :canonical_path => 'dtk.module.yaml', 
-         :backup_path    => 'dtk.module.bak.yaml', 
-         :print_name     => 'module DSL file'
-       },
-       {
-         :type           => :service_instance,
-         :regexp         => "/dtk\.service\.(yml|yaml)/",
-         :canonical_path => 'dtk.service.yaml', 
-         :backup_path    => 'dtk.service.bak.yaml', 
-         :print_name     => 'service DSL file'
-       }
-      ]
-      # regexps purposely do not have ^ or $ so calling function can insert these depending on context
+    require_relative('file_type/subclasses')
 
-    Types.each do |type_info|
-      # convert to camel case
-      class_name = type_info[:type].to_s.gsub(/(?<=_|^)(\w)/){$1.upcase}.gsub(/(?:_)(\w)/,'\1')
-      class_eval("
-         class #{class_name} < self
-           def self.type
-             :#{type_info[:type]}
-           end
-           def self.print_name
-             '#{type_info[:print_name]}'
-           end
-           def self.canonical_path
-             '#{type_info[:canonical_path]}'
-           end
-           def self.backup_path
-             '#{type_info[:backup_path]}'
-           end
+    SERVICE_INSTANCE_NESTED_MODULE_DIR = 'modules'
+    TYPES = {
+      CommonModule => {
+        :regexp         => Regexp.new("dtk\.module\.(yml|yaml)"),
+        :canonical_path => lambda { |opts| 'dtk.module.yaml' }, 
+        :print_name     => 'module DSL file'
+      },
+      ServiceInstance => {
+        :regexp         => Regexp.new("dtk\.service\.(yml|yaml)"),
+        :canonical_path => lambda { |opts| 'dtk.service.yaml' }, 
+        :print_name     => 'service DSL file'
+      },
+      ServiceInstanceNestedModule => {
+        :regexp         => Regexp.new("#{SERVICE_INSTANCE_NESTED_MODULE_DIR}/[^/]+/dtk\.module\.(yml|yaml)"),
+        :base_dir       => lambda { |opts| "#{SERVICE_INSTANCE_NESTED_MODULE_DIR}/#{opts[:module_name]}" },
+        :canonical_path => lambda { |opts| "#{SERVICE_INSTANCE_NESTED_MODULE_DIR}/#{opts[:module_name]}/dtk.module.yaml" },
+        :print_name     => 'nested module DSL file'
+      }
+    }
+    # regexps purposely do not have ^ or $ so calling function can insert these depending on context
 
-           private
+    # For each method have class and instance versions
+    def self.print_name
+      TYPES[self][:print_name]
+    end
+    def print_name
+      self.class.print_name
+    end
 
-           def self.regexp
-             #{type_info[:regexp]}
-           end
-        end")
+    def self.regexp
+      TYPES[self][:regexp]
+    end
+    def regexp
+      self.class.regexp
+    end
+
+    def self.canonical_path
+      canonical_path_lambda.call({})
+    end
+    # This can be over-written
+    def canonical_path
+      self.class.canonical_path
+    end
+  
+    def self.backup_path
+      backup_path_from_canonical_path(canonical_path)
+    end
+    def backup_path
+      self.class.backup_path_from_canonical_path(canonical_path)
     end
 
     def self.create_path_info
       DirectoryParser::PathInfo.new(regexp)
     end
-    
+    def create_path_info
+      self.class.create_path_info
+    end
+
     # opts can have keys:
     #  :exact - Booelan (default: false) - meaning regexp completely matches file_path
     def self.matches?(file_path, opts = {})
       DirectoryParser::PathInfo.matches?(file_path, regexp, opts)
     end
+    def matches?
+      self.class.matches?
+    end
+
+    private
+
+    def self.canonical_path_lambda
+      TYPES[self][:canonical_path]
+    end
+
+    FILE_PREFIX = 'bak'
+    def self.backup_path_from_canonical_path(canonical_path)
+      split_path = canonical_path.split('/')
+      file_path = split_path.pop
+      backup_file_path = "#{FILE_PREFIX}.#{file_path}"
+      split_path.empty? ? backup_file_path : "#{split_path.join('/')}/#{backup_file_path}"      
+    end
+
   end
 end
 
