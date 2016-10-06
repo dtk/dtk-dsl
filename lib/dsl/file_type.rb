@@ -42,6 +42,13 @@ module DTK::DSL
     # regexps purposely do not have ^ or $ so calling function can insert these depending on context
 
     # For each method have class and instance versions
+    def self.type
+      Aux.camel_case_to_snake(self.to_s.split('::').last).to_sym
+    end
+    def type
+      self.class.type
+    end
+
     def self.print_name
       TYPES[self][:print_name]
     end
