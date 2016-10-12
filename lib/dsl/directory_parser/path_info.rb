@@ -28,6 +28,10 @@ module DTK::DSL
         @base_dir = opts[:base_dir]
       end
 
+      # returns array of FileType::MatchingFiles objects or nil if empty 
+      def file_type_matching_files_array?
+      end
+
       # opts can have keys:
       #  :exact - Booelan (default: false) - meaning regexp completely matches file_path
       def matches?(file_path, opts = {})

@@ -19,24 +19,44 @@
 module DTK::DSL
   class FileType
     class CommonModule < self
+      def self.top_level_type
+        :common_module
+      end
+
+      class DSLFile < self
+        class Top < self
+        end
+      end
     end
 
     class ServiceInstance < self
-    end
-
-    class ServiceInstanceNestedModule < self
-      def initialize(module_name)
-        @module_name = module_name
+      def self.top_level_type
+        :service_instance
       end
 
-      def canonical_path
-        self.class.canonical_path_lambda.call(:module_name => @module_name)
+      class DSLFile < self
+        class Top < self
+        end
       end
 
-      def base_dir
-        TYPES[self.class][:base_dir].call(:module_name => @module_name)
-      end
+      class NestedModule < self
+        def initialize(module_name)
+          @module_name = module_name
+        end
 
+        def canonical_path
+          self.class.canonical_path_lambda.call(:module_name => @module_name)
+        end
+
+        def base_dir
+          type_entry[:base_dir].call(:module_name => @module_name)
+        end
+
+        class DSLFile < self
+          class Top < self
+          end
+        end
+      end
     end
   end
 end

@@ -19,48 +19,36 @@
 module DTK::DSL
   class FileType
     require_relative('file_type/subclasses')
+    require_relative('file_type/matching_files')
 
     SERVICE_INSTANCE_NESTED_MODULE_DIR = 'modules'
     TYPES = {
-      CommonModule => {
-        :regexp         => Regexp.new("dtk\.module\.(yml|yaml)"),
-        :canonical_path => lambda { |opts| 'dtk.module.yaml' }, 
-        :print_name     => 'module DSL file'
+      CommonModule::DSLFile::Top => {
+        :regexp                => Regexp.new("dtk\.module\.(yml|yaml)"),
+        :canonical_path_lambda => lambda { |_params| 'dtk.module.yaml' }, 
+        :print_name            => 'module DSL file'
       },
-      ServiceInstance => {
-        :regexp         => Regexp.new("dtk\.service\.(yml|yaml)"),
-        :canonical_path => lambda { |opts| 'dtk.service.yaml' }, 
-        :print_name     => 'service DSL file'
+      ServiceInstance::DSLFile::Top => {
+        :regexp                => Regexp.new("dtk\.service\.(yml|yaml)"),
+        :canonical_path_lambda => lambda { |_params| 'dtk.service.yaml' }, 
+        :print_name            => 'service DSL file'
       },
-      ServiceInstanceNestedModule => {
-        :regexp         => Regexp.new("#{SERVICE_INSTANCE_NESTED_MODULE_DIR}/[^/]+/dtk\.module\.(yml|yaml)"),
-        :base_dir       => lambda { |opts| "#{SERVICE_INSTANCE_NESTED_MODULE_DIR}/#{opts[:module_name]}" },
-        :canonical_path => lambda { |opts| "#{SERVICE_INSTANCE_NESTED_MODULE_DIR}/#{opts[:module_name]}/dtk.module.yaml" },
-        :print_name     => 'nested module DSL file'
+      ServiceInstance::NestedModule => {
+        :regexp                => Regexp.new("#{SERVICE_INSTANCE_NESTED_MODULE_DIR}/[^/]+/dtk\.module\.(yml|yaml)"),
+        :instance_match_lambda => lambda { |path| "{SERVICE_INSTANCE_NESTED_MODULE_DIR}/([^/])/dtk\.module\.(yml|yaml)" =~ path && { :module_name => $1 } },    
+        :base_dir              => lambda { |params| "#{SERVICE_INSTANCE_NESTED_MODULE_DIR}/#{params[:module_name]}" },
+        :canonical_path_lambda => lambda { |params| "#{SERVICE_INSTANCE_NESTED_MODULE_DIR}/#{params[:module_name]}/dtk.module.yaml" },
+        :print_name            => 'nested module DSL file'
       }
     }
     # regexps purposely do not have ^ or $ so calling function can insert these depending on context
 
-    # For each method have class and instance versions
-    def self.type
-      Aux.camel_case_to_snake(self.to_s.split('::').last).to_sym
-    end
-    def type
-      self.class.type
-    end
-
     def self.print_name
-      TYPES[self][:print_name]
-    end
-    def print_name
-      self.class.print_name
+      type_entry[:print_name]
     end
 
     def self.regexp
-      TYPES[self][:regexp]
-    end
-    def regexp
-      self.class.regexp
+      type_entry[:regexp]
     end
 
     def self.canonical_path
@@ -81,23 +69,36 @@ module DTK::DSL
     def self.create_path_info
       DirectoryParser::PathInfo.new(regexp)
     end
-    def create_path_info
-      self.class.create_path_info
-    end
 
     # opts can have keys:
     #  :exact - Booelan (default: false) - meaning regexp completely matches file_path
     def self.matches?(file_path, opts = {})
       DirectoryParser::PathInfo.matches?(file_path, regexp, opts)
     end
-    def matches?
-      self.class.matches?
+
+    def self.type_level_type
+      raise Error::NoMethodForConcreteClass.new(self)
     end
 
     private
 
+    BASE_CLASS = FileType 
+    def self.type_entry(klass = nil, orig_klass = nil)
+      klass      ||= self
+      orig_klass ||= self
+      fail Error, "Type '#{orig_klass}' is not in TYPES" if klass == BASE_CLASS 
+      TYPES[klass] || type_entry(klass.superclass, orig_klass)
+    end
+    def type_entry
+      self.class.type_entry
+    end
+
+    def self.instance_match_lambda?
+      type_entry[:instance_match_lambda]
+    end
+
     def self.canonical_path_lambda
-      TYPES[self][:canonical_path]
+      type_entry[:canonical_path_lambda]
     end
 
     FILE_PREFIX = 'bak'
