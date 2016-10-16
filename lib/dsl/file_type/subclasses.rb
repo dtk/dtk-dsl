@@ -40,8 +40,17 @@ module DTK::DSL
       end
 
       class NestedModule < self
-        def initialize(module_name)
-          @module_name = module_name
+        attr_reader :module_name
+        # params can have keys:
+        #  :module_name (required)
+        def initialize(params = {})
+          unless @module_name = params[:module_name]
+            raise Error, "Unexpected that opts[:module_name] is nil"
+          end
+        end
+
+        def index
+          "#{super}--#{@module_name}"
         end
 
         def canonical_path
@@ -49,7 +58,7 @@ module DTK::DSL
         end
 
         def base_dir
-          type_entry[:base_dir].call(:module_name => @module_name)
+          matching_type_def(:base_dir_lambda).call(:module_name => @module_name)
         end
 
         class DSLFile < self

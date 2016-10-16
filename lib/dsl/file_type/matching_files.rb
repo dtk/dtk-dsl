@@ -19,12 +19,38 @@
 module DTK::DSL
   class FileType
     class MatchingFiles
-      def initialize(file_type)
-        @file_type  = file_type
-        @file_paths = []
+      attr_reader :file_type_instance, :file_paths
+      def initialize(file_type_instance)
+        @file_type_instance  = file_type_instance
+        @file_paths          = []
       end
-    end
+      private :initialize
 
+      def add_file_path!(file_path)
+        @file_paths << file_path
+        self
+      end
+
+      # Returns array of MatchingFiles
+      def self.matching_files_array(file_type_classes, file_paths)
+        ndx_ret = {}
+        file_type_classes = [file_type_classes] unless file_type_classes.kind_of?(Array)
+        file_type_classes.each do |file_type_class|
+          file_paths.each do |file_path|
+            if file_type_instance = file_type_class.file_type_instance_if_match?(file_path)
+              file_type_instance_index = file_type_instance.index
+              if matching_index = ndx_ret.keys.find { |index| index == file_type_instance_index }
+                ndx_ret[matching_index].add_file_path!(file_path)
+              else
+                ndx_ret[file_type_instance_index] = new(file_type_instance).add_file_path!(file_path)
+              end
+            end
+          end
+        end
+        ndx_ret.values
+      end
+
+    end
   end
 end
 

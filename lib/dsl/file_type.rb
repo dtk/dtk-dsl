@@ -19,7 +19,22 @@
 module DTK::DSL
   class FileType
     require_relative('file_type/subclasses')
+    require_relative('file_type/match')
     require_relative('file_type/matching_files')
+
+    # opts can have keys:
+    #  :exact - Booelan (default: false) - meaning regexp completely matches file_path
+    def self.matches?(file_path, opts = {})
+      Match.matches?(self, file_path, opts)
+    end
+    def matches?(file_path, opts = {})
+      Match.matches?(self, file_path, opts)
+    end
+
+    # Returns array of MatchingFiles or nil
+    def self.matching_files_array?(file_type_classes, file_paths)
+      MatchingFiles.matching_files_array?(file_type_classes, file_paths)
+    end
 
     SERVICE_INSTANCE_NESTED_MODULE_DIR = 'modules'
     TYPES = {
@@ -34,21 +49,24 @@ module DTK::DSL
         :print_name            => 'service DSL file'
       },
       ServiceInstance::NestedModule => {
+        :instance_match_lambda => lambda { |path| path =~ Regexp.new("^#{SERVICE_INSTANCE_NESTED_MODULE_DIR}/([^/]+)/.+$") && { :module_name => $1 } },    
+        :base_dir_lambda       => lambda { |params| "#{SERVICE_INSTANCE_NESTED_MODULE_DIR}/#{params[:module_name]}" },
+        :print_name            => 'nested module file'
+      },
+      ServiceInstance::NestedModule::DSLFile::Top => {
         :regexp                => Regexp.new("#{SERVICE_INSTANCE_NESTED_MODULE_DIR}/[^/]+/dtk\.module\.(yml|yaml)"),
-        :instance_match_lambda => lambda { |path| "{SERVICE_INSTANCE_NESTED_MODULE_DIR}/([^/])/dtk\.module\.(yml|yaml)" =~ path && { :module_name => $1 } },    
-        :base_dir              => lambda { |params| "#{SERVICE_INSTANCE_NESTED_MODULE_DIR}/#{params[:module_name]}" },
         :canonical_path_lambda => lambda { |params| "#{SERVICE_INSTANCE_NESTED_MODULE_DIR}/#{params[:module_name]}/dtk.module.yaml" },
         :print_name            => 'nested module DSL file'
       }
     }
-    # regexps purposely do not have ^ or $ so calling function can insert these depending on context
+    # regexps, except for one in :instance_match_lambda, purposely do not have ^ or $ so calling function can insert these depending on context
 
     def self.print_name
-      type_entry[:print_name]
+      matching_type_def(:print_name)
     end
 
     def self.regexp
-      type_entry[:regexp]
+      matching_type_def(:regexp)
     end
 
     def self.canonical_path
@@ -58,7 +76,7 @@ module DTK::DSL
     def canonical_path
       self.class.canonical_path
     end
-  
+
     def self.backup_path
       backup_path_from_canonical_path(canonical_path)
     end
@@ -66,39 +84,54 @@ module DTK::DSL
       self.class.backup_path_from_canonical_path(canonical_path)
     end
 
-    def self.create_path_info
-      DirectoryParser::PathInfo.new(regexp)
+    def self.base_dir
+      nil
+    end
+    # This can be over-written
+    def base_dir
+      self.class.base_dir
     end
 
-    # opts can have keys:
-    #  :exact - Booelan (default: false) - meaning regexp completely matches file_path
-    def self.matches?(file_path, opts = {})
-      DirectoryParser::PathInfo.matches?(file_path, regexp, opts)
+
+    # If match it retuns a hash with params that can be used to create a File Type instance
+    def self.file_type_instance_if_match?(file_path)
+      # just want to match 'this' and dont want to match parent so not using matching_type_def
+      if instance_match_lambda = TYPES[self][:instance_match_lambda]
+        if hash_params_for_new = instance_match_lambda.call(file_path)
+          new(hash_params_for_new)
+        end
+      end
     end
 
     def self.type_level_type
       raise Error::NoMethodForConcreteClass.new(self)
     end
 
+    # This can be over-written
+    def index
+      self.class.to_s
+    end
+
     private
 
     BASE_CLASS = FileType 
-    def self.type_entry(klass = nil, orig_klass = nil)
+    # The method matching_type_def starts at tpe and looks to see if or recursive parents have definition
+    def self.matching_type_def(key, klass = nil, orig_klass = nil)
       klass      ||= self
       orig_klass ||= self
       fail Error, "Type '#{orig_klass}' is not in TYPES" if klass == BASE_CLASS 
-      TYPES[klass] || type_entry(klass.superclass, orig_klass)
+      if type_def_hash = TYPES[klass] 
+        type_def_hash[key]
+      else
+        matching_type_def(key, klass.superclass, orig_klass)
+      end
     end
-    def type_entry
-      self.class.type_entry
-    end
-
-    def self.instance_match_lambda?
-      type_entry[:instance_match_lambda]
+    def matching_type_def(key)
+      self.class.matching_type_def(key)
     end
 
     def self.canonical_path_lambda
-      type_entry[:canonical_path_lambda]
+      matching_type_def(:canonical_path_lambda)
     end
 
     FILE_PREFIX = 'bak'
