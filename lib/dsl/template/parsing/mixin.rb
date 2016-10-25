@@ -54,6 +54,13 @@ module DTK::DSL
           nil
         end
 
+        # args can have form 
+        #  (:ParsingErrorName,*parsing_error_params) or
+        #  (*parsing_error_params)
+        def parsing_error(*args)
+          parsing_error_with_opts(args)
+        end
+
         private
         
         def empty_parser_output(input, parent_key)
@@ -177,13 +184,6 @@ module DTK::DSL
         def raise_missing_key_value(constant)
           key = canonical_key(constant)
           raise parsing_error(:MissingKeyValue, key)
-        end
-
-        # args can have form 
-        #  (:ParsingErrorName,*parsing_error_params) or
-        #  (*parsing_error_params)
-        def parsing_error(*args)
-          parsing_error_with_opts(args)
         end
 
         # opts can have keys

@@ -42,7 +42,7 @@ module DTK::DSL
         
         def self.parse_elements(input_array, parent_info)
           input_array.inject(file_parser_output_hash) do |h, component|
-            name = name(component)
+            name = name(component, :parent => parent_info.parent)
             h.merge(name => parse_element(component, parent_info, :index => name))
           end
         end
@@ -85,18 +85,22 @@ module DTK::DSL
           ret
         end
         
-        def self.name(input)
+        # opts can have keys:
+        #  :parent
+        #  :this
+        # Wil not have both keys
+        def self.name(input, opts = {})
           if input.kind_of?(::String)
             input
           elsif input.kind_of?(::Hash) and input.size > 0
             input.keys.first
           else
-            raise parsing_error(:WrongObjectType, input, [::String, ::Hash])
+            raise (opts[:this] || opts[:parent]).parsing_error([:WrongObjectType, input, [::String, ::Hash]])
           end
         end
         
         def name
-          self.class.name(@input)
+          self.class.name(@input, :this => self)
         end
         
         def parse_when_string!
