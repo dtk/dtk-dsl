@@ -31,6 +31,10 @@ module DTK::DSL
       Components = :components
       Workflows  = :workflows
 
+      # Used in nested module
+      Module = :module
+      Version = :version      
+
       # Used at multiple levels
       Name          = :name
       Description   = :description
