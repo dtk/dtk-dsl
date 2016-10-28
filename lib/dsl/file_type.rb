@@ -54,8 +54,8 @@ module DTK::DSL
         :print_name            => 'nested module file'
       },
       ServiceInstance::NestedModule::DSLFile::Top => {
-        :regexp                => Regexp.new("#{SERVICE_INSTANCE_NESTED_MODULE_DIR}/[^/]+/dtk\.module\.(yml|yaml)"),
-        :canonical_path_lambda => lambda { |params| "#{SERVICE_INSTANCE_NESTED_MODULE_DIR}/#{params[:module_name]}/dtk.module.yaml" },
+        :regexp                => Regexp.new("#{SERVICE_INSTANCE_NESTED_MODULE_DIR}/[^/]+/dtk\.nested_module\.(yml|yaml)"),
+        :canonical_path_lambda => lambda { |params| "#{SERVICE_INSTANCE_NESTED_MODULE_DIR}/#{params[:module_name]}/dtk.nested_module.yaml" },
         :print_name            => 'nested module DSL file'
       }
     }
