@@ -40,6 +40,7 @@ module DTK::DSL
       Attributes    = :attributes
       Value         = :value
       Nodes         = :nodes
+      Target        = :target
 
       def self.index(output_key)
         begin
