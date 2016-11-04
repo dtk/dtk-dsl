@@ -35,6 +35,12 @@ module DTK::DSL
       Module = :module
       Version = :version      
 
+      # Used in workflows
+      Subtasks     = :subtasks
+      SubtaskOrder = :subtask_order
+      DSLLocation  = :dsl_location
+      Flatten      = :flatten
+
       # Used at multiple levels
       Name          = :name
       Description   = :description
