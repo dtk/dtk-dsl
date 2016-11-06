@@ -16,14 +16,17 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class FileGenerator
-    class ContentInput < InputOutputCommon::Canonical
-      require_relative('content_input/tag')
-      require_relative('content_input/mixin')
-      # mixin must go before the files below
-      require_relative('content_input/hash')
-      require_relative('content_input/array')
-      require_relative('content_input/string')
+  class FileGenerator::ContentInput
+    class Tag
+      class Assignment < self
+        attr_reader :value
+        def initialize(tag_name, tag_value)
+          super(tag_name)
+          @value = tag_value
+        end
+
+      end
     end
   end
 end
+
