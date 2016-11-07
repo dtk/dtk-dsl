@@ -36,11 +36,11 @@ module DTK::DSL
 
         # returns the path of a file if @yaml_object should be written to a nested dsl file
         def nested_dsl_file?
-          val(:DSLLocation)
+          val(:Import)
         end
 
         def add_nested_dsl_file_import?(nested_dsl_file)
-          unless val(:HiddenDSLLocation) 
+          unless val(:HideImportStatement)
             if @yaml_object.kind_of?(::Hash)
               add_import_statement!(nested_dsl_file, @yaml_object)
             elsif @yaml_object.kind_of?(::Array)

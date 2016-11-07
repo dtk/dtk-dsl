@@ -30,6 +30,7 @@ class DTK::DSL::Template
         Name         = 'name'
         SubtaskOrder = 'subtask_order'
         Subtasks     = 'subtasks'
+        Flatten      = 'flatten'
       end
       
       def parser_output_type
@@ -72,7 +73,7 @@ class DTK::DSL::Template
         self.class.create_for_generation(subtask, :top => @top, :filter => @filter).generate_yaml_object
       end
 
-      INTERPRETED_KEYS = [:name, :subtask_order, :subtasks, :flatten, :dsl_location]
+      INTERPRETED_KEYS = [Constant::Name, Constant::SubtaskOrder, Constant::Subtasks, Constant::Flatten, Constant::Import]
       def uninterpreted_keys
         (@content.keys - INTERPRETED_KEYS).inject({}) do |h, k| 
           h.merge(k.to_s => change_symbols_to_strings(@content[k]))

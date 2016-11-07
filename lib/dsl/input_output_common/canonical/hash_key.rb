@@ -28,7 +28,6 @@ module DTK::DSL
       Assembly = :asssembly
 
       # Used in assembly
-      Components = :components
       Workflows  = :workflows
 
       # Used in nested module
@@ -36,9 +35,14 @@ module DTK::DSL
       Version = :version      
 
       # Used in workflows
-      Subtasks     = :subtasks
-      SubtaskOrder = :subtask_order
-      Flatten      = :flatten
+      Subtasks          = :subtasks
+      SubtaskOrder      = :subtask_order
+      Node              = :node
+      ExecutionBlocks   = :exec_blocks
+      Flatten           = :flatten
+      Action            = :action
+      Actions           = :actions
+      OrderedComponents = :ordered_components     
 
       # Used at multiple levels
       Name          = :name
@@ -50,10 +54,11 @@ module DTK::DSL
       Value         = :value
       Nodes         = :nodes
       Target        = :target
+      Components = :components
 
       # meta info
-      DSLLocation       = :dsl_location
-      HiddenDSLLocation = :hidden_dsl_location
+      Import              = :import
+      HideImportStatement = :hide_import_statement
 
       def self.index(output_key)
         begin
