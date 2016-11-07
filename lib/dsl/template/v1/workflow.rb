@@ -18,6 +18,7 @@
 class DTK::DSL::Template
   class V1
     class Workflow < self
+      # TODO: do we want workflow/semantic_parse
       require_relative('workflow/semantic_parse')
 
       module Constant
@@ -25,6 +26,10 @@ class DTK::DSL::Template
         end
         
         extend ClassMixin::Constant
+        Import       = 'import'
+        Name         = 'name'
+        SubtaskOrder = 'subtask_order'
+        Subtasks     = 'subtasks'
       end
       
       def parser_output_type
@@ -49,10 +54,43 @@ class DTK::DSL::Template
       end
 
       def generate!
-        merge(@content)
+        set? :Name, val(:Name)
+        set? :SubtaskOrder, val(:SubtaskOrder)
+        if subtasks = val(:Subtasks)
+          generated_subtasks = subtasks.map do |subtask|
+            generated_subtask = generate_subtask(subtask)
+            generated_subtask.empty? ? nil : generated_subtask
+          end.compact
+          set :Subtasks, generated_subtasks unless generated_subtasks.empty?
+        end
+        merge(uninterpreted_keys)
       end
       
       private
+
+      def generate_subtask(subtask)
+        self.class.create_for_generation(subtask, :top => @top, :filter => @filter).generate_yaml_object
+      end
+
+      INTERPRETED_KEYS = [:name, :subtask_order, :subtasks, :flatten, :dsl_location]
+      def uninterpreted_keys
+        (@content.keys - INTERPRETED_KEYS).inject({}) do |h, k| 
+          h.merge(k.to_s => change_symbols_to_strings(@content[k]))
+        end
+      end
+      
+      def change_symbols_to_strings(obj)
+        if obj.kind_of?(::Hash)
+          obj.inject({}) { |h, (k, v)| h.merge(k.to_s => change_symbols_to_strings(v)) }
+        elsif obj.kind_of?(::Array)
+          obj.map { |el| change_symbols_to_strings(el) }
+        elsif obj.kind_of?(::Symbol)
+          obj.to_s
+        else
+          obj
+        end
+      end
+
       
       def parse_workflow(workflow_hash)
         # TODO: put in fine grain parsing of workflow_hash

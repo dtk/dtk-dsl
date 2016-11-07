@@ -38,7 +38,6 @@ module DTK::DSL
       # Used in workflows
       Subtasks     = :subtasks
       SubtaskOrder = :subtask_order
-      DSLLocation  = :dsl_location
       Flatten      = :flatten
 
       # Used at multiple levels
@@ -51,6 +50,10 @@ module DTK::DSL
       Value         = :value
       Nodes         = :nodes
       Target        = :target
+
+      # meta info
+      DSLLocation       = :dsl_location
+      HiddenDSLLocation = :hidden_dsl_location
 
       def self.index(output_key)
         begin
