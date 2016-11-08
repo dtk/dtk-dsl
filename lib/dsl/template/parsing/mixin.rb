@@ -84,6 +84,10 @@ module DTK::DSL
           @found_keys << key if @found_keys
         end
 
+        def file_parser_output_array
+          self.class.file_parser_output_array
+        end
+
         # opts can have key
         #   :key_type
         def parse_child_elements(parse_template_type, key_constant, opts = {})
