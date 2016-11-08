@@ -88,7 +88,7 @@ module DTK::DSL
         # opts can have keys:
         #  :parent
         #  :this
-        # Wil not have both keys
+        # Will not have both keys
         def self.name(input, opts = {})
           if input.kind_of?(::String)
             input
@@ -113,9 +113,9 @@ module DTK::DSL
           properties = input_hash.values.first
           set? :Attributes, parse_child_elements?(:attribute, :Attributes, :input_hash => properties)
 
-          # TODO: This is a catchall that removes ones we so far are parsing and then has catch all
-          properties.delete('attributes')
-          merge properties
+          # handle keys not processed
+          properties.delete(Constant::Attributes)
+          merge properties unless properties.empty?
         end
 
       end

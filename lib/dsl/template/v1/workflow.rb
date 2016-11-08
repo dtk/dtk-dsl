@@ -32,6 +32,8 @@ class DTK::DSL::Template
         Subtasks     = 'subtasks'
         Flatten      = 'flatten'
       end
+
+      ### For parsing
       
       def parser_output_type
         :hash
