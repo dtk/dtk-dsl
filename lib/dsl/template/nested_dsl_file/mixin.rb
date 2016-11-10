@@ -40,7 +40,7 @@ module DTK::DSL
         end
 
         def add_nested_dsl_file_import?(nested_dsl_file)
-          unless val(:HideImportStatement)
+          unless val(:HiddenImportStatement)
             if @yaml_object.kind_of?(::Hash)
               add_import_statement!(nested_dsl_file, @yaml_object)
             elsif @yaml_object.kind_of?(::Array)

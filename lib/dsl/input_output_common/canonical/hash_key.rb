@@ -57,8 +57,8 @@ module DTK::DSL
       Components = :components
 
       # meta info
-      Import              = :import
-      HideImportStatement = :hide_import_statement
+      Import                = :import
+      HiddenImportStatement = :hidden_import_statement
 
       def self.index(output_key)
         begin

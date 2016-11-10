@@ -99,7 +99,7 @@ module DTK::DSL
         module Hashkey
           include InputOutputCommon::Canonical::HashKey 
         end
-        INTERPRETED_KEYS = [Hashkey::Name, Hashkey::SubtaskOrder, Hashkey::Subtasks, Hashkey::Flatten, Hashkey::Import, Hashkey::HideImportStatement]
+        INTERPRETED_KEYS = [Hashkey::Name, Hashkey::SubtaskOrder, Hashkey::Subtasks, Hashkey::Flatten, Hashkey::Import, Hashkey::HiddenImportStatement]
         def uninterpreted_keys
           (@content.keys - INTERPRETED_KEYS).inject({}) do |h, k| 
             h.merge(k.to_s => change_symbols_to_strings(@content[k]))
