@@ -32,6 +32,8 @@ module DTK
     require_relative('dsl/file_parser')
     require_relative('dsl/file_generator')
     require_relative('dsl/template')
+    # file_type needs to go before service_and_component_info
+    require_relative('dsl/service_and_component_info')
 
   end
 end

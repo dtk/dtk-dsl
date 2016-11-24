@@ -27,6 +27,7 @@ module DTK::DSL
       end
     end
 
+    # yaml_object can be a ::Hash or child of a ::Hash
     def self.generate(yaml_object)
       ::YAML.dump(convert_for_yaml_dump(yaml_object))
     end
