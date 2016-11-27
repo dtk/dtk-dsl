@@ -16,20 +16,13 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class ServiceAndComponentInfo::TransformFrom
-    class ServiceInfo 
-      class Dependencies < Base
-        def hash_content?
-          if module_refs_input_files = input_files?(:module_refs)
-            module_refs_hash = module_refs_input_files.content_hash
-            dependencies = {}
-            if cmp_dependencies = module_refs_hash['component_modules']
-              cmp_dependencies.each_pair do |name, namespace_h|
-                dependencies.merge!({ "#{namespace_h['namespace']}/#{name}" => namespace_h['version']||'master' })
-              end
-            end
-            dependencies
-          end
+  class ServiceAndComponentInfo::TransformFrom::Parser
+    class TopDSL
+      class ModuleInfo < self
+        def update_output_hash?
+          # if these attributes are theer already they will match
+          output_hash['module']  ||= "#{namespace}/#{module_name}"
+          output_hash['version'] ||= version || 'master'
         end
 
       end

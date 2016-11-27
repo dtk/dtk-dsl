@@ -18,69 +18,34 @@
 module DTK::DSL
   module ServiceAndComponentInfo
     class TransformFrom
-      require_relative('transform_from/input_files')
-      require_relative('transform_from/output_files')
-      require_relative('transform_from/service_info')
+      require_relative('transform_from/info')
+      require_relative('transform_from/parser')
 
-      # This is for mapping to module directories (not service instance directories)
-      INFO_HASH = {
-        :service_info => {
-          :input_files => {
-            :assemblies => {
-              :regexps => 
-              [
-               Regexp.new("assemblies/(.*)\.dtk\.assembly\.(yml|yaml)$"), 
-               Regexp.new("assemblies/([^/]+)/assembly\.(yml|yaml)$") #Legacy form
-              ]
-            },
-            :module_refs =>  {
-              :regexps => [Regexp.new("module_refs\.yaml$")]
-            }
-          }
-
-        }
-      }
-
-      attr_reader :indexed_input_files
+      attr_reader :namespace, :module_name, :version, :output_path_hash_pairs
       def initialize(namespace, module_name, version = nil)
         @namespace = namespace
         @module_name = module_name
         @version     = version 
 
-        # both indexed_input_files are indexed by indexed_output_files are indexed by the file type
-        @indexed_input_files = ret_indexed_input_files(info_type)
         # dynamically computed
-        @indexed_output_files = {} 
+        @output_path_hash_pairs = {} 
       end
 
-      def output_file_array(type)
-        output_files_object = @indexed_output_files[type] || fail(Error, "Illegal output type '#{type}'")
-        output_files_object.outputs
-      end
-      
-      private
-
-      # TODO: hard coded now
-      DSL_VERSION = '1.0.0'
-      def top_dsl_file_header_hash
-        {
-          'dsl_version' => DSL_VERSION,
-          'module'      => "#{@namespace}/#{@module_name}",
-          'version' => @version || 'master'
-        }
+      def info_processor(info_type)
+        case info_type 
+        when :service_info then Info::Service.new(self)
+        when :component_info then Info::Component.new(self)
+        else
+          fail Error, "Unexpected info_type '#{info_type}'"
+        end
       end
 
-      def add_to_indexed_output_files!(type, output_files)
-        @indexed_output_files.merge!(type => output_files)
-      end
-                                  
-      # indexed by file type
-      def ret_indexed_input_files(info_type)
-        info_type_hash(info_type)[:input_files].inject({}) { |h, (k, v) | h.merge(k => InputFiles.new(v[:regexps])) }
+      def output_path_text_pairs
+        @output_path_hash_pairs.inject({}) { |h, (path, hash_content)| h.merge(path => YamlHelper.generate(hash_content)) }
       end
 
-      def info_type_hash(info_type)
-        INFO_HASH[info_type] || fail(Error, "Illegal info_type '#{info_type}'")
+      def update_or_add_output_hash!(path, hash_content)
+        @output_path_hash_pairs.merge!(path => hash_content)
       end
 
     end

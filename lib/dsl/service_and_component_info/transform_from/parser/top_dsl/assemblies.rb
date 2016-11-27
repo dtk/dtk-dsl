@@ -16,38 +16,34 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class ServiceAndComponentInfo::TransformFrom
-    class ServiceInfo 
-      class Assemblies < Base
+  class ServiceAndComponentInfo::TransformFrom::Parser
+    class TopDSL
+      class Assemblies < self
         require_relative('assemblies/workflows')
         require_relative('assemblies/node_bindings')
-        def hash_content?
-          assemblies = {}
-
-          input_files(:assemblies).content_hash_array.each do |content_hash|
-            name          = content_hash['name'] || raise_error_missing_field('name')
-            assembly_hash = content_hash['assembly'] || raise_error_missing_field('assembly')
+        def update_output_hash?
+          input_files(:assemblies).content_hash_array.each do |input_hash|
+            name          = input_hash['name'] || raise_error_missing_field('name')
+            assembly_hash = input_hash['assembly'] || raise_error_missing_field('assembly')
 
             assembly_content = {}
-            if description  = content_hash['description']
+            if description  = input_hash['description']
               assembly_content.merge!('description' => description)
             end
             
             assembly_content.merge!(assembly_hash)
             
-            if workflows = Workflows.hash_content?(content_hash)
+            if workflows = Workflows.hash_content?(input_hash)
               assembly_content.merge!('workflows' => workflows)
             end
 
-            if node_bindings = content_hash['node_bindings']
+            if node_bindings = input_hash['node_bindings']
               # convert node_bindings to node attributes
               NodeBindings.add_node_properties!(assembly_content, node_bindings) 
             end
-            
-            assemblies.merge!(name => assembly_content)
+            (output_hash['assemblies'] ||= {}).merge!(name => assembly_content)
           end
-          
-          assemblies.empty? ? nil : assemblies
+
         end
 
       end

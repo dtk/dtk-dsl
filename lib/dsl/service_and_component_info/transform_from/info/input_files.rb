@@ -17,34 +17,32 @@
 #
 module DTK::DSL
   class ServiceAndComponentInfo::TransformFrom
-    class ServiceInfo 
-      class Base
-        attr_reader :indexed_input_files
-        def initialize(parent)
-          @indexed_input_files = parent.indexed_input_files
-        end
-        private :initialize
+    class InputFiles
+      def initialize(regexps)
+        @regexps = regexps
 
-        def self.hash_content?(parent)
-          new(parent).hash_content?
-        end
-
-
-        private
-
-        def input_files(type)
-          input_files?(type) || raise(Error, "Unexpected that no indexed_input_files of type '#{type}'")
-        end
-
-        def input_files?(type)
-          @indexed_input_files[type]
-        end
-
-        def raise_error_missing_field(key)
-          raise Error, "Unexpected that field '#{key}' is missing"
-        end
-
+        # dyanmically set
+        @ndx_file_hash_content = {} #indexed by file hash name
       end
+
+      def match?(path)
+        @regexps.find { |regexp| path =~ regexp }
+      end
+
+      def add_content!(path, text_content)
+        file_obj = FileObj.new(nil, path, :content => text_content)
+        @ndx_file_hash_content.merge!(path => YamlHelper.parse(file_obj))
+      end
+
+      def content_hash_array
+        @ndx_file_hash_content.values
+      end
+
+      def content_hash
+        fail Error, "Unexpected that @ndx_file_hash_content.size != 1" unless @ndx_file_hash_content.size == 1
+        @ndx_file_hash_content.values.first
+      end
+
     end
   end
 end

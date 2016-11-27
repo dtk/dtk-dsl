@@ -16,8 +16,8 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class ServiceAndComponentInfo::TransformFrom
-    class ServiceInfo::Assemblies 
+  class ServiceAndComponentInfo::TransformFrom::Parser
+    class TopDSL::Assemblies 
       module Workflows
         def self.hash_content?(assembly_hash)
           if workflows = assembly_hash['workflow'] || assembly_hash['workflows']

@@ -17,30 +17,25 @@
 #
 module DTK::DSL
   class ServiceAndComponentInfo::TransformFrom
-    class InputFiles
-      def initialize(regexps)
-        @regexps = regexps
-
-        # dyanmically set
-        @ndx_file_hash_content = {} #indexed by file hash name
+    class Parser
+      class TopDSL < self
+        require_relative('top_dsl/module_info')
+        require_relative('top_dsl/assemblies')
+        require_relative('top_dsl/dependencies')
       end
 
-      def match?(path)
-        @regexps.find { |regexp| path =~ regexp }
+      private
+
+      def version
+        info_object.version
       end
 
-      def add_content!(path, text_content)
-        file_obj = FileObj.new(nil, path, :content => text_content)
-        @ndx_file_hash_content.merge!(path => YamlHelper.parse(file_obj))
+      def namespace
+        info_object.namespace
       end
 
-      def content_hash_array
-        @ndx_file_hash_content.values
-      end
-
-      def content_hash
-        fail Error, "Unexpected that @ndx_file_hash_content.size !=1 1" unless @ndx_file_hash_content.size == 1
-        @ndx_file_hash_content.values.first
+      def module_name
+        info_object.module_name
       end
 
     end

@@ -16,8 +16,8 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class ServiceAndComponentInfo::TransformFrom
-    class ServiceInfo::Assemblies 
+  class ServiceAndComponentInfo::TransformFrom::Parser
+    class TopDSL::Assemblies 
       module NodeBindings
         def self.add_node_properties!(assembly_content, node_bindings) 
           nodes = assembly_content['nodes'] || []

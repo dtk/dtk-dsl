@@ -17,19 +17,26 @@
 #
 module DTK::DSL
   class ServiceAndComponentInfo::TransformFrom
-    class OutputFiles
-      PathContentPair = Struct.new(:path, :text_content)
-      attr_reader :outputs
-      def initialize
-        # dyanmically set
-        @outputs= [] # array of PathContentPair elements
-      end
+    class Info
+      class Component < self
+        def compute_outputs!
+          path = top_level_dsl_path
+          update_or_add_output_hash!(path, top_dsl_file_hash_content!(output_file_hash(path)))
+        end
+        
+        private
+        
+        def info_type
+          :component_info
+        end
 
-      def add_content!(path, hash_content)
-        @outputs << PathContentPair.new(path, YamlHelper.generate(hash_content))
-        self
+        def top_dsl_file_hash_content!(output_hash)
+          top_dsl_parser::ModuleInfo.update_output_hash?(output_hash, self) 
+          top_dsl_parser::Dependencies.update_output_hash?(output_hash, self)
+          # top_dsl_parser::Components.update_output_hash?(output_hash, self)
+          output_hash
+        end
       end
-
     end
   end
 end
