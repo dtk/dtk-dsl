@@ -19,20 +19,58 @@ module DTK::DSL
   class ServiceAndComponentInfo::TransformFrom::Parser
     class TopDSL
       class Dependencies < self
-        # TODO: update to look for conflicts
         def update_output_hash?
           if module_refs_input_files = input_files?(:module_refs)
-            dependencies = {}
-            module_refs_hash = module_refs_input_files.content_hash
-            if cmp_dependencies = module_refs_hash['component_modules']
-              cmp_dependencies.each_pair do |name, namespace_h|
-                dependencies.merge!({ "#{namespace_h['namespace']}/#{name}" => namespace_h['version']||'master' })
-              end
-            end
-            output_hash.merge!('dependencies' => dependencies)
+            existing_module_refs = output_hash['dependencies'] || {}
+            merge_in_new_module_refs!(existing_module_refs, module_refs_input_files.content_hash)
+          end
+        end
+        
+        private
+        
+        def merge_in_new_module_refs!(module_refs_hash, input_module_refs_hash)
+          ndx_existing_modules = ndx_existing_modules(module_refs_hash)
+          component_modules(input_module_refs_hash).each do |module_info|
+            module_info.raise_error_if_conflicts(ndx_existing_modules)
+            module_refs_hash.merge!(module_info.combined_module_form)
+          end
+        end
+        
+        
+        # indexed by module_name
+        def ndx_existing_modules(module_refs_hash)
+          module_refs_hash.inject({}) do |h, (namespace_name, version)|
+            namespace, name = namespace_name.split(ModuleInfo::NAMESPACE_NAME_DELIM)
+            h.merge(name => ModuleInfo.new(namespace, name,  version))
           end
         end
 
+        def component_modules(input_module_refs_hash)
+          (input_module_refs_hash['component_modules'] || {}).inject([]) do |a, (name, info)|
+            a + ModuleInfo.new(info['namespace'], name, version)
+          end
+        end
+
+
+        class ModuleInfo
+          attr_reader :namespace, :module_name, :version
+          def initialize(namespace, module_name, version)
+            @namespace = namespace
+            @module_name = module_name
+            @version     = version || 'master'
+          end
+          
+          NAMESPACE_NAME_DELIM = '/'
+          
+          def combined_module_form
+            "#{@namespace}#{NAMESPACE_NAME_DELIM}#{@name}" => @version
+          end
+          
+          def raise_error_if_conflict(ndx_existing_modules)
+            # TODO:: stub; raise Error::Usage
+          end
+        end
+          
       end
     end
   end
