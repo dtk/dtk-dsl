@@ -80,8 +80,10 @@ module DTK::DSL
 
         def generate_component_hash
           ret = {}
+
           set_generation_hash(ret, :Attributes, generate_child_elements(:attribute, val(:Attributes)))
-          #TODO: set component_links
+          set_generation_hash(ret, :ComponentLinks, generate_child_elements(:component_link, val(:ComponentLinks)))
+
           ret
         end
         

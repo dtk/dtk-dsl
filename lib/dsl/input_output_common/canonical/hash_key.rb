@@ -45,16 +45,17 @@ module DTK::DSL
       OrderedComponents = :ordered_components     
 
       # Used at multiple levels
-      Name          = :name
-      Description   = :description
-      Namespace     = :namespace
-      ModuleName    = :module_name
-      ModuleVersion = :version
-      Attributes    = :attributes
-      Value         = :value
-      Nodes         = :nodes
-      Target        = :target
-      Components = :components
+      Name           = :name
+      Description    = :description
+      Namespace      = :namespace
+      ModuleName     = :module_name
+      ModuleVersion  = :version
+      Attributes     = :attributes
+      Value          = :value
+      Nodes          = :nodes
+      Target         = :target
+      Components     = :components
+      ComponentLinks = :component_links
 
       # meta info
       Import                = :import
