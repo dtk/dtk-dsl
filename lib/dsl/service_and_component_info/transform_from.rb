@@ -18,14 +18,13 @@
 module DTK::DSL
   module ServiceAndComponentInfo
     class TransformFrom
+      require_relative('transform_from/module_ref')
       require_relative('transform_from/info')
       require_relative('transform_from/parser')
 
-      attr_reader :namespace, :module_name, :version, :output_path_hash_pairs
+      attr_reader :module_ref, :output_path_hash_pairs
       def initialize(namespace, module_name, version = nil)
-        @namespace = namespace
-        @module_name = module_name
-        @version     = version 
+        @module_ref = ModuleRef.new(namespace, module_name, version)
 
         # dynamically computed
         @output_path_hash_pairs = {} 

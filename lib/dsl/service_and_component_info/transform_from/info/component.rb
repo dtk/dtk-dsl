@@ -33,7 +33,7 @@ module DTK::DSL
         def top_dsl_file_hash_content!(output_hash)
           top_dsl_parser::ModuleInfo.update_output_hash?(output_hash, self) 
           top_dsl_parser::Dependencies.update_output_hash?(output_hash, self)
-          # top_dsl_parser::Components.update_output_hash?(output_hash, self)
+          top_dsl_parser::Components.update_output_hash?(output_hash, self)
           output_hash
         end
       end

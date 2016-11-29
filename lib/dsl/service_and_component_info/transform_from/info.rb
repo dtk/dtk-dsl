@@ -22,12 +22,10 @@ module DTK::DSL
       require_relative('info/service')
       require_relative('info/component')
 
-      attr_reader :indexed_input_files, :namespace, :module_name, :version
+      attr_reader :indexed_input_files, :module_ref
       def initialize(parent)
         @parent      = parent
-        @namespace   = parent.namespace
-        @module_name = parent.module_name
-        @version     = parent.version
+        @module_ref  = parent.module_ref
 
         # indexed by input file type
         @indexed_input_files = ret_indexed_input_files(info_type)
@@ -55,7 +53,7 @@ module DTK::DSL
         },
         :component_info => {
           :input_files => {
-            :dsl_file => {
+            :component_dsl_file => {
               :regexps => [Regexp.new("dtk\.model\.yaml$")], 
             },
             :module_refs =>  {

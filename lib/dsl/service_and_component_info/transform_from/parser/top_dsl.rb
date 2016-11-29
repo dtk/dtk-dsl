@@ -21,21 +21,14 @@ module DTK::DSL
       class TopDSL < self
         require_relative('top_dsl/module_info')
         require_relative('top_dsl/assemblies')
+        require_relative('top_dsl/components')
         require_relative('top_dsl/dependencies')
       end
 
       private
 
-      def version
-        info_object.version
-      end
-
-      def namespace
-        info_object.namespace
-      end
-
-      def module_name
-        info_object.module_name
+      def module_ref
+        info_object.module_ref
       end
 
     end

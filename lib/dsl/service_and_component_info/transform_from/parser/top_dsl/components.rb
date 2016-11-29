@@ -18,11 +18,14 @@
 module DTK::DSL
   class ServiceAndComponentInfo::TransformFrom::Parser
     class TopDSL
-      class ModuleInfo < self
+      class Components < self
         def update_output_hash?
-          # if these attributes are in output_hash, already, they will match
-          output_hash['module']  ||= "#{module_ref.namespace}/#{module_ref.module_name}"
-          output_hash['version'] ||= module_ref.version
+          if component_dsl_input_file = input_files?(:component_dsl_file)
+            component_dsl_input_hash = component_dsl_input_file.content_hash
+            if components = component_dsl_input_hash['components']
+              output_hash['components'] = components
+            end
+          end
         end
 
       end
