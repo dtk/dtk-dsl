@@ -15,26 +15,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-class DTK::DSL::Template
-  class V1
-    class CommonModule < CommonModuleSummary
-      module Constant
-        include CommonModuleSummary::Constant
-
-        module Variations
-          include CommonModuleSummary::Constant::Variations
-        end
-
-        extend ClassMixin::Constant
-        Assemblies    = 'assemblies'
-        ComponentDefs = 'components' 
-      end
-
-      def parse!
-        super
-        set :Assemblies, parse_child_elements?(:assembly, :Assemblies)
-        set :ComponentDefs, parse_child_elements?(:component_def, :ComponentDefs)
+module DTK::DSL
+  class Template::V1
+    class ComponentDef
+      class SemanticParse < InputOutputCommon::SemanticParse::Hash
       end
     end
   end
 end
+
