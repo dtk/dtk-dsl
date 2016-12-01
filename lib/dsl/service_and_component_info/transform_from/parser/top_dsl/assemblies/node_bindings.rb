@@ -58,27 +58,24 @@ module DTK::DSL
           end
         end
 
-      end
-      
-      private
-
-      def self.ec2_properties_from_node_binding(node_binding)
-        image, size = node_binding.split('-')
-        [image, size]
-      end
-
-      def self.include_node_property_component?(components)
-        property_component = 'ec2::properties'
-        components.each do |component|
-          if component.is_a?(Hash)
-            return components.index(component) if component.keys.first.eql?(property_component)
-          else
-            return components.index(component) if component.eql?(property_component)
-          end
+        def self.ec2_properties_from_node_binding(node_binding)
+          image, size = node_binding.split('-')
+          [image, size]
         end
-        false
-      end
 
+        def self.include_node_property_component?(components)
+          property_component = 'ec2::properties'
+          components.each do |component|
+            if component.is_a?(Hash)
+              return components.index(component) if component.keys.first.eql?(property_component)
+            else
+              return components.index(component) if component.eql?(property_component)
+            end
+          end
+          false
+        end
+
+      end
     end
   end
 end
