@@ -27,7 +27,7 @@ class DTK::DSL::Template
 
         extend ClassMixin::Constant
         Assemblies    = 'assemblies'
-        ComponentDefs = 'components' 
+        ComponentDefs = 'component_defs' 
       end
 
       def parse!

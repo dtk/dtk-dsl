@@ -22,8 +22,8 @@ module DTK::DSL
         def update_output_hash?
           if component_dsl_input_file = input_files?(:component_dsl_file)
             component_dsl_input_hash = component_dsl_input_file.content_hash
-            if components = component_dsl_input_hash['components']
-              output_hash['components'] = components
+            if component_defs = component_dsl_input_hash['components']
+              output_hash['component_defs'] = component_defs
             end
           end
         end
