@@ -30,9 +30,6 @@ module DTK::DSL
       end
 
       def add_content!(path, text_content)
-        require 'debugger'
-        Debugger.start
-        debugger
         file_obj = FileObj.new(nil, path, :content => text_content)
         @ndx_file_hash_content.merge!(path => YamlHelper.parse(file_obj))
       end

@@ -20,9 +20,6 @@ module DTK::DSL
     class Info
       class Component < self
         def compute_outputs!
-          require 'debugger'
-          Debugger.start
-          debugger
           path = top_level_dsl_path
           update_or_add_output_hash!(path, top_dsl_file_hash_content!(output_file_hash(path)))
         end

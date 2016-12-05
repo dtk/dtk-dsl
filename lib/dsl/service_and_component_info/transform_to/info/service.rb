@@ -21,9 +21,6 @@ module DTK::DSL
       class Service < self
         def compute_outputs!
           path = top_level_dsl_path
-          require 'debugger'
-          Debugger.start
-          debugger
           update_or_add_output_hash!(path, top_dsl_file_hash_content!(output_file_hash(path)))
         end
       
@@ -34,9 +31,6 @@ module DTK::DSL
         end
 
         def top_dsl_file_hash_content!(output_hash)
-          require 'debugger'
-          Debugger.start
-          debugger
           top_dsl_parser::ModuleInfo.update_output_hash?(output_hash, self) 
           top_dsl_parser::Dependencies.update_output_hash?(output_hash, self)
           top_dsl_parser::Assemblies.update_output_hash?(output_hash, self)
