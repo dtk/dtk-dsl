@@ -55,7 +55,7 @@ module DTK::DSL
 
       private
 
-      def top_level_dsl_path  
+      def top_level_dsl_path
         FileType::CommonModule::DSLFile::Top.canonical_path
       end
 

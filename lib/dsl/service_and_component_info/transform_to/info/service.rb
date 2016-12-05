@@ -21,7 +21,15 @@ module DTK::DSL
       class Service < self
         def compute_outputs!
           path = top_level_dsl_path
-          update_or_add_output_hash!(path, top_dsl_file_hash_content!(output_file_hash(path)))
+          output_hash = output_file_hash(path)
+          top_dsl_file_hash_content!(output_hash)
+
+          if assemblies = output_hash['assemblies']
+            # update_or_add_output_hash!(path, )
+            assemblies.each do |name, content|
+              update_or_add_output_hash!(assembly_path_from_name(name), content)
+            end
+          end
         end
       
         private
@@ -35,6 +43,11 @@ module DTK::DSL
           top_dsl_parser::Dependencies.update_output_hash?(output_hash, self)
           top_dsl_parser::Assemblies.update_output_hash?(output_hash, self)
           output_hash
+        end
+
+        def assembly_path_from_name(name)
+          # assemblies/target.dtk.assembly.yaml
+          "#{name}.assembly.yaml"
         end
 
       end
