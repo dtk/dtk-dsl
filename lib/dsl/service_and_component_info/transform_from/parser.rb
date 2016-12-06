@@ -40,7 +40,9 @@ module DTK::DSL
       end
       
       def input_files?(type)
-        @indexed_input_files[type]
+        if input_files = @indexed_input_files[type]
+          input_files.empty? ? nil : input_files
+        end
       end
       
       def raise_error_missing_field(key)

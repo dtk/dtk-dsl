@@ -43,6 +43,10 @@ module DTK::DSL
         @ndx_file_hash_content.values.first
       end
 
+      def empty?
+        @ndx_file_hash_content.empty?
+      end
+
     end
   end
 end
