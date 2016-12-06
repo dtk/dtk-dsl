@@ -27,28 +27,6 @@ module DTK::DSL
               (output_hash['assemblies'] ||= {}).merge!(assemblies)
             end
           end
-          # input_files(:assemblies).content_hash_array.each do |input_hash|
-          #   name          = input_hash['name'] || raise_error_missing_field('name')
-          #   assembly_hash = input_hash['assembly'] || raise_error_missing_field('assembly')
-
-          #   assembly_content = {}
-          #   if description  = input_hash['description']
-          #     assembly_content.merge!('description' => description)
-          #   end
-            
-          #   assembly_content.merge!(assembly_hash)
-            
-          #   if workflows = Workflows.hash_content?(input_hash)
-          #     assembly_content.merge!('workflows' => workflows)
-          #   end
-
-          #   if node_bindings = input_hash['node_bindings']
-          #     # convert node_bindings to node attributes
-          #     NodeBindings.add_node_properties!(assembly_content, node_bindings) 
-          #   end
-          #   (output_hash['assemblies'] ||= {}).merge!(name => assembly_content)
-          # end
-
         end
 
       end
