@@ -57,6 +57,17 @@ module DTK::DSL
           end
         end
       end
+      
+      # TODO: DTK-2765: Aldin: this should be changed
+      def top_dsl_parser
+        @top_dsl_parser ||= Parser::TopDSL
+      end
+
+      # TODO: DTK-2765: Aldin: this is not being used as intended; it should be path of output file. Might be the way it is used still getting right answer, but this shoudl be fixed
+      def top_level_dsl_path
+        @top_level_dsl_path ||= FileType::CommonModule::DSLFile::Top.canonical_path
+      end
+
     end
   end
 end

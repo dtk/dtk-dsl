@@ -16,7 +16,7 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class ServiceAndComponentInfo::TransformTo
+  class ServiceAndComponentInfo
     class ModuleRef
       attr_reader :namespace, :module_name, :version
       def initialize(namespace, module_name, version)

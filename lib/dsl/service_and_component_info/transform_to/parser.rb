@@ -16,38 +16,9 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class ServiceAndComponentInfo::TransformTo
-    class Parser
+ class ServiceAndComponentInfo::TransformTo
+    class Parser < ServiceAndComponentInfo::Parser
       require_relative('parser/top_dsl')
-      
-      attr_reader :output_hash, :info_object
-      def initialize(output_hash, info_object)
-        @output_hash         = output_hash
-        @info_object         = info_object
-        @indexed_input_files = info_object.indexed_input_files
-      end
-      private :initialize
-      
-      def self.update_output_hash?(output_hash, info_object)
-        new(output_hash, info_object).update_output_hash?
-        output_hash
-      end
-      
-      private
-      
-      def input_files(type)
-        input_files?(type) || raise(Error, "Unexpected that no indexed_input_files of type '#{type}'")
-      end
-      
-      def input_files?(type)
-        @indexed_input_files[type]
-      end
-      
-      def raise_error_missing_field(key)
-        raise Error, "Unexpected that field '#{key}' is missing"
-      end
-      
     end
   end
 end
-

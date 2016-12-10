@@ -16,7 +16,7 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class ServiceAndComponentInfo::TransformTo
+  class ServiceAndComponentInfo::Info
     class InputFiles
       def initialize(regexps)
         @regexps = regexps
@@ -31,7 +31,11 @@ module DTK::DSL
 
       def add_content!(path, text_content)
         file_obj = FileObj.new(nil, path, :content => text_content)
-        @ndx_file_hash_content.merge!(path => YamlHelper.parse(file_obj))
+        add_hash_content!(path, YamlHelper.parse(file_obj))
+      end
+
+      def add_hash_content!(path, hash_content)
+        @ndx_file_hash_content.merge!(path => hash_content)
       end
 
       def content_hash_array
@@ -41,6 +45,10 @@ module DTK::DSL
       def content_hash
         # fail Error, "Unexpected that @ndx_file_hash_content.size != 1" unless @ndx_file_hash_content.size == 1
         @ndx_file_hash_content.values.first
+      end
+
+      def empty?
+        @ndx_file_hash_content.empty?
       end
 
     end

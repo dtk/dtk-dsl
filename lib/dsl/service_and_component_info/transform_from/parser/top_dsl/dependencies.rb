@@ -16,8 +16,8 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class ServiceAndComponentInfo::TransformFrom
-    class Parser::TopDSL
+  class ServiceAndComponentInfo
+    class TransformFrom::Parser::TopDSL
       class Dependencies < self
         def update_output_hash?
           if module_refs_input_file = input_files?(:module_refs)

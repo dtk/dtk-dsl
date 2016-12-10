@@ -17,24 +17,9 @@
 #
 module DTK::DSL
  class ServiceAndComponentInfo::TransformFrom
-    class Info
-      require_relative('info/input_files')
+    class Info < ServiceAndComponentInfo::Info
       require_relative('info/service')
       require_relative('info/component')
-
-      attr_reader :indexed_input_files, :module_ref
-      def initialize(parent)
-        @parent      = parent
-        @module_ref  = parent.module_ref
-
-        # indexed by input file type
-        @indexed_input_files = ret_indexed_input_files(info_type)
-      end
-
-      def compute_outputs!        
-        raise Error::NoMethodForConcreteClass.new(self.class)
-      end
-
       # This is for mapping to module directories (not service instance directories)
       INFO_HASH = {
         :service_info => {
@@ -65,29 +50,12 @@ module DTK::DSL
 
       private
 
-      def top_level_dsl_path  
-        FileType::CommonModule::DSLFile::Top.canonical_path
-      end
-
       def top_dsl_parser
-        Parser::TopDSL
+        @top_dsl_parser ||= Parser::TopDSL
       end
 
-      # indexed by input file type
-      def ret_indexed_input_files(input_type)
-        input_type_hash(input_type)[:input_files].inject({}) { |h, (k, v) | h.merge(k => InputFiles.new(v[:regexps])) }
-      end
-
-      def input_type_hash(input_type)
-        INFO_HASH[input_type] || fail(Error, "Illegal input_type '#{input_type}'")
-      end
-
-      def output_file_hash(path)
-        @parent.output_path_hash_pairs[path] || {}
-      end
-
-      def update_or_add_output_hash!(path, hash_content)
-        @parent.update_or_add_output_hash!(path, hash_content)
+      def top_level_dsl_path  
+        @top_level_dsl_path ||= FileType::CommonModule::DSLFile::Top.canonical_path
       end
 
     end
