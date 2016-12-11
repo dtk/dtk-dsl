@@ -18,7 +18,24 @@
 module DTK::DSL
  class ServiceAndComponentInfo::TransformTo
     class Parser < ServiceAndComponentInfo::Parser
+      require_relative('parser/module_refs')
+      require_relative('parser/component_module')
+
+      # # TODO: DTK-2765: Aldin: change this to be parser/service_module
       require_relative('parser/top_dsl')
+
+      private
+      def update_output_hash__dependencies?
+          if component_dsl_input_file = input_files?(:module)
+            component_dsl_input_hash = component_dsl_input_file.content_hash
+            if dependencies = component_dsl_input_hash['dependencies']
+              add_dependencies_to_output_hash!(dependencies)
+              output_hash
+            end
+          end
+        end
+      def add_dependencies_to_output_hash!(dependencies)
+      end
     end
   end
 end

@@ -18,6 +18,7 @@
 module DTK::DSL
  class ServiceAndComponentInfo::TransformTo
     class Info < ServiceAndComponentInfo::Info
+      require_relative('info/input_files')
       require_relative('info/service')
       require_relative('info/component')
 

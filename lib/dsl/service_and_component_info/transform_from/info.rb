@@ -18,6 +18,7 @@
 module DTK::DSL
  class ServiceAndComponentInfo::TransformFrom
     class Info < ServiceAndComponentInfo::Info
+      require_relative('info/input_files')
       require_relative('info/service')
       require_relative('info/component')
       # This is for mapping to module directories (not service instance directories)

@@ -20,8 +20,8 @@ module DTK::DSL
     class Info
       class Component < self
         def compute_outputs!
-          path = top_level_dsl_path
-          update_or_add_output_hash!(path, top_dsl_file_hash_content!(output_file_hash(path)))
+          set_top_level_dsl_output_hash!
+          set_module_refs_output_hash!
         end
         
         private
@@ -30,12 +30,40 @@ module DTK::DSL
           :component_info
         end
 
-        def top_dsl_file_hash_content!(output_hash)
-          top_dsl_parser::ModuleInfo.update_output_hash?(output_hash, self) 
-          top_dsl_parser::Dependencies.update_output_hash?(output_hash, self)
-          top_dsl_parser::Components.update_output_hash?(output_hash, self)
-          output_hash
+        def set_top_level_dsl_output_hash!
+          path   = ComponentModulePath.top_level_dsl
+          parser = component_module_dsl_parser::TopDSL
+          set_output_hash?(parser, path)
         end
+
+        def set_module_refs_output_hash!
+          path   = ComponentModulePath.module_refs
+          parser = component_module_dsl_parser::ModuleRefs
+          set_output_hash?(parser, path)
+        end
+
+        def set_output_hash?(parser, path)
+          output_hash = output_file_hash(path)
+          if parser.update_output_hash?(output_hash, self) # This conditionally updates output_hash
+            update_or_add_output_hash!(path, output_hash)
+          end
+        end
+
+        def component_module_dsl_parser
+          @component_module_dsl_parser ||= Parser::ComponentModule
+        end
+        
+        module ComponentModulePath
+          TOP_LEVEL_DSL = 'dtk.model.yaml'
+          MODULE_REFS = 'model_refs.yaml'
+          def self.top_level_dsl
+            TOP_LEVEL_DSL
+          end
+          def self.module_refs
+            MODULE_REFS
+          end
+        end
+        
       end
     end
   end

@@ -32,15 +32,15 @@ module DTK::DSL
         raise Error::NoMethodForConcreteClass.new(self.class)
       end
 
-      private
-
-      def top_level_dsl_path
-        raise Error::NoMethodForConcreteClass.new(self.class)
+      def output_path_text_pairs
+        @parent.output_path_text_pairs
       end
+
+      private
 
       # indexed by input file type
       def ret_indexed_input_files(input_type)
-        input_type_hash(input_type)[:input_files].inject({}) { |h, (k, v) | h.merge(k => InputFiles.new(v[:regexps])) }
+        input_type_hash(input_type)[:input_files].inject({}) { |h, (k, v) | h.merge(k => input_files_class.new(v[:regexps])) }
       end
 
       def input_type_hash(input_type)
@@ -53,6 +53,10 @@ module DTK::DSL
 
       def update_or_add_output_hash!(path, hash_content)
         @parent.update_or_add_output_hash!(path, hash_content)
+      end
+
+      def input_files_class
+        @input_files_class ||= @parent.class::Info::InputFiles
       end
 
     end

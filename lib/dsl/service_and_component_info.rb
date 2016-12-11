@@ -46,6 +46,7 @@ module DTK
         @output_path_hash_pairs.inject({}) { |h, (path, hash_content)| h.merge(path => YamlHelper.generate(hash_content)) }
       end
 
+
       def update_or_add_output_hash!(path, hash_content)
         @output_path_hash_pairs.merge!(path => hash_content)
       end

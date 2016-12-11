@@ -22,20 +22,12 @@ module DTK::DSL
         @regexps = regexps
 
         # dyanmically set
+        # For TransformFrom hash_content is type ::Hash where for TransformTo it is type InputOutputCommon::Canonical::Hash
         @ndx_file_hash_content = {} #indexed by file hash name
       end
 
       def match?(path)
         @regexps.find { |regexp| path =~ regexp }
-      end
-
-      def add_content!(path, text_content)
-        file_obj = FileObj.new(nil, path, :content => text_content)
-        add_hash_content!(path, YamlHelper.parse(file_obj))
-      end
-
-      def add_hash_content!(path, hash_content)
-        @ndx_file_hash_content.merge!(path => hash_content)
       end
 
       def content_hash_array
@@ -47,8 +39,18 @@ module DTK::DSL
         @ndx_file_hash_content.values.first
       end
 
+      def input_paths
+        @ndx_file_hash_content.keys
+      end
+
       def empty?
         @ndx_file_hash_content.empty?
+      end
+
+      private
+
+      def add_hash_content!(path, hash_content)
+        @ndx_file_hash_content.merge!(path => hash_content)
       end
 
     end
