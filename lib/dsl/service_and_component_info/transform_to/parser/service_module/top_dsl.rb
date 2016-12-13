@@ -17,14 +17,14 @@
 #
 module DTK::DSL; class ServiceAndComponentInfo::TransformTo
   class Parser
-    module ComponentModule
+    module ServiceModule
       class TopDSL < Parser
         def update_output_hash?
           if module_dsl_input_file = input_files?(:module)
             module_dsl_canonical_hash = module_dsl_input_file.content_hash
-            if component_defs = module_dsl_canonical_hash.val(:ComponentDefs)
+            if assemblies = module_dsl_canonical_hash.val(:Assemblies)
               add_module_info_to_output_hash!
-              add_components_to_output_hash!(component_defs)
+              add_assemblies_to_output_hash!(assemblies)
               output_hash
             end
           end
@@ -32,14 +32,14 @@ module DTK::DSL; class ServiceAndComponentInfo::TransformTo
         
         private
         
-        COMPONENT_MODULE_DSL_VERSION = '1.0.0'
+        DSL_VERSION = '1.0.0'
         def add_module_info_to_output_hash!
           output_hash['module']      = info_object.module_ref.module_name
-          output_hash['dsl_version'] = COMPONENT_MODULE_DSL_VERSION
+          output_hash['dsl_version'] = DSL_VERSION
         end
         
-        def add_components_to_output_hash!(component_defs)
-          output_hash['component'] = component_defs
+        def add_assemblies_to_output_hash!(assemblies)
+          output_hash['assemblies'] = assemblies
         end
         
       end

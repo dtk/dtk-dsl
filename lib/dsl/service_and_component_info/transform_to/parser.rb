@@ -20,9 +20,7 @@ module DTK::DSL
     class Parser < ServiceAndComponentInfo::Parser
       require_relative('parser/module_refs')
       require_relative('parser/component_module')
-
-      # # TODO: DTK-2765: Aldin: change this to be parser/service_module
-      require_relative('parser/top_dsl')
+      require_relative('parser/service_module')
 
       private
       def update_output_hash__dependencies?

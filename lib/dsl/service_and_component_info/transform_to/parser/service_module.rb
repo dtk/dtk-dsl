@@ -16,16 +16,12 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class ServiceAndComponentInfo::TransformTo::Parser
-    class TopDSL
-      class ModuleInfo < self
-        def update_output_hash?
-          # if these attributes are in output_hash, already, they will match
-          output_hash['module']      ||= "#{module_ref.namespace}/#{module_ref.module_name}"
-          output_hash['version']     ||= module_ref.version
-          output_hash['dsl_version'] ||= '1.0.0' #hardcoded for now
-        end
-
+  class ServiceAndComponentInfo::TransformTo
+    class Parser
+      # parse to form component module files
+      module ServiceModule
+        require_relative('service_module/top_dsl')
+        require_relative('service_module/module_refs')
       end
     end
   end

@@ -16,19 +16,11 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class ServiceAndComponentInfo::TransformTo::Parser
-    class TopDSL
-      class Assemblies < self
-        require_relative('assemblies/workflows')
-        require_relative('assemblies/node_bindings')
-        def update_output_hash?
-          if module_content = input_files(:module)
-            if assemblies = module_content.content_hash['assemblies']
-              (output_hash['assemblies'] ||= {}).merge!(assemblies)
-            end
-          end
+  class ServiceAndComponentInfo::TransformTo
+    class Parser
+      module ServiceModule
+        class ModuleRefs < Parser::ModuleRefs
         end
-
       end
     end
   end

@@ -20,54 +20,53 @@ module DTK::DSL
     class Info
       class Service < self
         def compute_outputs!
-          path        = top_level_dsl_path
-          output_hash = output_file_hash(path)
-
-          top_dsl_file_hash_content!(output_hash)
-          update_or_add_output_hashes!(output_hash)
+          set_top_level_dsl_output_hash!
+          set_module_refs_output_hash!
         end
-      
+
         private
-      
+
         def info_type
           :service_info
         end
 
-        def top_dsl_file_hash_content!(output_hash)
-          top_dsl_parser::ModuleInfo.update_output_hash?(output_hash, self) 
-          top_dsl_parser::Dependencies.update_output_hash?(output_hash, self)
-          top_dsl_parser::Assemblies.update_output_hash?(output_hash, self)
-          output_hash
+        def set_top_level_dsl_output_hash!
+          parser = service_module_dsl_parser::TopDSL
+          set_output_hash?(parser)
         end
 
-        def assembly_path_from_name(name)
-          "#{name}.assembly.yaml"
+        def set_module_refs_output_hash!
+          path        = ServiceModulePath.module_refs
+          parser      = service_module_dsl_parser::ModuleRefs
+          output_hash = output_file_hash(path)
+          update_or_add_output_hash!(path, output_hash) if parser.update_output_hash?(output_hash, self)
         end
 
-        def update_or_add_output_hashes!(output_hash)
-          if assemblies = output_hash['assemblies']
-            assemblies.each do |name, content|
-              assembly_content = { 'name' => name, 'dsl_version' => output_hash['dsl_version'] }
-              update_or_add_output_hash!(assembly_path_from_name(name), assembly_content.merge(content))
+        def set_output_hash?(parser)
+          output_hash = {}
+          if parser.update_output_hash?(output_hash, self)
+            if assemblies = output_hash['assemblies'] || output_hash[:assemblies]
+              assemblies.each { |assembly| update_or_add_output_hash!(ServiceModulePath.top_level_dsl(assembly[:name]), assembly) }
             end
           end
+        end
 
-          if module_refs = output_hash['service_module_refs']
-            update_or_add_output_hash!('module_refs.yaml', module_refs)
+        def service_module_dsl_parser
+          @service_module_dsl_parser ||= Parser::ServiceModule
+        end
+
+        module ServiceModulePath
+          TOP_LEVEL_DSL = 'dtk.assembly.yaml'
+          MODULE_REFS = 'module_refs.yaml'
+          def self.top_level_dsl(assembly_name)
+            "assemblies/#{assembly_name}.#{TOP_LEVEL_DSL}"
+          end
+          def self.module_refs
+            MODULE_REFS
           end
         end
-      end
-      
-      # TODO: DTK-2765: Aldin: this should be changed
-      def top_dsl_parser
-        @top_dsl_parser ||= Parser::TopDSL
-      end
 
-      # TODO: DTK-2765: Aldin: this is not being used as intended; it should be path of output file. Might be the way it is used still getting right answer, but this shoudl be fixed
-      def top_level_dsl_path
-        @top_level_dsl_path ||= FileType::CommonModule::DSLFile::Top.canonical_path
       end
-
     end
   end
 end
