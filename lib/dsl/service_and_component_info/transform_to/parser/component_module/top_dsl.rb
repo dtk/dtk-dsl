@@ -39,7 +39,7 @@ module DTK::DSL; class ServiceAndComponentInfo::TransformTo
         end
         
         def add_components_to_output_hash!(component_defs)
-          output_hash['component'] = component_defs
+          output_hash['components'] = component_defs
         end
         
       end
