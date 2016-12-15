@@ -49,7 +49,13 @@ module DTK::DSL
             ret
           end
         end
-        
+
+        def remove_all_except!(*output_keys)
+          matching_internal_indexes = output_keys.inject([]) { |a, k| a + possible_key_forms_from_output_key(k) }
+          keys.each { |internal_index| delete(internal_index) unless matching_internal_indexes.include?(internal_index) }
+          self
+        end
+
         private
         
         def canonical_key_form_from_output_key(output_key)

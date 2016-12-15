@@ -42,7 +42,7 @@ module DTK::DSL
         
         def self.parse_elements(input_array, parent_info)
           input_array.inject(file_parser_output_hash) do |h, component|
-            name = name(component)
+            name = name(component, :parent => parent_info.parent)
             h.merge(name => parse_element(component, parent_info, :index => name))
           end
         end
@@ -80,23 +80,29 @@ module DTK::DSL
 
         def generate_component_hash
           ret = {}
+
           set_generation_hash(ret, :Attributes, generate_child_elements(:attribute, val(:Attributes)))
-          #TODO: set component_links
+          set_generation_hash(ret, :ComponentLinks, generate_child_elements(:component_link, val(:ComponentLinks)))
+
           ret
         end
         
-        def self.name(input)
+        # opts can have keys:
+        #  :parent
+        #  :this
+        # Will not have both keys
+        def self.name(input, opts = {})
           if input.kind_of?(::String)
             input
           elsif input.kind_of?(::Hash) and input.size > 0
             input.keys.first
           else
-            raise parsing_error(:WrongObjectType, input, [::String, ::Hash])
+            raise (opts[:this] || opts[:parent]).parsing_error([:WrongObjectType, input, [::String, ::Hash]])
           end
         end
         
         def name
-          self.class.name(@input)
+          self.class.name(@input, :this => self)
         end
         
         def parse_when_string!
@@ -104,14 +110,14 @@ module DTK::DSL
 
         def parse_when_hash!
           unless input_hash.size == 1 and input_hash.values.first.kind_of?(::Hash)
-            raise parsing_error("Component is ill-formed; it must be string or hash with has value")
+            raise parsing_error("Component is ill-formed; it must be string or hash")
           end
           properties = input_hash.values.first
           set? :Attributes, parse_child_elements?(:attribute, :Attributes, :input_hash => properties)
 
-          # TODO: This is a catchall that removes ones we so far are parsing and then has catch all
-          properties.delete('attributes')
-          merge properties
+          # handle keys not processed
+          properties.delete(Constant::Attributes)
+          merge properties unless properties.empty?
         end
 
       end

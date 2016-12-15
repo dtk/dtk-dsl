@@ -19,14 +19,10 @@
 module DTK::DSL
   # Abstract class; application that uses this library must provide a concrete class that inherits from this
   class DirectoryParser
-    require_relative('directory_parser/path_info')
-    # file_types - a single or array of FileObj objects
-    # opts can have keys
-    #   :file_path - string
-    #   :dir_path - string
-    # Returns  FileObj that matches a file_typeo bject that matches a file_type in file_types
+    # file_types - a single or array of FileType
+    # Returns a FileObj that matches a file_type object that matches a file_type in file_types
     #   or returns nil if no match found
-    def self.matching_file_obj?(file_types, opts = {})
+    def self.matching_file_obj?(_file_types, *_args)
       raise Error::NoMethodForConcreteClass.new(self.class)
     end
   end

@@ -31,9 +31,11 @@ class DTK::DSL::Template
 
       ### For parsing
       def parse!
-        set :DSLVersion, input_key_value(:DSLVersion)
-        set :Name, input_key_value(:DSLVersion)
-        set? :DependentModules, input_key_value?(:DependentModules)
+        remove_processed_keys_from_input_hash! do
+          set :DSLVersion, input_key_value(:DSLVersion)
+          set :Name, input_key_value(:DSLVersion)
+          set? :DependentModules, input_key_value?(:DependentModules)
+        end
         merge parse_child(:assembly, input_hash)
       end
 

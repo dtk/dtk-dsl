@@ -20,13 +20,18 @@ module DTK::DSL
     # assumption is that where this included could have a Variations module
     module ClassMixin
       module Constant
-        def matches?(object, constant)
+        # opts can have keys:
+        #   :set_matching_key - if specified this wil be an empty array to add matching_key to
+        def matches?(object, constant, opts = {})
           unless object.nil?
             variations = variations(constant)
             if object.is_a?(Hash)
-              hash_value_of_matching_key?(object, variations)
+              if matching_key = hash_key_if_match?(object, variations)
+                opts[:set_matching_key] << matching_key if opts[:set_matching_key]
+                object[matching_key]
+              end
             elsif object.is_a?(String) || object.is_a?(Symbol)
-               variations.include?(object.to_s)
+              variations.include?(object.to_s)
             else
               fail Error.new("Unexpected object class (#{object.class})")
             end
@@ -77,12 +82,6 @@ module DTK::DSL
 
         def hash_key_if_match?(hash, variations)
           variations.find { |key| hash.key?(key) }
-        end
-
-        def hash_value_of_matching_key?(hash, variations)
-          if matching_key = hash_key_if_match?(hash, variations)
-            hash[matching_key]
-          end
         end
 
       end

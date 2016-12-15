@@ -34,10 +34,7 @@ module DTK::DSL
       end
         
       def add_tags!(new_tags)
-        Tags.raise_error_if_invalid(new_tags)
-        new_tags = [new_tags] unless new_tags.kind_of?(::Array)
-        @tags += new_tags
-        @tags.uniq!
+        Tag.add_tags!(@tags, new_tags)
         self
       end
 
@@ -46,7 +43,7 @@ module DTK::DSL
       end
       
       def matches_tag_type?(tag_type)
-        !! @tags.find { |tag| Tags.matches_tag_type?(tag_type, tag) }
+        !! @tags.find { |tag| Tag.matches_tag_type?(tag_type, tag) }
       end
 
       def add_tags_to_obj?(obj, new_tags) 

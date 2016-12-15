@@ -34,6 +34,13 @@ module DTK::DSL
       template_class = Template.template_class(parse_template_type, dsl_version)
       template_class.create_for_generation(content_input, opts).generate_yaml_text
     end
+
+    # opts can have keys
+    #   :filter
+    def self.generate_yaml_file_path__content_array(parse_template_type, top_file_path, content_input, dsl_version, opts = {})
+      template_class = Template.template_class(parse_template_type, dsl_version)
+      template_class.create_for_generation(content_input, opts).generate_yaml_file_path__content_array(top_file_path)
+    end
   end
 end
 

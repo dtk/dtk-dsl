@@ -54,6 +54,13 @@ module DTK::DSL
           nil
         end
 
+        # args can have form 
+        #  (:ParsingErrorName,*parsing_error_params) or
+        #  (*parsing_error_params)
+        def parsing_error(*args)
+          parsing_error_with_opts(args)
+        end
+
         private
         
         def empty_parser_output(input, parent_key)
@@ -65,6 +72,20 @@ module DTK::DSL
           else
             FileParser::Output.create(:input => input)
           end
+        end
+
+        def remove_processed_keys_from_input_hash!(&body)
+          @found_keys = []
+          body.call
+          @found_keys.each { |key| input_hash.delete(key) }
+        end
+
+        def add_found_key?(key)
+          @found_keys << key if @found_keys
+        end
+
+        def file_parser_output_array
+          self.class.file_parser_output_array
         end
 
         # opts can have key
@@ -105,7 +126,12 @@ module DTK::DSL
         end
         def input_key_value?(constant, opts = {})
           input_hash = opts[:input_hash] || input_hash()
-          constant_class.matches?(input_hash, constant)
+          set_matching_key = []
+          ret = constant_class.matches?(input_hash, constant, :set_matching_key => set_matching_key)
+          if matching_key = set_matching_key.first
+            add_found_key?(matching_key)
+          end
+          ret
         end
 
         # returns nil or {key => value}
@@ -114,6 +140,10 @@ module DTK::DSL
         def input_key_and_value?(constant, opts = {})
           input_hash = opts[:input_hash] || input_hash()
           constant_class.matching_key_and_value?(input_hash, constant)
+          if ret = constant_class.matching_key_and_value?(input_hash, constant)
+            add_found_key?(ret.keys.first)
+          end
+          ret
         end
 
         def parsing_set(constant, val)
@@ -177,13 +207,6 @@ module DTK::DSL
         def raise_missing_key_value(constant)
           key = canonical_key(constant)
           raise parsing_error(:MissingKeyValue, key)
-        end
-
-        # args can have form 
-        #  (:ParsingErrorName,*parsing_error_params) or
-        #  (*parsing_error_params)
-        def parsing_error(*args)
-          parsing_error_with_opts(args)
         end
 
         # opts can have keys

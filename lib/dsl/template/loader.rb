@@ -52,7 +52,7 @@ module DTK::DSL
       def self.template_class_aux(template_type, template_version)
         base_class = Template.const_get("V#{template_version}")
         begin 
-          base_class.const_get(::DTK::Common::Aux.snake_to_camel_case(template_type.to_s))
+          base_class.const_get(Aux.snake_to_camel_case(template_type.to_s))
         rescue
           raise Error, "Invalid template_type '#{template_type}'"
         end

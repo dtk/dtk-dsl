@@ -28,6 +28,7 @@ class DTK::DSL::Template
         Attributes  = 'attributes'
         Nodes       = 'nodes'
         Components  = 'components'
+        Target      = 'target'
 
         Workflows   = 'workflows'
         Variations::Workflows = ['workflows', 'workflow']
@@ -49,28 +50,24 @@ class DTK::DSL::Template
       end
 
       def parse!
-        set  :Name, input_key_value(:Name)
-        set? :Description, input_key_value?(:Description)
-        set? :Attributes, parse_child_elements?(:attribute, :Attributes)
-        set? :Nodes, parse_child_elements?(:node, :Nodes)
-        set? :Components, parse_child_elements?(:component, :Components)
-        set? :Workflows, parse_child_elements?(:workflow, :Workflows)
-    
-        # TODO: This is a catchall that removes ones we so far are parsing and then has catch all
-        input_hash.delete('name')
-        input_hash.delete('description')
-        input_hash.delete('attributes')
-        input_hash.delete('nodes')
-        input_hash.delete('components')
-        input_hash.delete('workflow')
-        input_hash.delete('workflows')
-        merge input_hash
+        remove_processed_keys_from_input_hash! do
+          set  :Name, input_key_value(:Name)
+          set? :Description, input_key_value?(:Description)
+          set? :Target, input_key_value?(:Target)
+          set? :Attributes, parse_child_elements?(:attribute, :Attributes)
+          set? :Nodes, parse_child_elements?(:node, :Nodes)
+          set? :Components, parse_child_elements?(:component, :Components)
+          set? :Workflows, parse_child_elements?(:workflow, :Workflows)
+        end
+        # handle keys not processed
+         merge input_hash unless input_hash.empty?
       end
 
       ### For generation
       def generate!
         # TODO: add attributes
         set :Description, val(:Description)
+        set :Target, val(:Target)
         set :Components, generate_child_elements(:component, val(:Components))
         set :Nodes, generate_child_elements(:node, val(:Nodes))
         set :Workflows, generate_child_elements(:workflow, val(:Workflows))

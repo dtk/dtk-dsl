@@ -57,6 +57,7 @@ module DTK::DSL
 
     DSL_VERSION_KEY = 'dsl_version'
     def self.dsl_version__raise_error_if_illegal(input_hash, file_obj)
+      raise Error::Usage, "Ill-formed DSL#{file_ref_in_error(file_obj)}" unless input_hash.kind_of?(::Hash)
       if dsl_version = input_hash[DSL_VERSION_KEY]
         unless DSLVersion.legal?(dsl_version)
           raise Error::Usage, "Illegal DSL version '#{dsl_version}'#{file_ref_in_error(file_obj)}"

@@ -29,9 +29,14 @@ module DTK::DSL
         def elements_collection_type
           nil
         end
-        
-        private
 
+        def file_parser_output_array
+          FileParser::Output.create(:output_type => :array)
+        end
+        
+        def file_parser_output_hash
+          FileParser::Output.create(:output_type => :hash)
+        end
 
         # opts can have keys
         #  :index
@@ -45,13 +50,7 @@ module DTK::DSL
           end
         end
 
-        def file_parser_output_array
-          FileParser::Output.create(:output_type => :array)
-        end
-        
-        def file_parser_output_hash
-          FileParser::Output.create(:output_type => :hash)
-        end
+        private
 
         def input_hash?(input)
           input.kind_of?(FileParser::Input::Hash)
