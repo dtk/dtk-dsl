@@ -46,7 +46,7 @@ module DTK::DSL
           output_hash = {}
           if parser.update_output_hash?(output_hash, self)
             if assemblies = output_hash['assemblies'] || output_hash[:assemblies]
-              assemblies.each { |assembly| update_or_add_output_hash!(ServiceModulePath.top_level_dsl(assembly[:name]), assembly) }
+              assemblies.each { |assembly| update_or_add_output_hash!(ServiceModulePath.top_level_dsl(assembly['name']||assembly[:name]), assembly) }
             end
           end
         end

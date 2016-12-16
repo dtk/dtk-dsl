@@ -40,11 +40,34 @@ module DTK::DSL; class ServiceAndComponentInfo::TransformTo
         
         def add_assemblies_to_output_hash!(assemblies)
           assemblies_yaml_object_array = assemblies.map do |assembly_canonical_hash|
-            FileGenerator.generate_yaml_object(:assembly, assembly_canonical_hash, DSL_VERSION)
+            parsed_assembly  = FileGenerator.generate_yaml_object(:assembly, assembly_canonical_hash, DSL_VERSION)
+            assembly_content = {}
+
+            if name = parsed_assembly.delete('name') || assembly_canonical_hash[:name]
+              assembly_content['name'] = name
+            end
+
+            if description = parsed_assembly.delete('description')
+              assembly_content['description'] = description
+            end
+
+            assembly_content['dsl_version'] = DSL_VERSION
+            workflows = parsed_assembly.delete('workflows')
+
+            if parsed_assembly && !parsed_assembly.empty?
+              assembly_content['assembly'] = parsed_assembly
+            end
+
+            if workflows
+              assembly_content['workflows'] = workflows
+            end
+
+            assembly_content
           end
+
           output_hash['assemblies'] = assemblies_yaml_object_array
         end
-        
+
       end
     end
   end
