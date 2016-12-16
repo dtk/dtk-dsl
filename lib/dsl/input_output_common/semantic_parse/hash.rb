@@ -26,6 +26,11 @@ module DTK::DSL
           super(parent_class)
           initialize_semantic_parse(opts)      
         end
+
+        # The method skip_for_generation? can be overwritten
+        def skip_for_generation?
+          false
+        end
       end
     end
   end

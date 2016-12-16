@@ -39,7 +39,10 @@ module DTK::DSL; class ServiceAndComponentInfo::TransformTo
         end
         
         def add_assemblies_to_output_hash!(assemblies)
-          output_hash['assemblies'] = assemblies
+          assemblies_yaml_object_array = assemblies.map do |assembly_canonical_hash|
+            FileGenerator.generate_yaml_object(:assembly, assembly_canonical_hash, DSL_VERSION)
+          end
+          output_hash['assemblies'] = assemblies_yaml_object_array
         end
         
       end
