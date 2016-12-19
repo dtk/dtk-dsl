@@ -60,7 +60,7 @@ module DTK::DSL
 
         ### For generation
         def self.generate_elements(components_content, parent)
-          components_content.map do |name, component| 
+          components_content.map do |name, component|
             if component_hash = generate_element?(component, parent)
               component_hash.empty? ? name : { name => component_hash }
             end
@@ -112,11 +112,20 @@ module DTK::DSL
           unless input_hash.size == 1 and input_hash.values.first.kind_of?(::Hash)
             raise parsing_error("Component is ill-formed; it must be string or hash")
           end
+
           properties = input_hash.values.first
-          set? :Attributes, parse_child_elements?(:attribute, :Attributes, :input_hash => properties)
+          if attributes = properties['attributes']
+            set? :Attributes, parse_child_elements?(:attribute, :Attributes, :input_hash => { 'attributes' => attributes })
+          end
+
+          if component_links = properties['component_links']
+            set? :ComponentLinks, parse_child_elements?(:component_link, :ComponentLinks, :input_hash => { 'component_links' => component_links})
+          end
 
           # handle keys not processed
           properties.delete(Constant::Attributes)
+          properties.delete(Constant::ComponentLinks)
+
           merge properties unless properties.empty?
         end
 
