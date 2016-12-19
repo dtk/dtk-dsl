@@ -20,8 +20,7 @@ module DTK::DSL; class ServiceAndComponentInfo::TransformTo
     module ComponentModule
       class TopDSL < Parser
         def update_output_hash?
-          if module_dsl_input_file = input_files?(:module)
-            module_dsl_canonical_hash = module_dsl_input_file.content_hash
+          if module_dsl_canonical_hash = input_file_hash?(:module)
             if component_defs = module_dsl_canonical_hash.val(:ComponentDefs)
               add_module_info_to_output_hash!
               add_components_to_output_hash!(component_defs)

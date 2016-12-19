@@ -41,6 +41,12 @@ module DTK::DSL
       def input_files?(type)
         @indexed_input_files[type]
       end
+
+      def input_file_hash?(type)
+        if input_files = input_files?(type)
+          input_files.content_hash?
+        end
+      end
       
       def raise_error_missing_field(key)
         raise Error, "Unexpected that field '#{key}' is missing"

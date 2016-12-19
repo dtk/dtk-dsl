@@ -24,14 +24,14 @@ module DTK::DSL
 
       private
       def update_output_hash__dependencies?
-          if component_dsl_input_file = input_files?(:module)
-            component_dsl_input_hash = component_dsl_input_file.content_hash
-            if dependencies = component_dsl_input_hash['dependencies']
-              add_dependencies_to_output_hash!(dependencies)
-              output_hash
-            end
+        if component_dsl_canonical_hash = input_file_hash?(:module)
+          if dependencies = component_dsl_canonical_hash['dependencies']
+            add_dependencies_to_output_hash!(dependencies)
+            output_hash
           end
         end
+      end
+
       def add_dependencies_to_output_hash!(dependencies)
       end
     end

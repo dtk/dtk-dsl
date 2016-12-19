@@ -19,8 +19,7 @@ module DTK::DSL
  class ServiceAndComponentInfo::TransformTo::Parser
    class ModuleRefs < self
       def update_output_hash?
-        if module_dsl_input_file = input_files?(:module)
-          module_dsl_canonical_hash = module_dsl_input_file.content_hash
+        if module_dsl_canonical_hash = input_file_hash?(:module)
           if dependencies = module_dsl_canonical_hash.val(:DependentModules)
             add_dependencies_to_output_hash!(dependencies)
             output_hash

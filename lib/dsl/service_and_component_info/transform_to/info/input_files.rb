@@ -23,10 +23,6 @@ module DTK::DSL
         add_hash_content!(path, canonical_hash_content)
       end
 
-      def content_canonical_hash
-        content_hash
-      end
-
       private
 
       def raise_error_if_not_canonical_hash(obj)

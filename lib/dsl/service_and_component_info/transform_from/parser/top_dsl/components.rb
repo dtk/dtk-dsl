@@ -20,8 +20,7 @@ module DTK::DSL
     class TopDSL
       class Components < self
         def update_output_hash?
-          if component_dsl_input_file = input_files?(:component_dsl_file)
-            component_dsl_input_hash = component_dsl_input_file.content_hash
+          if component_dsl_input_hash = input_file_hash?(:component_dsl_file)
             if component_defs = component_dsl_input_hash['components']
               output_hash['component_defs'] = component_defs
             end

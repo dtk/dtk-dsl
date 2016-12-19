@@ -34,17 +34,17 @@ module DTK::DSL
         @ndx_file_hash_content.values
       end
 
-      def content_hash
-        # fail Error, "Unexpected that @ndx_file_hash_content.size != 1" unless @ndx_file_hash_content.size == 1
-        @ndx_file_hash_content.values.first
-      end
-
       def input_paths
         @ndx_file_hash_content.keys
       end
 
       def empty?
         @ndx_file_hash_content.empty?
+      end
+
+      def content_hash?
+        fail Error, "Unexpected that @ndx_file_hash_content.size > 1" if @ndx_file_hash_content.size > 1
+        @ndx_file_hash_content.values.first
       end
 
       private

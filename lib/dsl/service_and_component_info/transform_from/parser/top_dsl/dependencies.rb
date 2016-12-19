@@ -20,12 +20,10 @@ module DTK::DSL
     class TransformFrom::Parser::TopDSL
       class Dependencies < self
         def update_output_hash?
-          if module_refs_input_file = input_files?(:module_refs)
-            module_refs_input_hash = module_refs_input_file.content_hash
-            unless module_refs_input_hash.empty?
-              existing_module_refs = output_hash['dependencies'] ||= {}
-              merge_in_new_module_refs!(existing_module_refs, module_refs_input_hash)
-            end
+          module_refs_input_hash = input_file_hash?(:module_refs) || {}
+          unless module_refs_input_hash.empty?
+            existing_module_refs = output_hash['dependencies'] ||= {}
+            merge_in_new_module_refs!(existing_module_refs, module_refs_input_hash)
           end
         end
         
