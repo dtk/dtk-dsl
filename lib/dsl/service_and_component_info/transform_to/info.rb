@@ -28,6 +28,12 @@ module DTK::DSL
           :input_files => {
             :module => {
               :regexps => [Regexp.new("dtk\.module\.yaml$")]
+            },
+            :assemblies => {
+              :regexps => [Regexp.new("assemblies/(.*)\.dtk\.assembly\.(yml|yaml)$"), ]
+            },
+            :legacy_assemblies => {
+              :regexps => [Regexp.new("assemblies/([^/]+)/assembly\.(yml|yaml)$")]
             }
           }
         },
