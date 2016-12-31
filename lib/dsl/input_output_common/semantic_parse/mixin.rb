@@ -27,7 +27,7 @@ module DTK::DSL
         private :initialize_semantic_parse
 
         def qualified_key
-          @qualified_key || fail(Error, "Unexepcetd that @qualified_key is nil")
+          @qualified_key || fail(Error, "Unexepected that @qualified_key is nil")
         end
 
         def name 

@@ -139,11 +139,12 @@ module DTK::DSL
         #   :input_hash
         def input_key_and_value?(constant, opts = {})
           input_hash = opts[:input_hash] || input_hash()
-          constant_class.matching_key_and_value?(input_hash, constant)
-          if ret = constant_class.matching_key_and_value?(input_hash, constant)
-            add_found_key?(ret.keys.first)
+          if kv = constant_class.matching_key_and_value?(input_hash, constant)
+            unless kv.values.first.nil? # check if value is nil and if so nil is returned
+              add_found_key?(kv.keys.first)
+              kv
+            end
           end
-          ret
         end
 
         def parsing_set(constant, val)
