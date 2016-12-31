@@ -200,7 +200,7 @@ module DTK::DSL
         #   :key
         # correct_ruby_types can also be scalar
         def raise_input_error(correct_ruby_types, opts = {})
-          input = opts[:input] || @input
+          input = (opts.has_key?(:input) ? opts[:input] : @input)
           raise parsing_error_with_opts([:WrongObjectType, input, correct_ruby_types], opts)
         end
         

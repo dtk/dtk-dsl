@@ -34,26 +34,26 @@ module DTK::DSL; class Template
             else
               "The key's value should be one of the types (#{correct_ruby_types.join(' ')})"
             end
-          error_msg << ", but has type #{input_class_string(obj)}"
+          error_msg << (obj.nil? ? ", but has null value" : ", but has type #{input_class_string(obj)}")
           super(error_msg, opts)
         end
         
         private
         
         def input_class_string(obj)
-          klass = 
-            if obj.kind_of?(::Hash) 
-              ::Hash 
-            elsif obj.kind_of?(::Array)
-              ::Array
-            elsif obj.kind_of?(::String)
-              ::String
-            else
-              obj.class
-            end
-          # demodularize
-          klass.to_s.split('::').last
+          if obj.kind_of?(::Hash) 
+            'Hash'
+          elsif obj.kind_of?(::Array)
+            'Array'
+          elsif obj.kind_of?(::String)
+            'String'
+          # elesif ..TODO: should we handle Booleans in special way
+          else
+            # demodularize
+            obj.class.to_s.split('::').last
+          end
         end
+
       end
     end
   end
