@@ -55,7 +55,7 @@ module DTK::DSL
         
         module ComponentModulePath
           TOP_LEVEL_DSL = 'dtk.model.yaml'
-          MODULE_REFS = 'model_refs.yaml'
+          MODULE_REFS = 'module_refs.yaml'
           def self.top_level_dsl
             TOP_LEVEL_DSL
           end
