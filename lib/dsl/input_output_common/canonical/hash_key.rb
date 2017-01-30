@@ -21,6 +21,7 @@ module DTK::DSL
       # Top level for common module
       DSLVersion       = :dsl_version
       Assemblies       = :assemblies
+      ComponentDefs    = :component_defs
       DependentModules = :dependent_modules
       ModuleRef        = :module
 

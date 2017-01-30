@@ -16,29 +16,21 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class InputOutputCommon
-    module SemanticParse
-      module Mixin
-        # opts can have keys
-        #  :qualified_key
-        def initialize_semantic_parse(opts = {})
-          @qualified_key = opts[:qualified_key]
-        end
-        private :initialize_semantic_parse
+  class ServiceAndComponentInfo::TransformTo::Info
+    class InputFiles < ServiceAndComponentInfo::Info::InputFiles
+      def add_canonical_hash_content!(path, canonical_hash_content)
+        raise_error_if_not_canonical_hash(canonical_hash_content)
+        add_hash_content!(path, canonical_hash_content)
+      end
 
-        def qualified_key
-          @qualified_key || fail(Error, "Unexepected that @qualified_key is nil")
-        end
+      private
 
-        def name 
-          qualified_key.relative_distinguished_name
-        end
-
-        def qualified_name
-          qualified_key.print_form
+      def raise_error_if_not_canonical_hash(obj)
+        unless obj.kind_of?(InputOutputCommon::Canonical::Hash)
+          raise Error, "Expecting input of type 'InputOutputCommon::Canonical::Hash', but '#{obj.class}' was given" 
         end
       end
+
     end
   end
 end
-

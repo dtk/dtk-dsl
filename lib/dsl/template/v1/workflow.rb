@@ -19,7 +19,6 @@ module DTK::DSL
   class Template
     class V1
       class Workflow < self
-        # TODO: do we want workflow/semantic_parse
         require_relative('workflow/semantic_parse')
         
         module Constant

@@ -24,6 +24,7 @@ module DTK::DSL
       require_relative('v1/common_module')
       require_relative('v1/service_instance')
       require_relative('v1/module_ref')
+      require_relative('v1/component_def')
       require_relative('v1/assembly')
       require_relative('v1/attribute')
       require_relative('v1/component_link')

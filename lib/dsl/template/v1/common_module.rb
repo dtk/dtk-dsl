@@ -26,12 +26,14 @@ class DTK::DSL::Template
         end
 
         extend ClassMixin::Constant
-        Assemblies = 'assemblies'
+        Assemblies    = 'assemblies'
+        ComponentDefs = 'component_defs' 
       end
 
       def parse!
         super
-        set :Assemblies, parse_child_elements(:assembly, :Assemblies)
+        set :Assemblies, parse_child_elements?(:assembly, :Assemblies)
+        set :ComponentDefs, parse_child_elements?(:component_def, :ComponentDefs)
       end
     end
   end

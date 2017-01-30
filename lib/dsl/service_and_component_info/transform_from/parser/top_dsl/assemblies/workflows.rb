@@ -16,29 +16,22 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class InputOutputCommon
-    module SemanticParse
-      module Mixin
-        # opts can have keys
-        #  :qualified_key
-        def initialize_semantic_parse(opts = {})
-          @qualified_key = opts[:qualified_key]
-        end
-        private :initialize_semantic_parse
-
-        def qualified_key
-          @qualified_key || fail(Error, "Unexepected that @qualified_key is nil")
-        end
-
-        def name 
-          qualified_key.relative_distinguished_name
+  class ServiceAndComponentInfo::TransformFrom::Parser
+    class TopDSL::Assemblies 
+      module Workflows
+        def self.hash_content?(assembly_hash)
+          if workflows = assembly_hash['workflow'] || assembly_hash['workflows']
+            if workflow_name = workflows['assembly_action']
+              # this is legacy workflow
+              workflows_without_name = workflows.inject({}) { |h, (k, v)| k == 'assembly_action' ? h : h.merge(k => v) }
+              { workflow_name =>  workflows_without_name }
+            else
+              workflows
+            end
+          end
         end
 
-        def qualified_name
-          qualified_key.print_form
-        end
       end
     end
   end
 end
-

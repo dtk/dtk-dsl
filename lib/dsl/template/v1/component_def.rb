@@ -16,27 +16,35 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class InputOutputCommon
-    module SemanticParse
-      module Mixin
-        # opts can have keys
-        #  :qualified_key
-        def initialize_semantic_parse(opts = {})
-          @qualified_key = opts[:qualified_key]
-        end
-        private :initialize_semantic_parse
+  class Template
+    class V1
+      class ComponentDef < self
+        require_relative('component_def/semantic_parse')
 
-        def qualified_key
-          @qualified_key || fail(Error, "Unexepected that @qualified_key is nil")
+        module Constant
+          module Variations
+          end
+          
+          extend ClassMixin::Constant
         end
 
-        def name 
-          qualified_key.relative_distinguished_name
+        ### For parsing
+        def parser_output_type 
+          :hash
         end
 
-        def qualified_name
-          qualified_key.print_form
+        def self.parse_elements(input_hash, parent_info)
+          input_hash.inject(file_parser_output_hash) do |h, (name, component_def)|
+            h.merge(name => parse_element(component_def, parent_info, :index => name))
+          end
         end
+
+        def parse!
+          # TODO: This does not parse and just passes through; parse routines from dtk-server will be migrated
+          # here
+          merge input_hash
+        end
+
       end
     end
   end

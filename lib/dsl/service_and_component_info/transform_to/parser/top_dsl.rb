@@ -16,29 +16,21 @@
 # limitations under the License.
 #
 module DTK::DSL
-  class InputOutputCommon
-    module SemanticParse
-      module Mixin
-        # opts can have keys
-        #  :qualified_key
-        def initialize_semantic_parse(opts = {})
-          @qualified_key = opts[:qualified_key]
-        end
-        private :initialize_semantic_parse
-
-        def qualified_key
-          @qualified_key || fail(Error, "Unexepected that @qualified_key is nil")
-        end
-
-        def name 
-          qualified_key.relative_distinguished_name
-        end
-
-        def qualified_name
-          qualified_key.print_form
-        end
+  class ServiceAndComponentInfo::TransformTo
+    class Parser
+      class TopDSL < self
+        require_relative('top_dsl/module_info')
+        require_relative('top_dsl/assemblies')
+        require_relative('top_dsl/components')
+        require_relative('top_dsl/dependencies')
       end
+
+      private
+
+      def module_ref
+        info_object.module_ref
+      end
+
     end
   end
 end
-
