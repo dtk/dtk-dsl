@@ -58,11 +58,8 @@ class DTK::DSL::Template
       end
 
       def generate!
-        value = val(:Value)
-        unless value.nil?
-          merge(req(:Name) => val(:Value))
-          self
-        end
+        merge(req(:Name) => val(:Value))
+        self
       end
 
       def generate?
