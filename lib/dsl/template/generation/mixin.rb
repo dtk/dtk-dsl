@@ -66,6 +66,16 @@ module DTK::DSL
         # Array where each element has keys :path and :content
         def generate_yaml_file_path__content_array(top_file_path)
           self.generate!
+
+          template_type =
+            if self.is_a?(V1::ServiceInstance)
+              :service_instance
+            elsif self.is_a?(V1::CommonModule)
+              :common_module
+            end
+          nf_processor = NewFormatProcessor.new(template_type, @yaml_object)
+          @yaml_object = nf_processor.process if nf_processor.new_format?
+
           [{ :path => top_file_path, :content => YamlHelper.generate(@yaml_object) }] + generate_nested_dsl_file_path__content_array
         end
 

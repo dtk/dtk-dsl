@@ -29,6 +29,7 @@ module DTK
     require_relative('dsl/qualified_key')
     require_relative('dsl/input_output_common')
     # input_output_common must be before file_parser and file_generator
+    require_relative('dsl/new_format_processor')
     require_relative('dsl/file_parser')
     require_relative('dsl/file_generator')
     require_relative('dsl/template')
