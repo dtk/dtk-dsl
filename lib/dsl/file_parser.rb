@@ -30,8 +30,14 @@ module DTK::DSL
       return ret unless file_obj.content?
 
       input_hash   = yaml_parse!(file_obj)
-      nf_processor = NewFormatProcessor.new(parse_template_type, input_hash)
-      input_hash   = nf_processor.process if nf_processor.new_format?
+      nf_processor = NewFormatProcessor.new(parse_template_type, input_hash) 
+      # Check if nf_processor is called from install or stage
+      if nf_processor.new_format? && opts[:method].include?('install')
+        input_hash   = nf_processor.process_old
+      else
+        input_hash   = nf_processor.process 
+      end
+      #input_hash   = nf_processor.process if nf_processor.new_format?
 
       # input_hash = NewFormatProcessor.new(input_hash).process if new_format?(input_hash)
       dsl_version =  opts[:dsl_version] || dsl_version__raise_error_if_illegal(input_hash, file_obj)

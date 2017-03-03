@@ -32,8 +32,15 @@ module DTK::DSL
       end
     end
 
+    def process_old
+      if @parse_template_type == :service_instance
+        generate_service_instance
+      else
+        process_common_module_to_old
+      end
+    end
+
     def generate_service_instance
-      new_hash = {}
 
       if nodes = @input_hash.delete('nodes')
         nodes.each do |name, node|
@@ -71,6 +78,18 @@ module DTK::DSL
       @input_hash
     end
 
+      def process_common_module_to_old
+      new_hash = {}
+      if assemblies = @input_hash.delete('assemblies')
+        assemblies.each do |name, assembly|
+          new_hash.merge!(name => process_assembly_to_old(assembly))
+        end
+      end
+
+      @input_hash['assemblies'] = new_hash
+      @input_hash
+      end
+
     def new_format?
       new_format = true
       if assemblies = @input_hash['assemblies']
@@ -91,6 +110,21 @@ module DTK::DSL
       assembly_content.each do |name, content|
         if match = name.match(Regex[:node])
           ret_assembly['nodes'].merge!(match[1] => process_node(content))
+        elsif match = name.match(Regex[:component])
+          ret_assembly['components'] << { match[1] => content }
+        else
+          ret_assembly.merge!(name => content)
+        end
+      end
+
+      ret_assembly
+    end
+
+     def process_assembly_to_old(assembly_content)
+      ret_assembly = { 'nodes' => {}, 'components' => [] }
+      assembly_content.each do |name, content|
+        if match = name.match(Regex[:node])
+          ret_assembly['nodes'].merge!(match[1] => content)
         elsif match = name.match(Regex[:component])
           ret_assembly['components'] << { match[1] => content }
         else
