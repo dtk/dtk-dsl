@@ -41,6 +41,10 @@ class DTK::DSL::Template
         :hash
       end
 
+      def yaml_object_type
+        :array
+      end
+
       def self.parse_elements(input_hash, parent_info)
         ret = file_parser_output_array
         input_hash.each do |name, content|
@@ -66,11 +70,20 @@ class DTK::DSL::Template
       ### For generation
       def generate!
         # TODO: add attributes
-        set :Description, val(:Description)
-        set :Target, val(:Target)
-        set :Components, generate_child_elements(:component, val(:Components))
-        set :Nodes, generate_child_elements(:node, val(:Nodes))
-        set :Workflows, generate_child_elements(:workflow, val(:Workflows))
+        if description = val(:Description)
+          add({'description' => description})
+        end
+
+        if target = val(:Target)
+          add({'target' => target})
+        end
+
+        concat?(generate_child_elements(:component, val(:Components)))
+        concat?(generate_child_elements(:node, val(:Nodes)))
+
+        if workflows = generate_child_elements(:workflow, val(:Workflows))
+          add({'workflows' => workflows})
+        end
       end
 
     end

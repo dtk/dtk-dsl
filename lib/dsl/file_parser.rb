@@ -31,7 +31,7 @@ module DTK::DSL
 
       input_hash   = yaml_parse!(file_obj)
       nf_processor = NewFormatProcessor.new(parse_template_type, input_hash)
-      input_hash   = nf_processor.process if nf_processor.new_format?
+      input_hash = nf_processor.process if nf_processor.new_format?
 
       # input_hash = NewFormatProcessor.new(input_hash).process if new_format?(input_hash)
       dsl_version =  opts[:dsl_version] || dsl_version__raise_error_if_illegal(input_hash, file_obj)

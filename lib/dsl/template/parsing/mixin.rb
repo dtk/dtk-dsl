@@ -159,6 +159,10 @@ module DTK::DSL
           @output << array_element
         end
 
+        def parsing_concat(array_element)
+          @output.concat(array_element)
+        end
+
         def check_type_and_ret_input(template_class, key_and_value)
           input = key_and_value.values.first
           key = key_and_value.keys.first

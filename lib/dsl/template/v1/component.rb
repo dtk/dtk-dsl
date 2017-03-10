@@ -62,7 +62,7 @@ module DTK::DSL
         def self.generate_elements(components_content, parent)
           components_content.map do |name, component|
             if component_hash = generate_element?(component, parent)
-              component_hash.empty? ? name : { name => component_hash }
+              component_hash.empty? ? "component[#{name}]" : { "component[#{name}]" => component_hash }
             end
           end.compact
         end
