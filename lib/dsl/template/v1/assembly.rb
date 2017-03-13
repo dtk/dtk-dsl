@@ -30,8 +30,9 @@ class DTK::DSL::Template
         Components  = 'components'
         Target      = 'target'
 
+        Actions     = 'actions'
         Workflows   = 'workflows'
-        Variations::Workflows = ['workflows', 'workflow']
+        Variations::Workflows = ['actions', 'workflows', 'workflow']
 
       end
 
@@ -61,7 +62,7 @@ class DTK::DSL::Template
           set? :Attributes, parse_child_elements?(:attribute, :Attributes)
           set? :Nodes, parse_child_elements?(:node, :Nodes)
           set? :Components, parse_child_elements?(:component, :Components)
-          set? :Workflows, parse_child_elements?(:workflow, :Workflows)
+          set? :Actions, parse_child_elements?(:workflow, :Workflows)
         end
         # handle keys not processed
          merge input_hash unless input_hash.empty?
@@ -82,7 +83,7 @@ class DTK::DSL::Template
         concat?(generate_child_elements(:node, val(:Nodes)))
 
         if workflows = generate_child_elements(:workflow, val(:Workflows))
-          add({'workflows' => workflows})
+          add({'actions' => workflows})
         end
       end
 

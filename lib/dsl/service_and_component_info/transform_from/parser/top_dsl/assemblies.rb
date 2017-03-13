@@ -38,9 +38,9 @@ module DTK::DSL
 
             assembly_hash = convert_old_to_new_format(assembly_hash) if is_old_format?(assembly_hash)
             assembly_content << assembly_hash
-
+ 
             if workflows = Workflows.hash_content?(input_hash)
-              assembly_content << { 'workflows' => workflows }
+              assembly_content << { 'actions' => workflows }
             end
 
             (output_hash['assemblies'] ||= {}).merge!(name => assembly_content.flatten)
