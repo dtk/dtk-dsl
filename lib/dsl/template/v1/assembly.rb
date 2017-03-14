@@ -62,7 +62,7 @@ class DTK::DSL::Template
           set? :Attributes, parse_child_elements?(:attribute, :Attributes)
           set? :Nodes, parse_child_elements?(:node, :Nodes)
           set? :Components, parse_child_elements?(:component, :Components)
-          set? :Actions, parse_child_elements?(:workflow, :Workflows)
+          set? :Workflows, parse_child_elements?(:workflow, :Workflows)
         end
         # handle keys not processed
          merge input_hash unless input_hash.empty?
