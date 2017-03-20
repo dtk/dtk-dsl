@@ -38,7 +38,7 @@ module DTK::DSL
 
             assembly_hash = convert_old_to_new_format(assembly_hash) if is_old_format?(assembly_hash)
             assembly_content << assembly_hash
- 
+
             if workflows = Workflows.hash_content?(input_hash)
               assembly_content << { 'actions' => workflows }
             end
@@ -50,7 +50,7 @@ module DTK::DSL
         private
 
         def is_old_format?(assembly_hash)
-          assembly_hash.key?('nodes') || assembly_hash.key?('components')
+           assembly_hash.is_a?(Hash) && (assembly_hash.key?('nodes') || assembly_hash.key?('components'))
         end
 
         def convert_old_to_new_format(assembly_hash)

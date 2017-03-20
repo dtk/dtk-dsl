@@ -51,6 +51,8 @@ module DTK::DSL
       @input_hash.each do |element|
         if element.is_a?(Hash)
           process_hash!(element, ret)
+        elsif element.is_a?(String)
+          process_string!(element, ret)
         else
           fail Error.new("Unexpected service instance content format #{element}")
         end
@@ -138,7 +140,8 @@ module DTK::DSL
       nodes_hash = { 'components' => [] }
 
       nodes.each do |node|
-        if node.is_a?(String)
+        next unless node
+        if node.is_a?(String) 
           if match = node.match(Regex[:component])
             nodes_hash['components'] << match[1]
           else
