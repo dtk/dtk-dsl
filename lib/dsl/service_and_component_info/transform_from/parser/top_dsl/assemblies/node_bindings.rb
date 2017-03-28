@@ -20,6 +20,7 @@ module DTK::DSL
     class TopDSL::Assemblies 
       module NodeBindings
         def self.add_node_properties!(assembly_content, node_bindings) 
+          return unless assembly_content.is_a?(Hash)
           nodes = assembly_content['nodes'] || []
           return if nodes.empty?
         

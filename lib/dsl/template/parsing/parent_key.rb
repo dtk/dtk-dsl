@@ -64,7 +64,8 @@ module DTK::DSL
               rest = split_on_left.join(LEFT_DELIM)
               split_on_right = rest.split(RIGHT_DELIM)
               if split_on_right.size == 1
-                index = split_on_right.first
+                index = split_on_right.first 
+                index << RIGHT_DELIM if index.include?(LEFT_DELIM) && !index.include?(RIGHT_DELIM)
               else
                 split_on_right.pop # get rid of end
                 index = split_on_right.join(RIGHT_DELIM)

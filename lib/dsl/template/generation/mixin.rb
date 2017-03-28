@@ -138,6 +138,10 @@ module DTK::DSL
           select_yaml_object_or_nested_dsl_file << array_element
         end
 
+        def generation_concat(array_element)
+          select_yaml_object_or_nested_dsl_file.concat(array_element)
+        end
+
         def generation_set_scalar(scalar)
           @yaml_object = scalar
         end
