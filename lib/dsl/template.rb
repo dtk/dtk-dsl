@@ -84,29 +84,10 @@ module DTK::DSL
       end
     end
 
-    def add?(array_element)
-      if array_element && !array_element.empty?
-        add(array_element)
-      end
-    end
-
     def add(array_element)
       case @type
       when :parsing then parsing_add(array_element)
       when :generation then generation_add(array_element)
-      end
-    end
-
-    def concat?(array_element)
-      if array_element && !array_element.empty?
-        concat(array_element)
-      end
-    end
-
-    def concat(array_element)
-      case @type
-      when :parsing then parsing_concat(array_element)
-      when :generation then generation_concat(array_element)
       end
     end
 

@@ -30,9 +30,8 @@ class DTK::DSL::Template
         Components  = 'components'
         Target      = 'target'
 
-        Actions     = 'actions'
         Workflows   = 'workflows'
-        Variations::Workflows = ['actions', 'workflows', 'workflow']
+        Variations::Workflows = ['workflows', 'workflow']
 
       end
 
@@ -40,10 +39,6 @@ class DTK::DSL::Template
 
       def self.elements_collection_type
         :hash
-      end
-
-      def yaml_object_type
-        :array
       end
 
       def self.parse_elements(input_hash, parent_info)
@@ -71,20 +66,11 @@ class DTK::DSL::Template
       ### For generation
       def generate!
         # TODO: add attributes
-        if description = val(:Description)
-          add({'description' => description})
-        end
-
-        if target = val(:Target)
-          add({'target' => target})
-        end
-
-        concat?(generate_child_elements(:component, val(:Components)))
-        concat?(generate_child_elements(:node, val(:Nodes)))
-
-        if workflows = generate_child_elements(:workflow, val(:Workflows))
-          add({'actions' => workflows})
-        end
+        set :Description, val(:Description)
+        set :Target, val(:Target)
+        set :Components, generate_child_elements(:component, val(:Components))
+        set :Nodes, generate_child_elements(:node, val(:Nodes))
+        set :Workflows, generate_child_elements(:workflow, val(:Workflows))
       end
 
     end

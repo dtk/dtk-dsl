@@ -57,7 +57,6 @@ module DTK::DSL
       Target         = :target
       Components     = :components
       ComponentLinks = :component_links
-      Links          = :links
 
       # meta info
       Import                = :import
