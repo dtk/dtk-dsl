@@ -29,6 +29,8 @@ module DTK::DSL
 
           Attributes     = 'attributes'
           ComponentLinks = 'component_links'
+          Links          = 'links'
+          Variations::ComponentLinks = ['links','component_links', 'component_link']
         end
 
         ### For parsing
@@ -62,7 +64,7 @@ module DTK::DSL
         def self.generate_elements(components_content, parent)
           components_content.map do |name, component|
             if component_hash = generate_element?(component, parent)
-              component_hash.empty? ? name : { name => component_hash }
+              component_hash.empty? ? "component[#{name}]" : { "component[#{name}]" => component_hash }
             end
           end.compact
         end
@@ -82,11 +84,11 @@ module DTK::DSL
           ret = {}
 
           set_generation_hash(ret, :Attributes, generate_child_elements(:attribute, val(:Attributes)))
-          set_generation_hash(ret, :ComponentLinks, generate_child_elements(:component_link, val(:ComponentLinks)))
+          set_generation_hash(ret, :Links, generate_child_elements(:component_link, val(:ComponentLinks)))
 
           ret
         end
-        
+
         # opts can have keys:
         #  :parent
         #  :this
@@ -118,13 +120,13 @@ module DTK::DSL
             set? :Attributes, parse_child_elements?(:attribute, :Attributes, :input_hash => { 'attributes' => attributes })
           end
 
-          if component_links = properties['component_links']
+          if component_links = properties['component_links'] || properties['links'] 
             set? :ComponentLinks, parse_child_elements?(:component_link, :ComponentLinks, :input_hash => { 'component_links' => component_links})
           end
 
           # handle keys not processed
           properties.delete(Constant::Attributes)
-          properties.delete(Constant::ComponentLinks)
+          properties.delete(properties.keys.first) if Constant::Variations::ComponentLinks.include?(properties.keys.first)
 
           merge properties unless properties.empty?
         end

@@ -19,7 +19,7 @@
 require 'dtk_common_core'
 
 module DTK::DSL
-  class FileParser                   
+  class FileParser
     require_relative('file_parser/input')
     require_relative('file_parser/output')
 
@@ -29,7 +29,11 @@ module DTK::DSL
       ret = Output.create(:output_type => :hash)
       return ret unless file_obj.content?
 
-      input_hash = yaml_parse!(file_obj)
+      input_hash   = yaml_parse!(file_obj)
+      nf_processor = NewFormatProcessor.new(parse_template_type, input_hash)
+      input_hash = nf_processor.process if nf_processor.new_format?
+
+      # input_hash = NewFormatProcessor.new(input_hash).process if new_format?(input_hash)
       dsl_version =  opts[:dsl_version] || dsl_version__raise_error_if_illegal(input_hash, file_obj)
 
       # parsing with respect to the parse_template_type

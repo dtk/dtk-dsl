@@ -29,6 +29,10 @@ class DTK::DSL::Template
         DependentModules = 'dependencies'
       end
 
+      def yaml_object_type
+        :array
+      end
+
       ### For parsing
       def parse!
         remove_processed_keys_from_input_hash! do
@@ -41,10 +45,14 @@ class DTK::DSL::Template
 
       ### For generation
       def generate!
-        set :DSLVersion, req(:DSLVersion)
-        set :Name, req(:Name)
-        set? :DependentModules, val(:DependentModules)
-        merge generate_child(:assembly, req(:Assembly))
+        add({'dsl_version' => req(:DSLVersion)})
+        add({'name' => req(:Name)})
+
+        if dependent_modules = val(:DependentModules)
+          add('dependencies' => dependent_modules)
+        end
+
+        concat(generate_child(:assembly, req(:Assembly)) || [])
       end
 
     end

@@ -47,22 +47,25 @@ class DTK::DSL::Template
 
       ### For generation
       def self.generate_elements(nodes_content, parent)
-        nodes_content.inject({}) do |h, (name, node)| 
-          node_hash = generate_element?(node, parent)
-          node_hash ? h.merge(name => node_hash) : h
-        end
+        nodes_content.map do |name, node|
+          if node_hash = generate_element?(node, parent)
+            node_hash.empty? ? "node[#{name}]" : { "node[#{name}]" => node_hash[:content] }
+          end
+        end.compact
       end
 
       def generate!
-        merge(generate_node_hash)
+        merge(:content => generate_node_hash.flatten)
       end
 
       private
 
       def generate_node_hash
-        ret = {}
-        set_generation_hash(ret, :Attributes, generate_child_elements(:node_attribute, val(:Attributes)))
-        set_generation_hash(ret, :Components, generate_child_elements(:component, val(:Components)))
+        ret = []
+
+        ret << { 'attributes' => generate_child_elements(:node_attribute, val(:Attributes)) }
+        ret << generate_child_elements(:component, val(:Components))
+
         ret
       end
 
