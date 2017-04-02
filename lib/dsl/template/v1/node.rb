@@ -36,7 +36,8 @@ class DTK::DSL::Template
 
       def self.parse_elements(input_hash, parent_info)
         input_hash.inject(file_parser_output_hash) do |h, (name, content)|
-          h.merge(name => parse_element(content, parent_info, :index => name))
+          # The term' content || {}' is in case node has no attributes or components
+          h.merge(name => parse_element(content || {}, parent_info, :index => name))
         end
       end
 
