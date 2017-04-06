@@ -20,7 +20,7 @@ module DTK::DSL
     class TopDSL::Assemblies 
       module Workflows
         def self.hash_content?(assembly_hash)
-          if workflows = assembly_hash['workflow'] || assembly_hash['workflows']
+          if workflows = assembly_hash['workflow'] || assembly_hash['workflows'] || assembly_hash['actions']
             if workflow_name = workflows['assembly_action']
               # this is legacy workflow
               workflows_without_name = workflows.inject({}) { |h, (k, v)| k == 'assembly_action' ? h : h.merge(k => v) }

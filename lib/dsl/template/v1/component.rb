@@ -29,6 +29,8 @@ module DTK::DSL
 
           Attributes     = 'attributes'
           ComponentLinks = 'component_links'
+          Links          = 'links'
+          Variations::ComponentLinks = ['links','component_links', 'component_link']
         end
 
         ### For parsing
@@ -82,7 +84,7 @@ module DTK::DSL
           ret = {}
 
           set_generation_hash(ret, :Attributes, generate_child_elements(:attribute, val(:Attributes)))
-          set_generation_hash(ret, :ComponentLinks, generate_child_elements(:component_link, val(:ComponentLinks)))
+          set_generation_hash(ret, :Links, generate_child_elements(:component_link, val(:ComponentLinks)))
 
           ret
         end
@@ -119,7 +121,7 @@ module DTK::DSL
           end
 
           if component_links = properties['component_links']
-            set? :ComponentLinks, parse_child_elements?(:component_link, :ComponentLinks, :input_hash => { 'component_links' => component_links})
+            set? :Links, parse_child_elements?(:component_link, :ComponentLinks, :input_hash => { 'component_links' => component_links})
           end
 
           # handle keys not processed
