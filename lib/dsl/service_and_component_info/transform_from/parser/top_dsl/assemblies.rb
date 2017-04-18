@@ -34,7 +34,7 @@ module DTK::DSL
             assembly_content.merge!(assembly_hash)
             
             if workflows = Workflows.hash_content?(input_hash)
-              assembly_content.merge!('workflows' => workflows)
+              assembly_content.merge!('actions' => workflows) 
             end
 
             if node_bindings = input_hash['node_bindings']

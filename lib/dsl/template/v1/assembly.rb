@@ -29,9 +29,9 @@ class DTK::DSL::Template
         Nodes       = 'nodes'
         Components  = 'components'
         Target      = 'target'
-
+        Actions     = 'actions'
         Workflows   = 'workflows'
-        Variations::Workflows = ['workflows', 'workflow']
+        Variations::Workflows = ['actions', 'workflows', 'workflow']
 
       end
 
@@ -70,7 +70,7 @@ class DTK::DSL::Template
         set :Target, val(:Target)
         set :Components, generate_child_elements(:component, val(:Components))
         set :Nodes, generate_child_elements(:node, val(:Nodes))
-        set :Workflows, generate_child_elements(:workflow, val(:Workflows))
+        set :Actions, generate_child_elements(:workflow, val(:Workflows))
       end
 
     end
