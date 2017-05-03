@@ -27,6 +27,7 @@ module DTK::DSL
           
           extend ClassMixin::Constant
 
+          Components     = 'components'
           Attributes     = 'attributes'
           ComponentLinks = 'component_links'
           Links          = 'links'
@@ -82,10 +83,9 @@ module DTK::DSL
 
         def generate_component_hash
           ret = {}
-
           set_generation_hash(ret, :Attributes, generate_child_elements(:attribute, val(:Attributes)))
           set_generation_hash(ret, :Links, generate_child_elements(:component_link, val(:ComponentLinks)))
-
+          set_generation_hash(ret, :Components, generate_child_elements(:component, val(:Components)))
           ret
         end
         
