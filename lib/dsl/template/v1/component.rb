@@ -27,11 +27,12 @@ module DTK::DSL
           
           extend ClassMixin::Constant
 
-          Components     = 'components'
-          Attributes     = 'attributes'
-          ComponentLinks = 'component_links'
-          Links          = 'links'
-          Variations::ComponentLinks = ['links','component_links', 'component_link']
+          Components        = 'components'
+          Attributes        = 'attributes'
+          Links             = 'links'
+          ComponentLinks    = 'component_links'
+          Variations::ComponentLinks = ['links', 'component_links', 'component_link']
+
         end
 
         ### For parsing
@@ -116,19 +117,38 @@ module DTK::DSL
           end
 
           properties = input_hash.values.first
-          if attributes = properties['attributes']
-            set? :Attributes, parse_child_elements?(:attribute, :Attributes, :input_hash => { 'attributes' => attributes })
-          end
 
-          if component_links = properties['component_links']
-            set? :Links, parse_child_elements?(:component_link, :ComponentLinks, :input_hash => { 'component_links' => component_links})
-          end
-
-          # handle keys not processed
-          properties.delete(Constant::Attributes)
-          properties.delete(Constant::ComponentLinks)
-
+          # removes from peroperties so we can simply merge keys not processed
+          parse_set_property_value_and_remove!(properties, :Attributes)
+          parse_set_property_value_and_remove__component_links!(properties)
+          parse_set_property_value_and_remove!(properties, :Components)
           merge properties unless properties.empty?
+        end
+
+        # opts can have keys: 
+        #   :matching_key_value
+        def parse_set_property_value_and_remove!(properties, constant, opts = {})
+          if matching_key_value = opts[:matching_key_value] || constant_class.matching_key_and_value?(properties, constant)
+            key_in_properties   = matching_key_value.keys.first
+            value               = matching_key_value.values.first
+            canonical_key       = constant_class.canonical_value(constant) # this is string
+            parse_template_type = canonical_key.sub(/s$/, '').to_sym
+
+            # example what below looks like set? :Components, parse_child_elements?(:component, :Components, :input_hash => { 'components' => components})
+            set? constant, parse_child_elements?(parse_template_type, constant, :input_hash => { canonical_key => value })
+            properties.delete(key_in_properties)
+          end
+        end
+
+        # This method handles synatic varaints where component links may be an array and can have array elements that are simple term meaning that
+        #   the link name is the component type
+        def parse_set_property_value_and_remove__component_links!(properties)
+          constant = :ComponentLinks
+          return unless matching_key_value = constant_class.matching_key_and_value?(properties, constant)
+          key   = matching_key_value.keys.first
+          value = matching_key_value.values.first
+          transformed_value = ComponentLink.parse_transform_to_hash_form(value, self)
+          parse_set_property_value_and_remove!(properties, constant, matching_key_value: { key => transformed_value })
         end
 
       end

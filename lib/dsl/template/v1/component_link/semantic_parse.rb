@@ -19,6 +19,14 @@ module DTK::DSL
   class Template::V1
     class ComponentLink
       class SemanticParse < InputOutputCommon::SemanticParse::Hash
+        def value
+          val(:Value) || fail(Error, "Unexpected that val(:Value) is nil")
+        end 
+
+        def external_service_name?
+          val(:ExternalServiceName)
+        end
+
       end
     end
   end

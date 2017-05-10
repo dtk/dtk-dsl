@@ -35,6 +35,9 @@ module DTK::DSL
       Module = :module
       Version = :version      
 
+      # Used in component links
+      ExternalServiceName = :external_service_name
+
       # Used in workflows
       Subtasks          = :subtasks
       SubtaskOrder      = :subtask_order

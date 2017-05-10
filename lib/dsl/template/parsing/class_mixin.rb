@@ -50,6 +50,10 @@ module DTK::DSL
           end
         end
 
+        def empty_input_hash
+          FileParser::Input::Hash.new(self)
+        end
+
         private
 
         def input_hash?(input)
