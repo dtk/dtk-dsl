@@ -85,8 +85,12 @@ module DTK::DSL
         # returns [dependency, external_service_name]; second can be nil
         def parse_value
           dependency = external_service_name = nil
+
           string = input_key_value(:Value)
-          dependency, external_service_name = ExternalServiceName.parse?(string)
+          # only the service instance dsl can have external service name
+          if file_obj.file_type < FileType::ServiceInstance
+            dependency, external_service_name = ExternalServiceName.parse?(string)
+          end
           dependency ||= string
           [dependency, external_service_name]
         end        
