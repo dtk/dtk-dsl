@@ -32,6 +32,10 @@ module DTK::DSL
         raise Error::NoMethodForConcreteClass.new(self.class)
       end
 
+      def output_path_hash_pairs
+        @parent.output_path_hash_pairs
+      end
+
       def output_path_text_pairs
         @parent.output_path_text_pairs
       end
