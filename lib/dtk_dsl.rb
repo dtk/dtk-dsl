@@ -22,6 +22,7 @@ module DTK
     require_relative('dsl/error')
     require_relative('dsl/dsl_version')
     require_relative('dsl/file_type')
+    require_relative('dsl/directory_type')
     require_relative('dsl/file_obj')
     require_relative('dsl/yaml_helper')
     require_relative('dsl/directory_parser')
