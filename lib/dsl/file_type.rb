@@ -42,6 +42,11 @@ module DTK::DSL
         :canonical_path_lambda => lambda { |_params| 'dtk.module.yaml' }, 
         :print_name            => 'module DSL file'
       },
+      ModuleRefsLock::DSLFile::Top => {
+        :regexp                => Regexp.new("dtk_modules\.lock"),
+        :canonical_path_lambda => lambda { |_params| 'dtk_modules.lock' },
+        :print_name            => 'module refs lock DSL file'
+      },
       ServiceInstance::DSLFile::Top => {
         :regexp                => Regexp.new("dtk\.service\.(yml|yaml)"),
         :canonical_path_lambda => lambda { |_params| 'dtk.service.yaml' }, 
