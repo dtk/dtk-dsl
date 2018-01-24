@@ -29,6 +29,17 @@ module DTK::DSL
       end
     end
 
+    class ModuleRefsLock < self
+      def self.top_level_type
+        :module_refs_lock
+      end
+
+      class DSLFile < self
+        class Top < self
+        end
+      end
+    end
+
     class ServiceInstance < self
       def self.top_level_type
         :service_instance
