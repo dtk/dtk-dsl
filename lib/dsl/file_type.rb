@@ -43,8 +43,8 @@ module DTK::DSL
         :print_name            => 'module DSL file'
       },
       ModuleRefsLock::DSLFile::Top => {
-        :regexp                => Regexp.new("dtk_modules\.lock"),
-        :canonical_path_lambda => lambda { |_params| 'dtk_modules.lock' },
+        :regexp                => Regexp.new("dtk\.module\.lock"),
+        :canonical_path_lambda => lambda { |_params| 'dtk\.modules.lock' },
         :print_name            => 'module refs lock DSL file'
       },
       ServiceInstance::DSLFile::Top => {
