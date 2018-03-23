@@ -1,3 +1,4 @@
 *.gem
 sftp-config*.json
 .byebug_history
+sftp.json
