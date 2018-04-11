@@ -47,6 +47,8 @@ module DTK::DSL
 
       class DSLFile < self
         class Top < self
+          class Hidden < self
+          end
         end
       end
 

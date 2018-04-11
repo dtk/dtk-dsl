@@ -56,6 +56,11 @@ module DTK::DSL
         :regexp                => Regexp.new("dtk\.module\.(yml|yaml)"),
         :canonical_path_lambda => lambda { |_params| 'dtk.module.yaml' },
         :print_name            => 'nested module DSL file'
+      },
+      ServiceInstance::DSLFile::Top::Hidden => {
+        :regexp                => Regexp.new(".dtk\.service\.(yml|yaml)"),
+        :canonical_path_lambda => lambda { |_params| '.dtk.service.yaml' }, 
+        :print_name            => 'hidden service DSL file'
       }
     }
     # regexps, except for one in :instance_match_lambda, purposely do not have ^ or $ so calling function can insert these depending on context

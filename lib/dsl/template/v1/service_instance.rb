@@ -44,7 +44,7 @@ class DTK::DSL::Template
         set :DSLVersion, req(:DSLVersion)
         set :Name, req(:Name)
         set? :DependentModules, val(:DependentModules)
-        merge generate_child(:assembly, req(:Assembly))
+        merge generate_child(:assembly, req(:Assembly)) if val(:Assembly)
       end
 
     end
