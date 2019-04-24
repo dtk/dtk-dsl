@@ -21,6 +21,7 @@ module DTK::DSL
       require_relative('info/input_files')
       require_relative('info/service')
       require_relative('info/component')
+      require_relative('info/kubernetes_crd')
 
       # This is for mapping to module directories (not service instance directories)
       INFO_HASH = {
@@ -38,6 +39,13 @@ module DTK::DSL
           }
         },
         :component_info => {
+          :input_files => {
+            :module => {
+              :regexps => [Regexp.new("dtk\.module\.yaml$")]
+            }
+          }
+        },
+        :kubernetes_crd => {
           :input_files => {
             :module => {
               :regexps => [Regexp.new("dtk\.module\.yaml$")]

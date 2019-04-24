@@ -37,6 +37,7 @@ module DTK
         case info_type 
         when :service_info then self.class::Info::Service.new(self)
         when :component_info then self.class::Info::Component.new(self)
+        when :kubernetes_crd then self.class::Info::KubernetesCrd.new(self)
         else
           fail Error, "Unexpected info_type '#{info_type}'"
         end

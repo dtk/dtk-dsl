@@ -16,24 +16,10 @@
 # limitations under the License.
 #
 module DTK::DSL
- class ServiceAndComponentInfo::TransformTo
-    class Parser < ServiceAndComponentInfo::Parser
-      require_relative('parser/module_refs')
-      require_relative('parser/component_module')
-      require_relative('parser/service_module')
-      require_relative('parser/kubernetes_crd')
-
-      private
-      def update_output_hash__dependencies?
-        if component_dsl_canonical_hash = input_file_hash?(:module)
-          if dependencies = component_dsl_canonical_hash['dependencies']
-            add_dependencies_to_output_hash!(dependencies)
-            output_hash
-          end
-        end
-      end
-
-      def add_dependencies_to_output_hash!(dependencies)
+  class ServiceAndComponentInfo::TransformTo
+    class Parser
+      module KubernetesCrd
+        require_relative('kubernetes_crd/top_dsl')
       end
     end
   end
