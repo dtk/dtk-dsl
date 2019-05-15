@@ -18,7 +18,7 @@
 module DTK::DSL
   class ServiceAndComponentInfo::TransformTo
     class Info
-      class KubernetesCrd < self
+      class KubernetesCrdInstance < self
         def compute_outputs!
           set_top_level_dsl_output_hash!
         end
@@ -26,7 +26,7 @@ module DTK::DSL
         private
         
         def info_type
-          :crd
+          :crd_instance
         end
 
         def set_top_level_dsl_output_hash!
@@ -43,7 +43,7 @@ module DTK::DSL
         end
 
         def component_module_dsl_parser
-          @component_module_dsl_parser ||= Parser::KubernetesCrd
+          @component_module_dsl_parser ||= Parser::KubernetesCrdInstance
         end
         
         module ComponentModulePath

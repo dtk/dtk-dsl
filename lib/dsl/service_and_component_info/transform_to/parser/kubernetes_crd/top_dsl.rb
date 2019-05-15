@@ -28,7 +28,7 @@ module DTK::DSL; class ServiceAndComponentInfo::TransformTo
             end
           end
         end
-        
+
         private
 
         API_VERSION = 'apiextensions.k8s.io/v1beta1'
@@ -41,7 +41,7 @@ module DTK::DSL; class ServiceAndComponentInfo::TransformTo
           output_hash[:metadata] = {}
           output_hash[:spec] = {}
         end
-        
+
         def add_components_to_output_hash!(component_defs)
           # used to pluralize component names
           require 'active_support/inflector'

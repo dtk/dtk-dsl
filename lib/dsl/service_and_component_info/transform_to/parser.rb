@@ -22,6 +22,7 @@ module DTK::DSL
       require_relative('parser/component_module')
       require_relative('parser/service_module')
       require_relative('parser/kubernetes_crd')
+      require_relative('parser/kubernetes_crd_instance')
 
       private
       def update_output_hash__dependencies?
